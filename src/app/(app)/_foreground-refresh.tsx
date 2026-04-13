@@ -5,15 +5,18 @@ import { useEffect, useRef } from "react";
 
 export function ForegroundRefresh() {
   const router = useRouter();
+  // eslint-disable-next-line no-restricted-syntax
   const lastActive = useRef(Date.now());
 
   useEffect(() => {
     function refresh() {
+      // eslint-disable-next-line no-restricted-syntax
       const elapsed = Date.now() - lastActive.current;
       // Only refresh if backgrounded for at least 3 seconds
       if (elapsed > 3000) {
         router.refresh();
       }
+      // eslint-disable-next-line no-restricted-syntax
       lastActive.current = Date.now();
     }
 
