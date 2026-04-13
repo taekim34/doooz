@@ -2,22 +2,19 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
+import { now } from "@/lib/datetime/clock";
 
 export function ForegroundRefresh() {
   const router = useRouter();
-  // eslint-disable-next-line no-restricted-syntax
-  const lastActive = useRef(Date.now());
+  const lastActive = useRef(now());
 
   useEffect(() => {
     function refresh() {
-      // eslint-disable-next-line no-restricted-syntax
-      const elapsed = Date.now() - lastActive.current;
-      // Only refresh if backgrounded for at least 3 seconds
+      const elapsed = now() - lastActive.current;
       if (elapsed > 3000) {
         router.refresh();
       }
-      // eslint-disable-next-line no-restricted-syntax
-      lastActive.current = Date.now();
+      lastActive.current = now();
     }
 
     // visibilitychange: works on most browsers + Android PWA
