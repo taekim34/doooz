@@ -130,24 +130,24 @@ export default async function ChildDetailPage({
           {taskList.length === 0 && (
             <p className="text-muted-foreground">{t("children.no_tasks_today", locale)}</p>
           )}
-          {taskList.map((c) => (
-            <div
-              key={c.id}
-              className="flex items-center justify-between border-b py-1 last:border-0"
-            >
-              <span>
-                {c.status === "completed"
-                  ? "✅"
-                  : c.status === "overdue"
-                    ? "😢"
-                    : c.status === "pardoned"
-                      ? "🙏"
-                      : "⬜"}{" "}
-                {c.title}
-              </span>
-              <Badge variant="secondary">+{c.points}</Badge>
-            </div>
-          ))}
+          {taskList.map((c) => {
+            const done = c.status === "completed";
+            const overdue = c.status === "overdue";
+            const pardoned = c.status === "pardoned";
+            return (
+              <div
+                key={c.id}
+                className="flex items-center justify-between border-b py-1 last:border-0"
+              >
+                <span className={done ? "text-muted-foreground line-through" : ""}>
+                  {c.title}
+                </span>
+                <span className={`text-xs font-medium ${done ? "text-green-600" : overdue ? "text-red-600" : pardoned ? "text-yellow-600" : "text-muted-foreground"}`}>
+                  {done ? t("home.status_done", locale) : overdue ? t("home.status_overdue", locale) : pardoned ? t("home.status_pardoned", locale) : t("home.status_pending", locale)}
+                </span>
+              </div>
+            );
+          })}
         </CardContent>
       </Card>
 

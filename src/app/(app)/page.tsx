@@ -102,31 +102,30 @@ export default async function HomePage() {
             )}
             {todayOnly.map((c) => {
               const isBeg = c.template_id === null;
-              const icon = c.status === "completed"
-                ? (isBeg ? "🎉" : "✅")
-                : c.status === "rejected" ? "❌" : "⬜";
+              const done = c.status === "completed";
+              const rejected = c.status === "rejected";
               return (
-                <Link
+                <div
                   key={c.id}
-                  href="/tasks"
-                  className={`flex items-center justify-between rounded-md border p-3 hover:bg-accent ${
-                    isBeg && c.status === "completed" ? "bg-green-50 border-green-200" : ""
-                  } ${c.status === "rejected" ? "bg-red-50 border-red-200" : ""}`}
+                  className={`flex items-center justify-between rounded-md border p-3 ${
+                    isBeg && done ? "bg-green-50 border-green-200" : ""
+                  } ${rejected ? "bg-red-50 border-red-200" : ""}`}
                 >
                   <div className="flex items-center gap-3">
-                    <span>{icon}</span>
-                    <span className={c.status === "completed" && !isBeg ? "text-muted-foreground line-through" : ""}>
+                    <span className={done ? "text-muted-foreground line-through" : ""}>
                       {c.title}
                     </span>
-                    {isBeg && c.status === "completed" && (
+                    {isBeg && done && (
                       <span className="text-[10px] font-medium text-green-600">{t("home.beg_success", locale)}</span>
                     )}
-                    {c.status === "rejected" && (
+                    {rejected && (
                       <span className="text-[10px] font-medium text-red-600">{t("home.beg_failed", locale)}</span>
                     )}
                   </div>
-                  <Badge variant="secondary">{c.points > 0 ? `+${c.points}` : "-"}</Badge>
-                </Link>
+                  <span className={`text-xs font-medium ${done ? "text-green-600" : rejected ? "text-red-600" : "text-muted-foreground"}`}>
+                    {done ? t("home.status_done", locale) : rejected ? t("home.status_rejected", locale) : t("home.status_pending", locale)}
+                  </span>
+                </div>
               );
             })}
           </CardContent>

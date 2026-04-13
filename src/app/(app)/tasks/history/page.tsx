@@ -84,9 +84,11 @@ export default async function TaskHistoryPage({ searchParams }: Props) {
     return toFamilyDate(d, family.timezone);
   })();
   const canGoNext = selectedDate < today;
+  const isToday = selectedDate === today;
   const isPastDate = selectedDate < today;
-  // Children can only modify today's tasks; parents can modify any date.
-  const childReadOnly = !isParent && isPastDate;
+  // Today: read-only for everyone (use /tasks page to check off).
+  // Past: parents can modify, children cannot.
+  const readOnly = isToday || (!isParent && isPastDate);
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
@@ -137,8 +139,8 @@ export default async function TaskHistoryPage({ searchParams }: Props) {
                 title={r.title}
                 points={r.points}
                 status={r.status}
-                canPardon={isParent && !childReadOnly && r.template_id !== null}
-                readOnly={childReadOnly || r.template_id === null}
+                canPardon={isParent && !readOnly && r.template_id !== null}
+                readOnly={readOnly || r.template_id === null}
                 isBeg={r.template_id === null}
               />
             ))}
