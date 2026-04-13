@@ -2,6 +2,7 @@ import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { t, type Locale } from "@/lib/i18n";
+import { formatDateInFamilyTz } from "@/lib/datetime/family-tz";
 import Link from "next/link";
 import type { Route } from "next";
 import { BackButton } from "@/components/ui/back-button";
@@ -34,7 +35,7 @@ export default async function PointsHistoryPage({
 
   let q = supabase
     .from("point_transactions")
-    .select("id, amount, reason, kind, created_at, user_id")
+    .select("id, amount, reason, kind, created_at, user_id, task_instances(due_date)")
     .order("created_at", { ascending: false })
     .limit(PAGE_SIZE);
 
@@ -56,6 +57,7 @@ export default async function PointsHistoryPage({
     kind: string;
     created_at: string;
     user_id: string;
+    task_instances: { due_date: string } | null;
   }>;
   const last = rows[rows.length - 1];
 
@@ -125,7 +127,7 @@ export default async function PointsHistoryPage({
               >
                 <span>
                   <span className="text-muted-foreground">
-                    {tx.created_at.slice(0, 10)}
+                    {tx.task_instances?.due_date ?? formatDateInFamilyTz(tx.created_at, family.timezone, "yyyy-MM-dd")}
                   </span>{" "}
                   {user.role === "parent" && !selectedChild && nameMap.get(tx.user_id) && (
                     <span className="text-xs text-muted-foreground">

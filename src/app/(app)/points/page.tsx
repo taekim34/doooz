@@ -2,6 +2,7 @@ import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { t, type Locale } from "@/lib/i18n";
+import { formatDateInFamilyTz } from "@/lib/datetime/family-tz";
 import Link from "next/link";
 
 export default async function PointsPage() {
@@ -11,7 +12,7 @@ export default async function PointsPage() {
 
   const { data: txs } = await supabase
     .from("point_transactions")
-    .select("id, amount, reason, kind, created_at, user_id")
+    .select("id, amount, reason, kind, created_at, user_id, task_instances(due_date)")
     .eq(user.role === "child" ? "user_id" : "family_id", user.role === "child" ? user.id : family.id)
     .order("created_at", { ascending: false })
     .limit(30);
@@ -26,7 +27,7 @@ export default async function PointsPage() {
           .order("display_name")
       : { data: null };
 
-  type Tx = { id: string; amount: number; reason: string; kind: string; created_at: string; user_id: string };
+  type Tx = { id: string; amount: number; reason: string; kind: string; created_at: string; user_id: string; task_instances: { due_date: string } | null };
   const txList = (txs ?? []) as Tx[];
   const kidList = (members ?? []) as Array<{ id: string; display_name: string; current_balance: number }>;
   const nameMap = new Map(kidList.map((k) => [k.id, k.display_name]));
@@ -80,7 +81,7 @@ export default async function PointsPage() {
                 {kidTxs.map((tx) => (
                   <div key={tx.id} className="flex justify-between border-b py-1 last:border-0">
                     <span>
-                      <span className="text-muted-foreground">{tx.created_at.slice(5, 10)}</span>{" "}
+                      <span className="text-muted-foreground">{tx.task_instances?.due_date?.slice(5) ?? formatDateInFamilyTz(tx.created_at, family.timezone, "MM-dd")}</span>{" "}
                       {tx.reason}
                     </span>
                     <span className={tx.amount >= 0 ? "text-green-600" : "text-red-600"}>
@@ -108,7 +109,7 @@ export default async function PointsPage() {
             {txList.map((tx) => (
               <div key={tx.id} className="flex justify-between border-b py-1 last:border-0">
                 <span>
-                  <span className="text-muted-foreground">{tx.created_at.slice(5, 10)}</span>{" "}
+                  <span className="text-muted-foreground">{tx.task_instances?.due_date?.slice(5) ?? formatDateInFamilyTz(tx.created_at, family.timezone, "MM-dd")}</span>{" "}
                   {tx.reason}
                 </span>
                 <span className={tx.amount >= 0 ? "text-green-600" : "text-red-600"}>

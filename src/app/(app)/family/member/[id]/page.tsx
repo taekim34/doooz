@@ -3,7 +3,7 @@ import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
 import { characterEmoji } from "@/features/characters/emoji-map";
 import { getStage, progressToNextLevel, getLevelTitle } from "@/lib/level";
-import { familyToday } from "@/lib/datetime/family-tz";
+import { familyToday, formatDateInFamilyTz } from "@/lib/datetime/family-tz";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BackButton } from "@/components/ui/back-button";
@@ -61,7 +61,7 @@ export default async function MemberDetailPage({
     // Recent point transactions
     supabase
       .from("point_transactions")
-      .select("id, amount, reason, kind, created_at")
+      .select("id, amount, reason, kind, created_at, task_instances(due_date)")
       .eq("user_id", member.id)
       .order("created_at", { ascending: false })
       .limit(20),
@@ -87,6 +87,7 @@ export default async function MemberDetailPage({
   }>;
   const txList = (txsRes.data ?? []) as Array<{
     id: string; amount: number; reason: string; kind: string; created_at: string;
+    task_instances: { due_date: string } | null;
   }>;
   const badges = (badgesRes.data ?? []) as Array<{
     badge_id: string; badges: { name: string; icon: string | null } | null;
@@ -96,7 +97,7 @@ export default async function MemberDetailPage({
   // Stats
   const totalCompleted = completedTasks.length;
   const activeDays = new Set(completedTasks.map((c) => c.due_date)).size;
-  const joinDate = member.created_at.slice(0, 10);
+  const joinDate = formatDateInFamilyTz(member.created_at, family.timezone, "yyyy-MM-dd");
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -232,7 +233,7 @@ export default async function MemberDetailPage({
           {txList.map((tx) => (
             <div key={tx.id} className="flex items-center justify-between border-b py-1 last:border-0">
               <span>
-                <span className="text-muted-foreground">{tx.created_at.slice(5, 10)}</span>{" "}
+                <span className="text-muted-foreground">{tx.task_instances?.due_date?.slice(5) ?? formatDateInFamilyTz(tx.created_at, family.timezone, "MM-dd")}</span>{" "}
                 {tx.reason}
               </span>
               <span className={tx.amount >= 0 ? "text-green-600" : "text-red-600"}>

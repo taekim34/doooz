@@ -7,6 +7,7 @@ import { t, type Locale } from "@/lib/i18n";
 import { ApproveButton, RejectButton } from "./_actions";
 import type { RewardRequestRow } from "@/schemas/reward";
 import { nowDate } from "@/lib/datetime/clock";
+import { formatDateInFamilyTz } from "@/lib/datetime/family-tz";
 import { BackButton } from "@/components/ui/back-button";
 
 type Row = Pick<
@@ -21,8 +22,8 @@ type Row = Pick<
   | "requested_by"
 >;
 
-function fmt(ts: string) {
-  return ts.slice(0, 16).replace("T", " ");
+function fmt(ts: string, timezone: string) {
+  return formatDateInFamilyTz(ts, timezone, "yyyy-MM-dd HH:mm");
 }
 
 export default async function RewardRequestsPage() {
@@ -100,7 +101,7 @@ export default async function RewardRequestsPage() {
               <div>
                 <div className="font-semibold">{r.reward_title_snapshot}</div>
                 <div className="text-xs text-muted-foreground">
-                  {nameMap.get(r.requested_by) ?? t("rewards.child_fallback", locale)} · {r.cost_snapshot.toLocaleString()}pt · {fmt(r.requested_at)}
+                  {nameMap.get(r.requested_by) ?? t("rewards.child_fallback", locale)} · {r.cost_snapshot.toLocaleString()}pt · {fmt(r.requested_at, family.timezone)}
                 </div>
               </div>
               <div className="flex gap-2">

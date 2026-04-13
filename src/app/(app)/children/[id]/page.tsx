@@ -3,7 +3,7 @@ import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
 import { characterEmoji } from "@/features/characters/emoji-map";
 import { getStage, progressToNextLevel } from "@/lib/level";
-import { familyToday } from "@/lib/datetime/family-tz";
+import { familyToday, formatDateInFamilyTz } from "@/lib/datetime/family-tz";
 import { getRank } from "@/features/children/rank";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -56,7 +56,7 @@ export default async function ChildDetailPage({
       .order("created_at"),
     supabase
       .from("point_transactions")
-      .select("id, amount, reason, kind, created_at")
+      .select("id, amount, reason, kind, created_at, task_instances(due_date)")
       .eq("user_id", child.id)
       .order("created_at", { ascending: false })
       .limit(20),
@@ -83,6 +83,7 @@ export default async function ChildDetailPage({
     reason: string;
     kind: string;
     created_at: string;
+    task_instances: { due_date: string } | null;
   }>;
   const badges = (earnedBadges ?? []) as Array<{
     badge_id: string;
@@ -162,7 +163,7 @@ export default async function ChildDetailPage({
               className="flex items-center justify-between border-b py-1 last:border-0"
             >
               <span>
-                <span className="text-muted-foreground">{tx.created_at.slice(0, 10)}</span>{" "}
+                <span className="text-muted-foreground">{tx.task_instances?.due_date ?? formatDateInFamilyTz(tx.created_at, family.timezone, "yyyy-MM-dd")}</span>{" "}
                 {tx.kind === "penalty" && "😢 "}
                 {tx.kind === "adjustment" && `${t("children.adjustment", locale)} · `}
                 {tx.reason}

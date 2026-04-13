@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { t, type Locale } from "@/lib/i18n";
+import { formatDateInFamilyTz } from "@/lib/datetime/family-tz";
 import Link from "next/link";
 import { WantButton, CancelRequestButton } from "./_actions";
 import type { RewardRequestRow, RewardRequestStatus } from "@/schemas/reward";
@@ -101,7 +102,7 @@ export default async function RewardsPage() {
                   <Badge variant={STATUS_VARIANT[r.status]}>{t(STATUS_KEYS[r.status], locale)}</Badge>
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  {r.cost_snapshot.toLocaleString()} pt · {r.requested_at.slice(0, 16).replace("T", " ")}
+                  {r.cost_snapshot.toLocaleString()} pt · {formatDateInFamilyTz(r.requested_at, family.timezone, "yyyy-MM-dd HH:mm")}
                 </div>
                 {r.decision_note && r.status === "rejected" && (
                   <div className="mt-1 text-xs text-muted-foreground">{t("rewards.note", locale)}: {r.decision_note}</div>
