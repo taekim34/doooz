@@ -10,10 +10,12 @@ Built for families who want to see their kids grow — literally — over 5+ yea
 
 - **Trust-based, instant credit.** Kids tap, points land. No pestering, no approval bottleneck.
 - **Points are the language.** One append-only ledger tracks every credit and redemption. No lost points, ever.
+- **Kids can ask for more.** The "beg" feature lets children request extra tasks and earn bonus points — parents approve with one tap.
 - **Gamification that lasts.** 30 levels, 58 badges, 12 evolving characters — curves tuned for *years*, not a weekend.
-- **Family-first privacy.** Row-level security isolates every family at the database layer.
+- **Auto-pilot.** Daily tasks auto-generate at midnight. Evening push reminders nudge incomplete items.
+- **Installable PWA.** Add to home screen on any device — works offline-first with background sync.
+- **Family-first privacy.** Row-level security isolates every family at the database layer. Parent-only permissions enforced at both code and DB level.
 - **Multilingual.** Korean, Japanese, and English out of the box.
-- **Push notifications.** Evening reminders keep everyone on track.
 
 ## Stack
 
@@ -112,6 +114,7 @@ src/
 │  └─ api/                 route handlers + cron jobs (evening-reminder, midnight-rollover)
 ├─ features/
 │  ├─ auth/                requireUser, getCurrentAuth
+│  ├─ tasks/               server actions (update, pardon)
 │  ├─ children/            rank calculation
 │  └─ characters/          emoji map
 ├─ lib/
