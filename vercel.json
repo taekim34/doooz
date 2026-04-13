@@ -1,0 +1,13 @@
+{
+  "regions": ["icn1"],
+  "crons": [
+    {
+      "path": "/api/cron/evening-reminder",
+      "schedule": "0 12 * * *"
+    },
+    {
+      "path": "/api/cron/midnight-rollover",
+      "schedule": "0 16 * * *"
+    }
+  ]
+}

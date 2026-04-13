@@ -1,0 +1,22 @@
+{
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "NewExpression[callee.name='Date'][arguments.length=0]",
+        "message": "Do not use new Date() directly. Use clock.now() from @/lib/datetime/clock instead to keep time injectable and family-tz aware."
+      },
+      {
+        "selector": "CallExpression[callee.object.name='Date'][callee.property.name='now']",
+        "message": "Do not use Date.now() directly. Use clock.now() from @/lib/datetime/clock instead."
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/lib/datetime/**/*.ts", "**/*.test.ts", "**/*.test.tsx", "tests/**/*"],
+      "rules": { "no-restricted-syntax": "off" }
+    }
+  ]
+}
