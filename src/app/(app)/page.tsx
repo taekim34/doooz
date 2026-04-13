@@ -104,26 +104,24 @@ export default async function HomePage() {
               const isBeg = c.template_id === null;
               const done = c.status === "completed";
               const rejected = c.status === "rejected";
+              const chipClass = done
+                ? "bg-green-100 text-green-700"
+                : rejected
+                  ? "bg-red-100 text-red-700"
+                  : "bg-gray-100 text-gray-600";
+              const chipLabel = isBeg
+                ? (done ? t("home.beg_success", locale) : rejected ? t("home.beg_failed", locale) : t("home.status_pending", locale))
+                : (done ? t("home.status_done", locale) : t("home.status_pending", locale));
               return (
                 <div
                   key={c.id}
-                  className={`flex items-center justify-between rounded-md border p-3 ${
-                    isBeg && done ? "bg-green-50 border-green-200" : ""
-                  } ${rejected ? "bg-red-50 border-red-200" : ""}`}
+                  className="flex items-center justify-between rounded-md border p-3"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className={done ? "text-muted-foreground line-through" : ""}>
-                      {c.title}
-                    </span>
-                    {isBeg && done && (
-                      <span className="text-[10px] font-medium text-green-600">{t("home.beg_success", locale)}</span>
-                    )}
-                    {rejected && (
-                      <span className="text-[10px] font-medium text-red-600">{t("home.beg_failed", locale)}</span>
-                    )}
-                  </div>
-                  <span className={`text-xs font-medium ${done ? "text-green-600" : rejected ? "text-red-600" : "text-muted-foreground"}`}>
-                    {done ? t("home.status_done", locale) : rejected ? t("home.status_rejected", locale) : t("home.status_pending", locale)}
+                  <span className={done ? "text-muted-foreground line-through" : ""}>
+                    {c.title}
+                  </span>
+                  <span className={`shrink-0 ml-3 rounded-full px-2.5 py-0.5 text-xs font-medium ${chipClass}`}>
+                    {chipLabel}
                   </span>
                 </div>
               );
@@ -244,43 +242,33 @@ export default async function HomePage() {
               )}
               {kidTasks.map((c) => {
                 const isBeg = c.template_id === null;
-                const icon = c.status === "completed"
-                  ? (isBeg ? "🎉" : "✅")
-                  : c.status === "rejected"
-                    ? "❌"
-                    : c.status === "requested"
-                      ? "⏳"
-                      : c.status === "overdue"
-                        ? "🔴"
-                        : "⬜";
-                const label = isBeg && c.status === "completed"
-                  ? t("home.beg_success", locale)
-                  : c.status === "rejected"
-                    ? t("home.beg_failed", locale)
-                    : c.status === "requested"
-                      ? t("home.beg_waiting", locale)
-                      : null;
+                const done = c.status === "completed";
+                const rejected = c.status === "rejected";
+                const requested = c.status === "requested";
+                const overdue = c.status === "overdue";
+                const chipClass = done
+                  ? "bg-green-100 text-green-700"
+                  : rejected
+                    ? "bg-red-100 text-red-700"
+                    : requested
+                      ? "bg-yellow-100 text-yellow-700"
+                      : overdue
+                        ? "bg-red-100 text-red-700"
+                        : "bg-gray-100 text-gray-600";
+                const chipLabel = isBeg
+                  ? (done ? t("home.beg_success", locale) : rejected ? t("home.beg_failed", locale) : requested ? t("home.beg_waiting", locale) : t("home.status_pending", locale))
+                  : (done ? t("home.status_done", locale) : overdue ? t("home.status_overdue", locale) : t("home.status_pending", locale));
                 return (
                   <div
                     key={c.id}
-                    className={`flex items-center justify-between rounded-md px-3 py-2 text-sm ${
-                      isBeg && c.status === "completed" ? "bg-green-50" : ""
-                    } ${c.status === "rejected" ? "bg-red-50" : ""}`}
+                    className="flex items-center justify-between rounded-md px-3 py-2 text-sm"
                   >
-                    <div className="flex items-center gap-2">
-                      <span>{icon}</span>
-                      <span className={c.status === "completed" && !isBeg ? "text-muted-foreground line-through" : ""}>
-                        {c.title}
-                      </span>
-                      {label && (
-                        <span className={`text-[10px] font-medium ${
-                          c.status === "completed" ? "text-green-600" : c.status === "rejected" ? "text-red-600" : "text-yellow-600"
-                        }`}>
-                          {label}
-                        </span>
-                      )}
-                    </div>
-                    <Badge variant="secondary">{c.points > 0 ? `+${c.points}` : "-"}</Badge>
+                    <span className={done ? "text-muted-foreground line-through" : ""}>
+                      {c.title}
+                    </span>
+                    <span className={`shrink-0 ml-3 rounded-full px-2.5 py-0.5 text-xs font-medium ${chipClass}`}>
+                      {chipLabel}
+                    </span>
                   </div>
                 );
               })}

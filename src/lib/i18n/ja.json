@@ -123,6 +123,7 @@
   "tasks.history_empty": "やることの記録がありません。",
   "tasks.history_next": "次の日 →",
   "tasks.history_prev": "← 前の日",
+  "tasks.history_parent_guide": "間違ったチェックの取り消しや再完了がここでできます。",
   "tasks.history_title": "やること記録",
   "tasks.history_today": "今日",
   "tasks.in_progress": "進行中",

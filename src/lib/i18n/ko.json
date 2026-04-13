@@ -123,6 +123,7 @@
   "tasks.history_empty": "할일 기록이 없어요.",
   "tasks.history_next": "다음날 →",
   "tasks.history_prev": "← 이전날",
+  "tasks.history_parent_guide": "아이가 잘못 체크하거나 수정이 필요한 할일을 여기서 취소/재완료할 수 있어요.",
   "tasks.history_title": "할일 기록",
   "tasks.history_today": "오늘",
   "tasks.in_progress": "진행 중",

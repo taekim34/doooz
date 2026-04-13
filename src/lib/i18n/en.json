@@ -123,6 +123,7 @@
   "tasks.history_empty": "No task records.",
   "tasks.history_next": "Next →",
   "tasks.history_prev": "← Prev",
+  "tasks.history_parent_guide": "Cancel or re-complete tasks here to correct mistakes.",
   "tasks.history_title": "Task History",
   "tasks.history_today": "Today",
   "tasks.in_progress": "In Progress",

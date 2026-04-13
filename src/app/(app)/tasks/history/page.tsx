@@ -84,16 +84,18 @@ export default async function TaskHistoryPage({ searchParams }: Props) {
     return toFamilyDate(d, family.timezone);
   })();
   const canGoNext = selectedDate < today;
-  const isToday = selectedDate === today;
   const isPastDate = selectedDate < today;
-  // Today: read-only for everyone (use /tasks page to check off).
-  // Past: parents can modify, children cannot.
-  const readOnly = isToday || (!isParent && isPastDate);
+  // Parents can modify any date (including today) for corrections.
+  // Children: today uses /tasks page, history is read-only.
+  const readOnly = !isParent;
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
       <BackButton fallback="/tasks" />
       <h1 className="text-2xl font-bold">{t("tasks.history_title", locale)}</h1>
+      {isParent && (
+        <p className="text-sm text-muted-foreground">{t("tasks.history_parent_guide", locale)}</p>
+      )}
 
       <HistoryControls
         childList={children}

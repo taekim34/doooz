@@ -134,6 +134,14 @@ export default async function ChildDetailPage({
             const done = c.status === "completed";
             const overdue = c.status === "overdue";
             const pardoned = c.status === "pardoned";
+            const chipClass = done
+              ? "bg-green-100 text-green-700"
+              : overdue
+                ? "bg-red-100 text-red-700"
+                : pardoned
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-gray-100 text-gray-600";
+            const chipLabel = done ? t("home.status_done", locale) : overdue ? t("home.status_overdue", locale) : pardoned ? t("home.status_pardoned", locale) : t("home.status_pending", locale);
             return (
               <div
                 key={c.id}
@@ -142,8 +150,8 @@ export default async function ChildDetailPage({
                 <span className={done ? "text-muted-foreground line-through" : ""}>
                   {c.title}
                 </span>
-                <span className={`text-xs font-medium ${done ? "text-green-600" : overdue ? "text-red-600" : pardoned ? "text-yellow-600" : "text-muted-foreground"}`}>
-                  {done ? t("home.status_done", locale) : overdue ? t("home.status_overdue", locale) : pardoned ? t("home.status_pardoned", locale) : t("home.status_pending", locale)}
+                <span className={`shrink-0 ml-3 rounded-full px-2.5 py-0.5 text-xs font-medium ${chipClass}`}>
+                  {chipLabel}
                 </span>
               </div>
             );
