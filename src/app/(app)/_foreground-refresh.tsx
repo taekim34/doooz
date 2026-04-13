@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { now } from "@/lib/datetime/clock";
+import { useLoading } from "./_navigation-loading";
 
 function isIOSStandalone() {
   if (typeof window === "undefined") return false;
@@ -14,17 +15,17 @@ function isIOSStandalone() {
 
 export function ForegroundRefresh() {
   const router = useRouter();
+  const { show, hide } = useLoading();
   const lastActive = useRef(now());
-  const [refreshing, setRefreshing] = useState(false);
   const [pullY, setPullY] = useState(0);
   const touchStartY = useRef(0);
   const pulling = useRef(false);
 
   const doRefresh = useCallback(() => {
-    setRefreshing(true);
+    show();
     router.refresh();
-    setTimeout(() => setRefreshing(false), 800);
-  }, [router]);
+    setTimeout(hide, 800);
+  }, [router, show, hide]);
 
   // Foreground restore
   useEffect(() => {
@@ -97,35 +98,22 @@ export function ForegroundRefresh() {
     };
   }, [doRefresh, pullY]);
 
+  // Pull indicator only (overlay is handled by NavigationLoading)
+  if (pullY <= 0) return null;
   return (
-    <>
-      {/* Pull indicator (iOS standalone only) */}
-      {pullY > 0 && (
-        <div
-          className="fixed left-0 right-0 top-0 z-50 flex justify-center"
-          style={{ transform: `translateY(${pullY - 40}px)` }}
+    <div
+      className="fixed left-0 right-0 top-0 z-50 flex justify-center"
+      style={{ transform: `translateY(${pullY - 40}px)` }}
+    >
+      <div className="rounded-full bg-primary/20 p-2">
+        <svg
+          className="h-5 w-5 text-primary"
+          style={{ transform: `rotate(${Math.min(pullY * 3, 360)}deg)` }}
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
         >
-          <div className="rounded-full bg-primary/20 p-2">
-            <svg
-              className="h-5 w-5 text-primary"
-              style={{ transform: `rotate(${Math.min(pullY * 3, 360)}deg)` }}
-              viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-            >
-              <path d="M21 12a9 9 0 1 1-6.22-8.56" />
-            </svg>
-          </div>
-        </div>
-      )}
-      {/* Refresh indicator */}
-      {refreshing && (
-        <div className="fixed left-0 right-0 top-0 z-50 flex justify-center pt-2">
-          <div className="animate-spin rounded-full bg-background p-2 shadow-md">
-            <svg className="h-4 w-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 12a9 9 0 1 1-6.22-8.56" />
-            </svg>
-          </div>
-        </div>
-      )}
-    </>
+          <path d="M21 12a9 9 0 1 1-6.22-8.56" />
+        </svg>
+      </div>
+    </div>
   );
 }

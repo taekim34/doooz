@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import { requireUser } from "@/features/auth/current-user";
 import { AppNav } from "./_nav";
 import { PushSubscriber } from "./_push-subscriber";
 import { ForegroundRefresh } from "./_foreground-refresh";
+import { NavigationLoading } from "./_navigation-loading";
 import { LocaleProvider } from "@/lib/i18n/context";
 import type { Locale } from "@/lib/i18n";
 
@@ -11,12 +13,16 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <LocaleProvider locale={locale}>
-      <div className="flex min-h-screen flex-col md:flex-row">
-        <AppNav role={user.role} userName={user.display_name} familyName={family.name} locale={locale} />
-        <main className="flex-1 p-4 pb-24 md:p-8 md:pb-8">{children}</main>
-        <PushSubscriber />
-        <ForegroundRefresh />
-      </div>
+      <Suspense>
+        <NavigationLoading>
+          <div className="flex min-h-screen flex-col md:flex-row">
+            <AppNav role={user.role} userName={user.display_name} familyName={family.name} locale={locale} />
+            <main className="flex-1 p-4 pb-24 md:p-8 md:pb-8">{children}</main>
+            <PushSubscriber />
+            <ForegroundRefresh />
+          </div>
+        </NavigationLoading>
+      </Suspense>
     </LocaleProvider>
   );
 }
