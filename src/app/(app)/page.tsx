@@ -4,9 +4,8 @@ import { characterEmoji } from "@/features/characters/emoji-map";
 import { getStage, progressToNextLevel } from "@/lib/level";
 import { familyToday } from "@/lib/datetime/family-tz";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { t, type Locale } from "@/lib/i18n";
-
+import { TaskCheckbox } from "./tasks/_checkbox";
 import Link from "next/link";
 import type { Route } from "next";
 
@@ -100,32 +99,17 @@ export default async function HomePage() {
             {todayOnly.length === 0 && (
               <p className="text-sm text-muted-foreground">{t("home.no_tasks", locale)}</p>
             )}
-            {todayOnly.map((c) => {
-              const isBeg = c.template_id === null;
-              const done = c.status === "completed";
-              const rejected = c.status === "rejected";
-              const chipClass = done
-                ? "bg-green-100 text-green-700"
-                : rejected
-                  ? "bg-red-100 text-red-700"
-                  : "bg-gray-100 text-gray-600";
-              const chipLabel = isBeg
-                ? (done ? t("home.beg_success", locale) : rejected ? t("home.beg_failed", locale) : t("home.status_pending", locale))
-                : (done ? t("home.status_done", locale) : t("home.status_pending", locale));
-              return (
-                <div
-                  key={c.id}
-                  className="flex items-center justify-between rounded-md border p-3"
-                >
-                  <span className={done ? "text-muted-foreground line-through" : ""}>
-                    {c.title}
-                  </span>
-                  <span className={`shrink-0 ml-3 rounded-full px-2.5 py-0.5 text-xs font-medium ${chipClass}`}>
-                    {chipLabel}
-                  </span>
-                </div>
-              );
-            })}
+            {todayOnly.map((c) => (
+              <TaskCheckbox
+                key={c.id}
+                id={c.id}
+                title={c.title}
+                points={c.points}
+                status={c.status}
+                readOnly
+                isBeg={c.template_id === null}
+              />
+            ))}
           </CardContent>
         </Card>
 
@@ -240,38 +224,17 @@ export default async function HomePage() {
               {kidTasks.length === 0 && (
                 <p className="text-sm text-muted-foreground">{t("home.no_tasks", locale)}</p>
               )}
-              {kidTasks.map((c) => {
-                const isBeg = c.template_id === null;
-                const done = c.status === "completed";
-                const rejected = c.status === "rejected";
-                const requested = c.status === "requested";
-                const overdue = c.status === "overdue";
-                const chipClass = done
-                  ? "bg-green-100 text-green-700"
-                  : rejected
-                    ? "bg-red-100 text-red-700"
-                    : requested
-                      ? "bg-yellow-100 text-yellow-700"
-                      : overdue
-                        ? "bg-red-100 text-red-700"
-                        : "bg-gray-100 text-gray-600";
-                const chipLabel = isBeg
-                  ? (done ? t("home.beg_success", locale) : rejected ? t("home.beg_failed", locale) : requested ? t("home.beg_waiting", locale) : t("home.status_pending", locale))
-                  : (done ? t("home.status_done", locale) : overdue ? t("home.status_overdue", locale) : t("home.status_pending", locale));
-                return (
-                  <div
-                    key={c.id}
-                    className="flex items-center justify-between rounded-md px-3 py-2 text-sm"
-                  >
-                    <span className={done ? "text-muted-foreground line-through" : ""}>
-                      {c.title}
-                    </span>
-                    <span className={`shrink-0 ml-3 rounded-full px-2.5 py-0.5 text-xs font-medium ${chipClass}`}>
-                      {chipLabel}
-                    </span>
-                  </div>
-                );
-              })}
+              {kidTasks.map((c) => (
+                <TaskCheckbox
+                  key={c.id}
+                  id={c.id}
+                  title={c.title}
+                  points={c.points}
+                  status={c.status}
+                  readOnly
+                  isBeg={c.template_id === null}
+                />
+              ))}
             </CardContent>
           </Card>
         );

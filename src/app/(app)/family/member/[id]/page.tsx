@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BackButton } from "@/components/ui/back-button";
 import { StageProgress } from "@/app/(app)/characters/_stage-progress";
+import { TaskCheckbox } from "@/app/(app)/tasks/_checkbox";
 import { t, type Locale } from "@/lib/i18n";
 
 interface MemberRow {
@@ -184,32 +185,17 @@ export default async function MemberDetailPage({
             <CardTitle>{t("home.today_tasks", locale)}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-1 text-sm">
-            {taskList.map((c) => {
-              const isBeg = c.template_id === null;
-              const done = c.status === "completed";
-              const overdue = c.status === "overdue";
-              const pardoned = c.status === "pardoned";
-              const chipClass = done
-                ? "bg-green-100 text-green-700"
-                : overdue
-                  ? "bg-red-100 text-red-700"
-                  : pardoned
-                    ? "bg-yellow-100 text-yellow-700"
-                    : "bg-gray-100 text-gray-600";
-              const chipLabel = isBeg
-                ? (done ? t("home.beg_success", locale) : t("home.status_pending", locale))
-                : (done ? t("home.status_done", locale) : overdue ? t("home.status_overdue", locale) : pardoned ? t("home.status_pardoned", locale) : t("home.status_pending", locale));
-              return (
-                <div key={c.id} className="flex items-center justify-between border-b py-1 last:border-0">
-                  <span className={done ? "text-muted-foreground line-through" : ""}>
-                    {c.title}
-                  </span>
-                  <span className={`shrink-0 ml-3 rounded-full px-2.5 py-0.5 text-xs font-medium ${chipClass}`}>
-                    {chipLabel}
-                  </span>
-                </div>
-              );
-            })}
+            {taskList.map((c) => (
+              <TaskCheckbox
+                key={c.id}
+                id={c.id}
+                title={c.title}
+                points={c.points}
+                status={c.status}
+                readOnly
+                isBeg={c.template_id === null}
+              />
+            ))}
           </CardContent>
         </Card>
       )}
