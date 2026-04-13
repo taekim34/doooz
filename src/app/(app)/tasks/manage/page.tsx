@@ -95,6 +95,24 @@ async function deleteAction(formData: FormData) {
   revalidatePath("/tasks/manage");
 }
 
+async function permanentDeleteAction(formData: FormData) {
+  "use server";
+  const id = String(formData.get("id") || "");
+  const supabase = await createClient();
+  const {
+    data: { user: authUser },
+  } = await supabase.auth.getUser();
+  if (!authUser) redirect("/login");
+  const { data: me } = await supabase
+    .from("users")
+    .select("role")
+    .eq("id", authUser.id)
+    .single();
+  if (!me || me.role !== "parent") redirect("/tasks");
+  await supabase.from("task_templates").delete().eq("id", id).eq("active", false);
+  revalidatePath("/tasks/manage");
+}
+
 type RawTemplate = {
   id: string;
   title: string;
@@ -154,7 +172,7 @@ export default async function TaskManagePage() {
     return parsed.success && parsed.data.kind === "weekly";
   }
 
-  function renderChildTemplates(templates: RawTemplate[], showDelete: boolean) {
+  function renderChildTemplates(templates: RawTemplate[], showDelete: boolean, showPermanentDelete: boolean = false) {
     const recurring = templates.filter(isRecurring);
     const once = templates.filter((t) => !isRecurring(t));
     return (
@@ -177,6 +195,7 @@ export default async function TaskManagePage() {
                 }}
                 assignees={kidList.map((k) => ({ id: k.id, display_name: k.display_name }))}
                 deleteAction={showDelete ? deleteAction : undefined}
+                permanentDeleteAction={showPermanentDelete ? permanentDeleteAction : undefined}
               />
             ))}
           </div>
@@ -199,6 +218,7 @@ export default async function TaskManagePage() {
                 }}
                 assignees={kidList.map((k) => ({ id: k.id, display_name: k.display_name }))}
                 deleteAction={showDelete ? deleteAction : undefined}
+                permanentDeleteAction={showPermanentDelete ? permanentDeleteAction : undefined}
               />
             ))}
           </div>
@@ -261,7 +281,7 @@ export default async function TaskManagePage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {renderChildTemplates(mine, false)}
+                  {renderChildTemplates(mine, false, true)}
                 </CardContent>
               </Card>
             );

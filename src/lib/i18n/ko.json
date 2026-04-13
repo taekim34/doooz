@@ -101,6 +101,8 @@
   "tasks.custom_input": "직접입력",
   "tasks.deadline_label": "종료일 (이 날짜까지 하면 됨)",
   "tasks.delete": "삭제",
+  "tasks.permanent_delete": "완전 삭제",
+  "tasks.permanent_delete_confirm": "정말 완전히 삭제할까요? 되돌릴 수 없습니다.",
   "tasks.deselect_all": "전체 해제",
   "tasks.edit": "수정",
   "tasks.end_date": "종료일 (선택)",

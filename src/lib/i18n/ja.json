@@ -101,6 +101,8 @@
   "tasks.custom_input": "直接入力",
   "tasks.deadline_label": "期限（この日までにやればOK）",
   "tasks.delete": "削除",
+  "tasks.permanent_delete": "完全削除",
+  "tasks.permanent_delete_confirm": "完全に削除しますか？元に戻せません。",
   "tasks.deselect_all": "全解除",
   "tasks.edit": "編集",
   "tasks.end_date": "終了日（任意）",

@@ -155,6 +155,30 @@ export function TaskCheckbox({
     return <span className="text-sm font-semibold">+{points}</span>;
   })();
 
+  // Read-only: chip-style label, no interactive elements
+  if (readOnly) {
+    const chipClass = isDone
+      ? "bg-green-100 text-green-700"
+      : isRejected
+        ? "bg-red-100 text-red-700"
+        : isOverdue
+          ? "bg-red-100 text-red-700"
+          : isPardoned
+            ? "bg-yellow-100 text-yellow-700"
+            : "bg-gray-100 text-gray-600";
+    const chipLabel = isBeg
+      ? (isDone ? t("tasks.beg_success") : isRejected ? t("tasks.beg_failed") : t("home.status_pending"))
+      : (isDone ? t("home.status_done") : isOverdue ? t("home.status_overdue") : isPardoned ? t("home.status_pardoned") : t("home.status_pending"));
+    return (
+      <div className="flex items-center justify-between rounded-md border p-3">
+        <span className={`truncate ${isDone ? "text-muted-foreground line-through" : ""}`}>{title}</span>
+        <span className={`shrink-0 ml-3 rounded-full px-2.5 py-0.5 text-xs font-medium ${chipClass}`}>
+          {chipLabel}
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`flex w-full items-center justify-between gap-2 rounded-md border p-3 text-left ${

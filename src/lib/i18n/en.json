@@ -101,6 +101,8 @@
   "tasks.custom_input": "Custom",
   "tasks.deadline_label": "Deadline (finish by this date)",
   "tasks.delete": "Delete",
+  "tasks.permanent_delete": "Permanently Delete",
+  "tasks.permanent_delete_confirm": "Permanently delete this task? This cannot be undone.",
   "tasks.deselect_all": "Deselect all",
   "tasks.edit": "Edit",
   "tasks.end_date": "End date (optional)",

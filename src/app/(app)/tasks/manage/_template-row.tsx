@@ -31,9 +31,10 @@ type Props = {
   template: TemplateRowData;
   assignees: TemplateRowKid[];
   deleteAction?: (formData: FormData) => Promise<void>;
+  permanentDeleteAction?: (formData: FormData) => Promise<void>;
 };
 
-export function TemplateRow({ template, assignees, deleteAction }: Props) {
+export function TemplateRow({ template, assignees, deleteAction, permanentDeleteAction }: Props) {
   const t = useT();
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(template.title);
@@ -73,6 +74,19 @@ export function TemplateRow({ template, assignees, deleteAction }: Props) {
               <input type="hidden" name="id" value={template.id} />
               <Button type="submit" variant="destructive" size="sm" disabled={isPending}>
                 {t("tasks.delete")}
+              </Button>
+            </form>
+          )}
+          {permanentDeleteAction && (
+            <form
+              action={(fd) => {
+                if (!confirm(t("tasks.permanent_delete_confirm"))) return;
+                startTransition(() => permanentDeleteAction(fd));
+              }}
+            >
+              <input type="hidden" name="id" value={template.id} />
+              <Button type="submit" variant="destructive" size="sm" disabled={isPending}>
+                {t("tasks.permanent_delete")}
               </Button>
             </form>
           )}
