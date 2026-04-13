@@ -1,6 +1,6 @@
 /**
  * Level calculator
- * Thresholds from spec v2 §1 #2 (x5 inflation, 20 levels).
+ * Thresholds from spec v2 §1 #2 (x5 inflation, 30 levels).
  * Keep in sync with any SQL `calculate_level` if present.
  */
 
@@ -37,38 +37,8 @@ export const LEVEL_THRESHOLDS: readonly number[] = [
   1_000_000, // L30
 ] as const;
 
-export const LEVEL_TITLES: readonly string[] = [
-  "새싹",
-  "풀잎",
-  "꽃봉오리",
-  "묘목",
-  "나무",
-  "숲",
-  "산",
-  "구름",
-  "별",
-  "유성",
-  "혜성",
-  "은하",
-  "성운",
-  "우주",
-  "영원",
-  "전설",
-  "신화",
-  "영웅",
-  "거인",
-  "불멸",
-  "불사조",
-  "용",
-  "천상",
-  "성좌",
-  "영겁",
-  "신성",
-  "지고",
-  "무한",
-  "궁극",
-  "초월",
-] as const;
+/** @deprecated Use getLevelTitle(level, locale) with i18n keys instead */
+export const LEVEL_TITLES: readonly string[] = [] as const;
 
 export const MAX_LEVEL = LEVEL_THRESHOLDS.length;
 
@@ -101,10 +71,12 @@ export function getStage(level: number): CharacterStage {
 
 /**
  * Human-readable title for a level (1-indexed).
+ * Reads from i18n keys: "level.title_1" ... "level.title_30"
  */
-export function getLevelTitle(level: number): string {
-  const idx = Math.max(1, Math.min(MAX_LEVEL, level)) - 1;
-  return LEVEL_TITLES[idx] ?? "";
+export function getLevelTitle(level: number, tFn?: (key: string) => string): string {
+  const clamped = Math.max(1, Math.min(MAX_LEVEL, level));
+  if (tFn) return tFn(`level.title_${clamped}`);
+  return `L${clamped}`;
 }
 
 /**

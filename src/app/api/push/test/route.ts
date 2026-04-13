@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { sendPushToUsers } from "@/lib/push/send";
+import { apiError } from "@/lib/api-error";
 
 /**
  * POST /api/push/test
@@ -11,7 +12,7 @@ export async function POST() {
   const {
     data: { user: authUser },
   } = await supabase.auth.getUser();
-  if (!authUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!authUser) return apiError(401, "unauthorized");
 
   await sendPushToUsers([authUser.id], {
     title: "테스트 푸시 🔔",

@@ -23,11 +23,11 @@ describe("assertBalanceMatchesLedger", () => {
     expect(() => assertBalanceMatchesLedger({ current_balance: 0, lifetime_earned: 0 }, [])).not.toThrow();
   });
 
-  it("passes on a single chore_reward credit", () => {
+  it("passes on a single task_reward credit", () => {
     expect(() =>
       assertBalanceMatchesLedger(
         { current_balance: 10, lifetime_earned: 10 },
-        [{ amount: 10, kind: "chore_reward" }],
+        [{ amount: 10, kind: "task_reward" }],
       ),
     ).not.toThrow();
   });
@@ -37,7 +37,7 @@ describe("assertBalanceMatchesLedger", () => {
       assertBalanceMatchesLedger(
         { current_balance: 50, lifetime_earned: 100 },
         [
-          { amount: 100, kind: "chore_reward" },
+          { amount: 100, kind: "task_reward" },
           { amount: -50, kind: "redemption" },
         ],
       ),
@@ -45,7 +45,7 @@ describe("assertBalanceMatchesLedger", () => {
   });
 
   it("passes on mixed 100-tx sequence", () => {
-    const txs: { amount: number; kind: "chore_reward" | "redemption" | "bonus" | "penalty" | "adjustment" }[] = [];
+    const txs: { amount: number; kind: "task_reward" | "redemption" | "bonus" | "penalty" | "adjustment" }[] = [];
     let balance = 0;
     let lifetime = 0;
     for (let i = 0; i < 100; i++) {
@@ -57,7 +57,7 @@ describe("assertBalanceMatchesLedger", () => {
         balance += 50;
         lifetime += 50;
       } else {
-        txs.push({ amount: 10, kind: "chore_reward" });
+        txs.push({ amount: 10, kind: "task_reward" });
         balance += 10;
         lifetime += 10;
       }
@@ -71,7 +71,7 @@ describe("assertBalanceMatchesLedger", () => {
     expect(() =>
       assertBalanceMatchesLedger(
         { current_balance: 99, lifetime_earned: 10 },
-        [{ amount: 10, kind: "chore_reward" }],
+        [{ amount: 10, kind: "task_reward" }],
       ),
     ).toThrow(/I1/);
   });
@@ -81,7 +81,7 @@ describe("assertBalanceMatchesLedger", () => {
       assertBalanceMatchesLedger(
         { current_balance: 50, lifetime_earned: 150 },
         [
-          { amount: 100, kind: "chore_reward" },
+          { amount: 100, kind: "task_reward" },
           { amount: -50, kind: "redemption" },
         ],
       ),

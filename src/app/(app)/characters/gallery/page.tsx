@@ -30,8 +30,8 @@ async function switchCharacter(formData: FormData) {
     .select("level, role")
     .eq("id", authUser.id)
     .single();
-  if (!me || (me as { role: string }).role !== "child") return;
-  if ((me as { level: number }).level < (char as { unlock_level: number }).unlock_level) return;
+  if (!me || me.role !== "child") return;
+  if (me.level < char.unlock_level) return;
 
   await supabase
     .from("users")
@@ -45,7 +45,7 @@ async function switchCharacter(formData: FormData) {
 
 export default async function GalleryPage() {
   const { user, family } = await requireUser();
-  const locale = ((family as unknown as { locale?: string }).locale as Locale) || "ko";
+  const locale = (family.locale || "ko") as Locale;
   if (user.role === "parent") redirect("/");
   const supabase = await createClient();
   const { data } = await supabase

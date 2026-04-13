@@ -41,7 +41,7 @@ describe("calculateLevel (30 levels)", () => {
   it("MAX_LEVEL matches thresholds length", () => {
     expect(MAX_LEVEL).toBe(30);
     expect(LEVEL_THRESHOLDS.length).toBe(30);
-    expect(LEVEL_TITLES.length).toBe(30);
+    expect(LEVEL_TITLES.length).toBe(0); // deprecated, titles moved to i18n
   });
 });
 
@@ -61,9 +61,9 @@ describe("getStage", () => {
 });
 
 describe("getLevelTitle", () => {
-  it("maps L1 to 새싹 and L30 to 초월", () => {
-    expect(getLevelTitle(1)).toBe("새싹");
-    expect(getLevelTitle(30)).toBe("초월");
+  it("returns fallback without tFn", () => {
+    expect(getLevelTitle(1)).toBe("L1");
+    expect(getLevelTitle(30)).toBe("L30");
   });
 });
 

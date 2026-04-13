@@ -28,7 +28,18 @@ export async function middleware(request: NextRequest) {
   );
 
   // IMPORTANT: call getUser() to force token refresh.
-  await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const pathname = request.nextUrl.pathname;
+  const isPublicPath = pathname.startsWith("/login") ||
+    pathname.startsWith("/signup") ||
+    pathname.startsWith("/join") ||
+    pathname.startsWith("/onboarding") ||
+    pathname.startsWith("/api/cron/");
+
+  if (!user && !isPublicPath) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 
   return response;
 }

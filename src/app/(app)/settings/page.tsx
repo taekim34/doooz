@@ -38,12 +38,12 @@ async function updateFamilyAction(formData: FormData) {
     .select("family_id, role")
     .eq("id", authUser.id)
     .single();
-  if (!me || (me as { role: string }).role !== "parent") redirect("/settings");
+  if (!me || me.role !== "parent") redirect("/settings");
 
   const familyName = String(formData.get("family_name") || "").trim();
   const timezone = String(formData.get("timezone") || "Asia/Seoul");
   const localeVal = String(formData.get("locale") || "ko");
-  const familyId = (me as { family_id: string }).family_id;
+  const familyId = me.family_id;
 
   const { error } = await supabase
     .from("families")
@@ -110,7 +110,7 @@ export default async function SettingsPage({
 }) {
   const sp = await searchParams;
   const { user, family } = await requireUser();
-  const locale = ((family as unknown as { locale?: string }).locale as Locale) || "ko";
+  const locale = (family.locale || "ko") as Locale;
 
   return (
     <div className="mx-auto max-w-md space-y-4">

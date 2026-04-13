@@ -17,7 +17,8 @@ import { getAuthLocale } from "@/lib/i18n/auth-locale";
 
 function syntheticEmail(familyId: string): string {
   const shortId = randomUUID().replace(/-/g, "").slice(0, 10);
-  return `kid-${shortId}@${familyId}.dooooz.kid`;
+  const domain = process.env.NEXT_PUBLIC_SYNTHETIC_EMAIL_DOMAIN || "dooooz.invalid";
+  return `kid-${shortId}@${familyId}.${domain}`;
 }
 
 async function joinAction(formData: FormData) {
@@ -51,7 +52,7 @@ async function joinAction(formData: FormData) {
   if (!fam) redirectWith(t("auth.error_invite_mismatch", locale));
 
   // 2. Create the auth user with a synthetic email, pre-confirmed.
-  const familyId = (fam as { id: string }).id;
+  const familyId = fam!.id;
   const email = syntheticEmail(familyId);
   const { data: created, error: createErr } = await admin.auth.admin.createUser(
     {

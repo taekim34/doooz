@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toast";
 import { RegisterSW } from "./_register-sw";
 
+const DEFAULT_LOCALE = process.env.NEXT_PUBLIC_DEFAULT_LOCALE || "en";
+const LOCALE_COOKIE = process.env.NEXT_PUBLIC_LOCALE_COOKIE || "doooz_locale";
+
 export const metadata: Metadata = {
-  title: "DOOOZ",
-  description: "Family chores, points, and multi-year adventures.",
+  title: process.env.NEXT_PUBLIC_APP_NAME || "DOOOZ",
+  description:
+    process.env.NEXT_PUBLIC_APP_DESCRIPTION ||
+    "Family tasks, points, and multi-year adventures.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "48x48" },
@@ -16,9 +22,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const lang = cookieStore.get(LOCALE_COOKIE)?.value || DEFAULT_LOCALE;
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={lang} suppressHydrationWarning>
       <head>
         <RegisterSW />
       </head>

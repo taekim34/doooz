@@ -7,7 +7,7 @@ import { t, type Locale } from "@/lib/i18n";
 
 export default async function InvitePage() {
   const { user, family } = await requireUser();
-  const locale = ((family as unknown as { locale?: string }).locale as Locale) || "ko";
+  const locale = (family.locale || "ko") as Locale;
   if (user.role !== "parent") redirect("/family");
 
   return (

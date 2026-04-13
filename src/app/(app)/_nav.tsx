@@ -25,7 +25,7 @@ type NavItem = {
 
 const ITEMS: ReadonlyArray<NavItem> = [
   { href: "/" as Route, labelKey: "nav.home", icon: Home },
-  { href: "/chores" as Route, labelKey: "nav.chores", icon: ListChecks },
+  { href: "/tasks" as Route, labelKey: "nav.tasks", icon: ListChecks },
   { href: "/points" as Route, labelKey: "nav.points", icon: Coins },
   { href: "/rewards" as Route, labelKey: "nav.rewards", icon: Gift, roles: ["child"] },
   { href: "/rewards/manage" as Route, labelKey: "nav.rewards", icon: Gift, roles: ["parent"] },

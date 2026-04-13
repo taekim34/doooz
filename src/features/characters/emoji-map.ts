@@ -1,6 +1,6 @@
 /**
- * Emoji placeholders for the 10 characters × 5 evolution stages.
- * Baby (L1-5) → Child (L6-10) → Teen (L11-15) → Hero (L16-20) → Legend (L21-30)
+ * Emoji placeholders for the 12 characters × 5 evolution stages.
+ * Baby (L1-6) → Child (L7-12) → Teen (L13-18) → Hero (L19-24) → Legend (L25-30)
  * Replace with SVG illustrations later (schema unchanged).
  */
 import type { CharacterStage } from "@/lib/level";

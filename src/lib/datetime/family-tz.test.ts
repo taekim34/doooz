@@ -3,7 +3,7 @@ import { familyToday, formatDateInFamilyTz, toFamilyDate } from "./family-tz";
 import { resetClock, setClock } from "./clock";
 
 /**
- * v2 #6 regression: a chore with due_date = 2026-04-11 is still "today" in
+ * v2 #6 regression: a task with due_date = 2026-04-11 is still "today" in
  * Asia/Seoul right up until KST midnight, not UTC midnight or LA midnight.
  */
 describe("family-tz local day boundaries", () => {

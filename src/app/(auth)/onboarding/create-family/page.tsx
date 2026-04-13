@@ -10,13 +10,9 @@ import { getAuthLocale } from "@/lib/i18n/auth-locale";
 
 function generateInviteCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let out = "";
-  for (let i = 0; i < 8; i++) {
-    // eslint-disable-next-line no-restricted-syntax
-    const idx = Math.floor(Math.random() * chars.length);
-    out += chars[idx];
-  }
-  return out;
+  const bytes = new Uint8Array(8);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => chars[b % chars.length]).join("");
 }
 
 async function createFamilyAction(formData: FormData) {
@@ -46,8 +42,7 @@ async function createFamilyAction(formData: FormData) {
     .eq("id", authUser.id)
     .maybeSingle();
   if (existing) {
-    const row = existing as { id: string; character_id: string | null };
-    if (row.character_id) redirect("/");
+    if (existing.character_id) redirect("/");
     redirect("/onboarding/pick-character");
   }
 
@@ -60,7 +55,7 @@ async function createFamilyAction(formData: FormData) {
       .insert({ name, timezone, locale: familyLocale, invite_code: invite })
       .select("id")
       .single();
-    if (!error) family = data as { id: string };
+    if (!error) family = data;
     else if (customCode) redirect(`/onboarding/create-family?error=${encodeURIComponent(t("auth.error_invite_code_taken", locale))}`);
   }
   if (!family) redirect(`/onboarding/create-family?error=${encodeURIComponent(t("auth.error_family_create_failed", locale))}`);
@@ -72,7 +67,7 @@ async function createFamilyAction(formData: FormData) {
     display_name: displayName,
   });
   if (uerr) {
-    redirect(`/onboarding/create-family?error=${encodeURIComponent(uerr.message)}`);
+    redirect(`/onboarding/create-family?error=${encodeURIComponent(t("auth.error_family_create_failed", locale))}`);
   }
 
   redirect("/onboarding/pick-character");

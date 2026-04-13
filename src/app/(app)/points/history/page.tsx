@@ -15,7 +15,7 @@ export default async function PointsHistoryPage({
 }) {
   const sp = await searchParams;
   const { user, family } = await requireUser();
-  const locale = ((family as unknown as Record<string, unknown>).locale as string || "ko") as Locale;
+  const locale = (family.locale || "ko") as Locale;
   const supabase = await createClient();
 
   // Parents may filter by child. Children see only their own.
@@ -110,7 +110,7 @@ export default async function PointsHistoryPage({
             const isPenalty = tx.kind === "penalty";
             const isAdjustment = tx.kind === "adjustment";
             const label =
-              (isPenalty ? t("points.missed_chore", locale) + " · " : "") +
+              (isPenalty ? t("points.missed_task", locale) + " · " : "") +
               (isAdjustment ? t("points.adjustment", locale) + " · " : "") +
               tx.reason;
             const amountClass = isPenalty

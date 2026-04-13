@@ -27,7 +27,7 @@ function fmt(ts: string) {
 
 export default async function RewardRequestsPage() {
   const { user, family } = await requireUser();
-  const locale = ((family as unknown as Record<string, unknown>).locale as string || "ko") as Locale;
+  const locale = (family.locale || "ko") as Locale;
   if (user.role !== "parent") redirect("/rewards");
 
   const supabase = await createClient();

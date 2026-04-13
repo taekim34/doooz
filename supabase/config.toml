@@ -38,6 +38,8 @@ file_size_limit = "50MiB"
 
 [auth]
 enabled = true
+# Replace with your deployment domain (must match NEXT_PUBLIC_SITE_URL in .env).
+# Also update in Supabase Dashboard → Auth → URL Configuration.
 site_url = "https://do-ooz.vercel.app"
 additional_redirect_urls = ["https://do-ooz.vercel.app/**", "http://localhost:3000", "http://127.0.0.1:3000"]
 jwt_expiry = 3600

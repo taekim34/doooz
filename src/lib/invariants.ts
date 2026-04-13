@@ -7,12 +7,12 @@
 
 export const INVARIANTS = {
   I1: "users.current_balance = SUM(point_transactions.amount) per user",
-  I2: "users.lifetime_earned = SUM(amount) WHERE amount > 0 AND kind IN ('chore_reward','bonus')",
+  I2: "users.lifetime_earned = SUM(amount) WHERE amount > 0 AND kind IN ('task_reward','bonus')",
   I3: "balance may be negative after a penalty (relaxed from >= 0)",
-  I4: "At most one point_transactions row with kind='chore_reward' per chore_instance",
+  I4: "At most one point_transactions row with kind='task_reward' per task_instance",
   I5: "Every row's family_id matches the actor's family_id",
   I6: "point_transactions is append-only (no UPDATE / DELETE)",
-  I7: "chore_instances with status='completed' are immutable",
+  I7: "task_instances with status='completed' are immutable",
   I8: "user_badges (user_id, badge_id) is unique",
   I9: "Rank/level/character filter role='child'",
   I10: "All date comparisons use families.timezone via lib/datetime helpers",
@@ -22,7 +22,7 @@ export type InvariantKey = keyof typeof INVARIANTS;
 
 interface LedgerRow {
   amount: number;
-  kind: "chore_reward" | "redemption" | "adjustment" | "bonus" | "penalty";
+  kind: "task_reward" | "redemption" | "adjustment" | "bonus" | "penalty";
 }
 
 interface UserCache {
@@ -39,7 +39,7 @@ export function assertBalanceMatchesLedger(user: UserCache, transactions: Readon
   let lifetime = 0;
   for (const tx of transactions) {
     balance += tx.amount;
-    if (tx.amount > 0 && (tx.kind === "chore_reward" || tx.kind === "bonus")) {
+    if (tx.amount > 0 && (tx.kind === "task_reward" || tx.kind === "bonus")) {
       lifetime += tx.amount;
     }
   }

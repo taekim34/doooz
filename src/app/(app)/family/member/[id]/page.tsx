@@ -47,11 +47,11 @@ export default async function MemberDetailPage({
   const isChild = member.role === "child";
 
   // Parallel queries
-  const [choresRes, txsRes, badgesRes, statsRes] = await Promise.all([
-    // Today's chores (child only)
+  const [tasksRes, txsRes, badgesRes, statsRes] = await Promise.all([
+    // Today's tasks (child only)
     isChild
       ? supabase
-          .from("chore_instances")
+          .from("task_instances")
           .select("id, title, points, status, template_id")
           .eq("assignee_id", member.id)
           .eq("due_date", today)
@@ -74,7 +74,7 @@ export default async function MemberDetailPage({
     // Stats: total completed, total days
     isChild
       ? supabase
-          .from("chore_instances")
+          .from("task_instances")
           .select("id, status, due_date")
           .eq("assignee_id", member.id)
           .eq("status", "completed")
@@ -82,7 +82,7 @@ export default async function MemberDetailPage({
       : { data: null },
   ]);
 
-  const choreList = (choresRes.data ?? []) as Array<{
+  const taskList = (tasksRes.data ?? []) as Array<{
     id: string; title: string; points: number; status: string; template_id: string | null;
   }>;
   const txList = (txsRes.data ?? []) as Array<{
@@ -91,11 +91,11 @@ export default async function MemberDetailPage({
   const badges = (badgesRes.data ?? []) as Array<{
     badge_id: string; badges: { name: string; icon: string | null } | null;
   }>;
-  const completedChores = (statsRes.data ?? []) as Array<{ id: string; due_date: string }>;
+  const completedTasks = (statsRes.data ?? []) as Array<{ id: string; due_date: string }>;
 
   // Stats
-  const totalCompleted = completedChores.length;
-  const activeDays = new Set(completedChores.map((c) => c.due_date)).size;
+  const totalCompleted = completedTasks.length;
+  const activeDays = new Set(completedTasks.map((c) => c.due_date)).size;
   const joinDate = member.created_at.slice(0, 10);
 
   return (
@@ -113,7 +113,7 @@ export default async function MemberDetailPage({
                 {member.role === "parent" ? t("family.role_parent", locale) : t("family.role_child", locale)}
               </div>
               <div className="text-lg font-semibold mt-1">
-                Lv.{member.level} · {getLevelTitle(member.level)}
+                Lv.{member.level} · {getLevelTitle(member.level, (k) => t(k, locale))}
               </div>
               <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
                 <div
@@ -158,7 +158,7 @@ export default async function MemberDetailPage({
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold">{totalCompleted}</div>
-              <div className="text-xs text-muted-foreground">{t("chores.completed", locale)}</div>
+              <div className="text-xs text-muted-foreground">{t("tasks.completed", locale)}</div>
             </CardContent>
           </Card>
           <Card>
@@ -176,14 +176,14 @@ export default async function MemberDetailPage({
         </div>
       )}
 
-      {/* Today's chores (child only) */}
-      {isChild && choreList.length > 0 && (
+      {/* Today's tasks (child only) */}
+      {isChild && taskList.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>{t("home.today_chores", locale)}</CardTitle>
+            <CardTitle>{t("home.today_tasks", locale)}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-1 text-sm">
-            {choreList.map((c) => {
+            {taskList.map((c) => {
               const isBeg = c.template_id === null;
               return (
                 <div key={c.id} className="flex items-center justify-between border-b py-1 last:border-0">
@@ -191,7 +191,7 @@ export default async function MemberDetailPage({
                     {c.status === "completed" ? (isBeg ? "🎉" : "✅") : c.status === "overdue" ? "😢" : "⬜"}{" "}
                     {c.title}
                     {isBeg && c.status === "completed" && (
-                      <span className="ml-1 text-[10px] text-green-600">{t("chores.beg_success", locale)}</span>
+                      <span className="ml-1 text-[10px] text-green-600">{t("tasks.beg_success", locale)}</span>
                     )}
                   </span>
                   <Badge variant="secondary">{c.points > 0 ? `+${c.points}` : "-"}</Badge>

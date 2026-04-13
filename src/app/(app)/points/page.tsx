@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default async function PointsPage() {
   const { user, family } = await requireUser();
-  const locale = ((family as unknown as Record<string, unknown>).locale as string || "ko") as Locale;
+  const locale = (family.locale || "ko") as Locale;
   const supabase = await createClient();
 
   const { data: txs } = await supabase

@@ -8,7 +8,7 @@ import { t, type Locale } from "@/lib/i18n";
 
 export default async function FamilyPage() {
   const { user, family } = await requireUser();
-  const locale = ((family as unknown as { locale?: string }).locale as Locale) || "ko";
+  const locale = (family.locale || "ko") as Locale;
   const supabase = await createClient();
   const { data } = await supabase
     .from("users")

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const pointKindSchema = z.enum([
-  "chore_reward",
+  "task_reward",
   "redemption",
   "adjustment",
   "bonus",
@@ -15,7 +15,7 @@ export const pointTransactionSchema = z.object({
   amount: z.number().int(),
   kind: pointKindSchema,
   reason: z.string().min(1).max(200),
-  related_chore_id: z.string().uuid().nullable().optional(),
+  related_task_id: z.string().uuid().nullable().optional(),
   actor_id: z.string().uuid(),
 });
 

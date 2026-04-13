@@ -2,11 +2,11 @@ import { describe, expect, it } from "vitest";
 import { createFamilyInputSchema, joinFamilyInputSchema, familySchema } from "./family";
 import { createUserInputSchema, userSchema, userRoleSchema } from "./user";
 import {
-  choreTemplateInputSchema,
-  choreInstanceSchema,
+  taskTemplateInputSchema,
+  taskInstanceSchema,
   recurrenceSchema,
-  choreStatusSchema,
-} from "./chore";
+  taskStatusSchema,
+} from "./task";
 import { redeemInputSchema, pointTransactionSchema, pointKindSchema } from "./point";
 import { rewardInputSchema, rewardSchema } from "./reward";
 import { badgeSchema, badgeRuleTypeSchema } from "./badge";
@@ -96,7 +96,7 @@ describe("user schemas", () => {
   });
 });
 
-describe("chore schemas (v2)", () => {
+describe("task schemas (v2)", () => {
   const base = {
     assignee_id: UUID,
     title: "Dishes",
@@ -106,12 +106,12 @@ describe("chore schemas (v2)", () => {
   };
 
   it("accepts a valid weekly template input", () => {
-    expect(choreTemplateInputSchema.safeParse(base).success).toBe(true);
+    expect(taskTemplateInputSchema.safeParse(base).success).toBe(true);
   });
 
   it("accepts a valid once template input", () => {
     expect(
-      choreTemplateInputSchema.safeParse({
+      taskTemplateInputSchema.safeParse({
         ...base,
         recurrence: { kind: "once", due_date: "2026-04-20" },
       }).success,
@@ -119,27 +119,27 @@ describe("chore schemas (v2)", () => {
   });
 
   it("rejects points < 1", () => {
-    expect(choreTemplateInputSchema.safeParse({ ...base, points: 0 }).success).toBe(false);
+    expect(taskTemplateInputSchema.safeParse({ ...base, points: 0 }).success).toBe(false);
   });
 
   it("accepts points up to 10000", () => {
-    expect(choreTemplateInputSchema.safeParse({ ...base, points: 10000 }).success).toBe(true);
+    expect(taskTemplateInputSchema.safeParse({ ...base, points: 10000 }).success).toBe(true);
   });
 
   it("rejects points > 10000", () => {
-    expect(choreTemplateInputSchema.safeParse({ ...base, points: 10001 }).success).toBe(false);
+    expect(taskTemplateInputSchema.safeParse({ ...base, points: 10001 }).success).toBe(false);
   });
 
   it("rejects empty title", () => {
-    expect(choreTemplateInputSchema.safeParse({ ...base, title: "" }).success).toBe(false);
+    expect(taskTemplateInputSchema.safeParse({ ...base, title: "" }).success).toBe(false);
   });
 
   it("rejects over-length title", () => {
-    expect(choreTemplateInputSchema.safeParse({ ...base, title: "x".repeat(81) }).success).toBe(false);
+    expect(taskTemplateInputSchema.safeParse({ ...base, title: "x".repeat(81) }).success).toBe(false);
   });
 
   it("rejects end_date before start_date", () => {
-    const r = choreTemplateInputSchema.safeParse({
+    const r = taskTemplateInputSchema.safeParse({
       ...base,
       start_date: "2026-04-11",
       end_date: "2026-04-10",
@@ -148,7 +148,7 @@ describe("chore schemas (v2)", () => {
   });
 
   it("accepts end_date == start_date", () => {
-    const r = choreTemplateInputSchema.safeParse({
+    const r = taskTemplateInputSchema.safeParse({
       ...base,
       end_date: "2026-04-11",
     });
@@ -157,7 +157,7 @@ describe("chore schemas (v2)", () => {
 
   it("recurrence weekly requires at least one day", () => {
     expect(
-      choreTemplateInputSchema.safeParse({
+      taskTemplateInputSchema.safeParse({
         ...base,
         recurrence: { kind: "weekly", days: [] },
       }).success,
@@ -185,16 +185,16 @@ describe("chore schemas (v2)", () => {
     ).toBe(false);
   });
 
-  it("choreStatus includes pardoned + overdue", () => {
-    expect(choreStatusSchema.safeParse("pending").success).toBe(true);
-    expect(choreStatusSchema.safeParse("pardoned").success).toBe(true);
-    expect(choreStatusSchema.safeParse("overdue").success).toBe(true);
-    expect(choreStatusSchema.safeParse("done").success).toBe(false);
+  it("taskStatus includes pardoned + overdue", () => {
+    expect(taskStatusSchema.safeParse("pending").success).toBe(true);
+    expect(taskStatusSchema.safeParse("pardoned").success).toBe(true);
+    expect(taskStatusSchema.safeParse("overdue").success).toBe(true);
+    expect(taskStatusSchema.safeParse("done").success).toBe(false);
   });
 
-  it("choreInstanceSchema validates full row", () => {
+  it("taskInstanceSchema validates full row", () => {
     expect(
-      choreInstanceSchema.safeParse({
+      taskInstanceSchema.safeParse({
         id: UUID,
         family_id: UUID2,
         template_id: null,
@@ -210,7 +210,7 @@ describe("chore schemas (v2)", () => {
 
 describe("point schemas", () => {
   it("pointKind accepts 5 enums", () => {
-    expect(pointKindSchema.safeParse("chore_reward").success).toBe(true);
+    expect(pointKindSchema.safeParse("task_reward").success).toBe(true);
     expect(pointKindSchema.safeParse("redemption").success).toBe(true);
     expect(pointKindSchema.safeParse("adjustment").success).toBe(true);
     expect(pointKindSchema.safeParse("bonus").success).toBe(true);

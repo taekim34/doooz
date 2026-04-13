@@ -2,6 +2,9 @@
 import { useRouter } from "next/navigation";
 import type { Locale } from "@/lib/i18n";
 
+const LOCALE_COOKIE =
+  process.env.NEXT_PUBLIC_LOCALE_COOKIE || "doooz_locale";
+
 const LOCALE_LABELS: Record<Locale, string> = {
   ko: "🇰🇷",
   ja: "🇯🇵",
@@ -13,7 +16,7 @@ export function AuthLocaleSwitcher({ current }: { current: Locale }) {
 
   function onChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const val = e.target.value;
-    document.cookie = `doooz_locale=${val};path=/;max-age=31536000`;
+    document.cookie = `${LOCALE_COOKIE}=${val};path=/;max-age=31536000`;
     router.refresh();
   }
 

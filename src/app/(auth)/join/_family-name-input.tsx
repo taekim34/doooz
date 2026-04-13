@@ -2,7 +2,8 @@
 import { useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 
-const STORAGE_KEY = "doooz_family_name";
+const STORAGE_KEY =
+  process.env.NEXT_PUBLIC_FAMILY_STORAGE_KEY || "doooz_family_name";
 
 export function FamilyNameInput({ defaultValue }: { defaultValue?: string }) {
   const ref = useRef<HTMLInputElement>(null);

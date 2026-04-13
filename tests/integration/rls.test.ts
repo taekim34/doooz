@@ -167,11 +167,11 @@ describe.skipIf(!runSuite)("RLS integration (Supabase local)", () => {
       }),
     },
     {
-      name: "chore_templates",
+      name: "task_templates",
       insert: (familyId, c) => ({
         family_id: familyId,
         assignee_id: c.childBUser.id,
-        title: "evil chore",
+        title: "evil task",
         points: 10,
         recurrence: { kind: "weekly", days: [0, 1, 2, 3, 4, 5, 6] },
         start_date: new Date().toISOString().slice(0, 10),
@@ -180,7 +180,7 @@ describe.skipIf(!runSuite)("RLS integration (Supabase local)", () => {
       }),
     },
     {
-      name: "chore_instances",
+      name: "task_instances",
       insert: (familyId, c) => ({
         family_id: familyId,
         assignee_id: c.childBUser.id,
@@ -208,17 +208,6 @@ describe.skipIf(!runSuite)("RLS integration (Supabase local)", () => {
         title: "Evil reward",
         cost: 10,
         active: true,
-      }),
-    },
-    {
-      name: "goals",
-      insert: (familyId, c) => ({
-        family_id: familyId,
-        assignee_id: c.childBUser.id,
-        title: "Evil goal",
-        goal_type: "manual",
-        reward_points: 10,
-        status: "active",
       }),
     },
     {
@@ -303,13 +292,13 @@ describe.skipIf(!runSuite)("RLS integration (Supabase local)", () => {
   });
 
   // ------------------------------------------------------------------
-  // I7 — completed chore_instance is immutable
+  // I7 — completed task_instance is immutable
   // ------------------------------------------------------------------
   it("I7: UPDATE after completion is rejected by trigger", async () => {
     const c = ctx as Ctx;
     const today = new Date().toISOString().slice(0, 10);
     const { data: inst, error: insErr } = await c.admin
-      .from("chore_instances")
+      .from("task_instances")
       .insert({
         family_id: c.familyA,
         assignee_id: c.childAUser.id,
@@ -328,7 +317,7 @@ describe.skipIf(!runSuite)("RLS integration (Supabase local)", () => {
       c.childAUser.email!,
       "TestPass123!",
     );
-    const { error: rpcErr } = await childClient.rpc("complete_chore", {
+    const { error: rpcErr } = await childClient.rpc("complete_task", {
       p_instance_id: inst!.id,
       p_actor_id: c.childAUser.id,
     });
@@ -336,7 +325,7 @@ describe.skipIf(!runSuite)("RLS integration (Supabase local)", () => {
 
     // Now attempt to mutate the completed row — trigger must block it.
     const { error: updErr } = await c.parentA
-      .from("chore_instances")
+      .from("task_instances")
       .update({ title: "mutated" })
       .eq("id", inst!.id);
     expect(updErr).not.toBeNull();

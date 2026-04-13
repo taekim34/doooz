@@ -21,10 +21,10 @@ async function createAction(formData: FormData) {
     .select("family_id, role")
     .eq("id", authUser.id)
     .single();
-  if (!me || (me as { role: string }).role !== "parent") redirect("/rewards");
+  if (!me || me.role !== "parent") redirect("/rewards");
 
   await supabase.from("rewards").insert({
-    family_id: (me as { family_id: string }).family_id,
+    family_id: me.family_id,
     title: String(formData.get("title") || ""),
     cost: Number(formData.get("cost") || 100),
     active: true,
@@ -37,13 +37,23 @@ async function deleteAction(formData: FormData) {
   "use server";
   const id = String(formData.get("id") || "");
   const supabase = await createClient();
+  const {
+    data: { user: authUser },
+  } = await supabase.auth.getUser();
+  if (!authUser) redirect("/login");
+  const { data: me } = await supabase
+    .from("users")
+    .select("role")
+    .eq("id", authUser.id)
+    .single();
+  if (!me || me.role !== "parent") redirect("/rewards");
   await supabase.from("rewards").update({ active: false }).eq("id", id);
   revalidatePath("/rewards/manage");
 }
 
 export default async function RewardsManagePage() {
   const { user, family } = await requireUser();
-  const locale = ((family as unknown as Record<string, unknown>).locale as string || "ko") as Locale;
+  const locale = (family.locale || "ko") as Locale;
   if (user.role !== "parent") redirect("/rewards");
   const supabase = await createClient();
   const { data } = await supabase

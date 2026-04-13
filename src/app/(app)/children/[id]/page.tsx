@@ -29,7 +29,7 @@ export default async function ChildDetailPage({
 }) {
   const { id } = await params;
   const { user, family } = await requireUser();
-  const locale = ((family as unknown as { locale?: string }).locale as Locale) || "ko";
+  const locale = (family.locale || "ko") as Locale;
   if (user.role !== "parent") redirect("/");
 
   const supabase = await createClient();
@@ -47,9 +47,9 @@ export default async function ChildDetailPage({
   }
 
   const today = familyToday(family.timezone);
-  const [{ data: chores }, { data: txs }, { data: earnedBadges }] = await Promise.all([
+  const [{ data: tasks }, { data: txs }, { data: earnedBadges }] = await Promise.all([
     supabase
-      .from("chore_instances")
+      .from("task_instances")
       .select("id, title, points, status")
       .eq("assignee_id", child.id)
       .eq("due_date", today)
@@ -71,7 +71,7 @@ export default async function ChildDetailPage({
   const stage = getStage(child.level);
   const progress = progressToNextLevel(child.lifetime_earned);
 
-  const choreList = (chores ?? []) as Array<{
+  const taskList = (tasks ?? []) as Array<{
     id: string;
     title: string;
     points: number;
@@ -123,13 +123,13 @@ export default async function ChildDetailPage({
 
       <Card>
         <CardHeader>
-          <CardTitle>{t("children.today_chores", locale)}</CardTitle>
+          <CardTitle>{t("children.today_tasks", locale)}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-1 text-sm">
-          {choreList.length === 0 && (
-            <p className="text-muted-foreground">{t("children.no_chores_today", locale)}</p>
+          {taskList.length === 0 && (
+            <p className="text-muted-foreground">{t("children.no_tasks_today", locale)}</p>
           )}
-          {choreList.map((c) => (
+          {taskList.map((c) => (
             <div
               key={c.id}
               className="flex items-center justify-between border-b py-1 last:border-0"

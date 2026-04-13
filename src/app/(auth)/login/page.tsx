@@ -20,7 +20,7 @@ async function emailLoginAction(formData: FormData) {
     if (error.message.includes("Email not confirmed")) {
       redirect("/login?need_confirm=1");
     }
-    redirect(`/login?tab=email&error=${encodeURIComponent(error.message)}`);
+    redirect(`/login?tab=email&error=${encodeURIComponent("Invalid credentials")}`);
   }
   redirect("/");
 }
@@ -51,13 +51,13 @@ async function familyLoginAction(formData: FormData) {
   const { data: usr } = await admin
     .from("users")
     .select("id")
-    .eq("family_id", (fam as { id: string }).id)
+    .eq("family_id", fam!.id)
     .eq("display_name", displayName)
     .maybeSingle();
   if (!usr) redirectWith(t("auth.error_name_not_found", locale));
 
   // 3. Get the auth user's email
-  const { data: authData } = await admin.auth.admin.getUserById((usr as { id: string }).id);
+  const { data: authData } = await admin.auth.admin.getUserById(usr!.id);
   if (!authData?.user?.email) redirectWith(t("auth.error_account_not_found", locale));
 
   // 4. Sign in with the looked-up email

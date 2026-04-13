@@ -36,7 +36,7 @@ export function LevelTable({ currentLevel }: { currentLevel: number }) {
                     className={isCurrent ? "bg-primary/10 font-semibold" : ""}
                   >
                     <td className="px-2 py-1">Lv.{level}</td>
-                    <td className="px-2 py-1">{getLevelTitle(level)}</td>
+                    <td className="px-2 py-1">{getLevelTitle(level, t)}</td>
                     <td className="px-2 py-1 text-right">{threshold.toLocaleString()}</td>
                   </tr>
                 );

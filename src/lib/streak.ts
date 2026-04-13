@@ -1,11 +1,11 @@
 /**
  * Streak computation: consecutive family-local days (ending today)
- * on which the user completed at least one chore.
+ * on which the user completed at least one task.
  */
 import { toFamilyDate, familyToday } from "./datetime/family-tz";
 
 /**
- * @param completionInstants Dates at which chores were completed (UTC instants ok).
+ * @param completionInstants Dates at which tasks were completed (UTC instants ok).
  * @param timezone IANA timezone of the family.
  * @returns consecutive-day streak count ending today (or today-1 if today has no completions yet).
  *   Spec choice: a streak is NOT broken by a dayless today — we count the most recent

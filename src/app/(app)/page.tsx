@@ -12,7 +12,7 @@ import type { Route } from "next";
 
 export default async function HomePage() {
   const { user, family } = await requireUser();
-  const locale = ((family as unknown as Record<string, unknown>).locale as string || "ko") as Locale;
+  const locale = (family.locale || "ko") as Locale;
   const supabase = await createClient();
   const today = familyToday(family.timezone);
 
@@ -25,16 +25,16 @@ export default async function HomePage() {
   }
 
   if (user.role === "child") {
-    const { data: chores } = await supabase
-      .from("chore_instances")
+    const { data: tasks } = await supabase
+      .from("task_instances")
       .select("id, title, points, status, due_date, template_id")
       .eq("assignee_id", user.id)
       .gte("due_date", today)
       .in("status", ["pending", "completed", "rejected"])
       .order("due_date");
 
-    const { data: overdueChores } = await supabase
-      .from("chore_instances")
+    const { data: overdueTasks } = await supabase
+      .from("task_instances")
       .select("id")
       .eq("assignee_id", user.id)
       .eq("status", "overdue");
@@ -45,7 +45,7 @@ export default async function HomePage() {
       .eq("user_id", user.id)
       .order("earned_at", { ascending: false });
 
-    const todayOnly = ((chores ?? []) as Array<{
+    const todayOnly = ((tasks ?? []) as Array<{
       id: string;
       title: string;
       points: number;
@@ -53,7 +53,7 @@ export default async function HomePage() {
       due_date: string;
       template_id: string | null;
     }>).filter((c) => c.due_date === today);
-    const overdueCount = (overdueChores ?? []).length;
+    const overdueCount = (overdueTasks ?? []).length;
 
     const stage = getStage(user.level);
     const progress = progressToNextLevel(user.lifetime_earned);
@@ -88,7 +88,7 @@ export default async function HomePage() {
         <Card>
           <CardHeader>
             <CardTitle>
-              {t("home.today_chores", locale)}
+              {t("home.today_tasks", locale)}
               {overdueCount > 0 && (
                 <span className="ml-2 rounded-full bg-red-100 px-2 py-1 text-xs text-red-700">
                   {t("home.missed_count", locale).replace("{count}", String(overdueCount))}
@@ -98,7 +98,7 @@ export default async function HomePage() {
           </CardHeader>
           <CardContent className="space-y-2">
             {todayOnly.length === 0 && (
-              <p className="text-sm text-muted-foreground">{t("home.no_chores", locale)}</p>
+              <p className="text-sm text-muted-foreground">{t("home.no_tasks", locale)}</p>
             )}
             {todayOnly.map((c) => {
               const isBeg = c.template_id === null;
@@ -108,7 +108,7 @@ export default async function HomePage() {
               return (
                 <Link
                   key={c.id}
-                  href="/chores"
+                  href="/tasks"
                   className={`flex items-center justify-between rounded-md border p-3 hover:bg-accent ${
                     isBeg && c.status === "completed" ? "bg-green-50 border-green-200" : ""
                   } ${c.status === "rejected" ? "bg-red-50 border-red-200" : ""}`}
@@ -155,9 +155,6 @@ export default async function HomePage() {
     );
   }
 
-  // TODO(subtask-c): Parent branch — overview with children grid, pending
-  // approvals, quick-add, etc. Left untouched below for SubTask-C to finish.
-
   // Parent dashboard — children overview grid + quick actions.
   const { data: members } = await supabase
     .from("users")
@@ -165,8 +162,8 @@ export default async function HomePage() {
     .eq("family_id", family.id)
     .eq("role", "child");
 
-  const { data: todaysChores } = await supabase
-    .from("chore_instances")
+  const { data: todaysTasks } = await supabase
+    .from("task_instances")
     .select("id, assignee_id, title, points, status, template_id")
     .eq("family_id", family.id)
     .eq("due_date", today)
@@ -180,7 +177,7 @@ export default async function HomePage() {
     lifetime_earned: number;
     character_id: string | null;
   }>;
-  const choreList = (todaysChores ?? []) as Array<{
+  const taskList = (todaysTasks ?? []) as Array<{
     id: string;
     assignee_id: string;
     title: string;
@@ -208,9 +205,9 @@ export default async function HomePage() {
       )}
 
       {kidList.map((k) => {
-        const kidChores = choreList.filter((c) => c.assignee_id === k.id);
-        const total = kidChores.length;
-        const done = kidChores.filter((c) => c.status === "completed").length;
+        const kidTasks = taskList.filter((c) => c.assignee_id === k.id);
+        const total = kidTasks.length;
+        const done = kidTasks.filter((c) => c.status === "completed").length;
         const pct = total > 0 ? Math.round((done / total) * 100) : 0;
 
         return (
@@ -243,10 +240,10 @@ export default async function HomePage() {
               )}
             </CardHeader>
             <CardContent className="space-y-1 pt-0">
-              {kidChores.length === 0 && (
-                <p className="text-sm text-muted-foreground">{t("home.no_chores", locale)}</p>
+              {kidTasks.length === 0 && (
+                <p className="text-sm text-muted-foreground">{t("home.no_tasks", locale)}</p>
               )}
-              {kidChores.map((c) => {
+              {kidTasks.map((c) => {
                 const isBeg = c.template_id === null;
                 const icon = c.status === "completed"
                   ? (isBeg ? "🎉" : "✅")

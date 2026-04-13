@@ -45,7 +45,7 @@ export async function requireUser(): Promise<{
 
   if (!row) redirect("/onboarding/create-family");
 
-  const r = row as unknown as Omit<CurrentUser, "email">;
+  const r = row as Omit<CurrentUser, "email">;
 
   // Everyone must pick a character.
   if (!r.character_id) redirect("/onboarding/pick-character");
@@ -59,7 +59,7 @@ export async function requireUser(): Promise<{
 
   return {
     user: { ...r, email: authUser.email ?? null },
-    family: fam as unknown as CurrentFamily,
+    family: fam as CurrentFamily,
   };
 }
 

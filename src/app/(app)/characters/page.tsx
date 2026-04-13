@@ -11,7 +11,7 @@ import { t, type Locale } from "@/lib/i18n";
 
 export default async function CharactersPage() {
   const { user, family } = await requireUser();
-  const locale = ((family as unknown as { locale?: string }).locale as Locale) || "ko";
+  const locale = (family.locale || "ko") as Locale;
   const supabase = await createClient();
 
   const { data: allBadges } = await supabase.from("badges").select("id, name, icon, description").order("sort_order");
@@ -45,7 +45,7 @@ export default async function CharactersPage() {
           <div className="flex items-center gap-6">
             <div className="text-7xl">{characterEmoji(user.character_id, stage)}</div>
             <div className="flex-1">
-              <div className="text-lg font-semibold">{t("settings.character_label", locale)} Lv. {user.level} · {getLevelTitle(user.level)}</div>
+              <div className="text-lg font-semibold">{t("settings.character_label", locale)} Lv. {user.level} · {getLevelTitle(user.level, (k) => t(k, locale))}</div>
               <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
                 <div
                   className="h-full bg-primary"

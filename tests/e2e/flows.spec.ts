@@ -1,5 +1,5 @@
 /**
- * E2E flows — spec Section 8, 7 scenarios.
+ * E2E flows — spec Section 8, 6 scenarios.
  *
  * These tests require a running Next.js dev server AND a Supabase local
  * instance with migrations + seed applied. When E2E_BASE_URL is not set,
@@ -71,13 +71,13 @@ test.describe("dooooz flows", () => {
     await expect(page).toHaveURL(/\/$|\/home/);
   });
 
-  test("3. Parent creates chore template", async ({ page }) => {
+  test("3. Parent creates task template", async ({ page }) => {
     await page.goto("/login");
     await page.getByLabel(/email/i).fill(parentEmail);
     await page.getByLabel(/password/i).fill(password);
     await page.getByRole("button", { name: /log ?in|로그인/i }).click();
 
-    await page.goto("/chores/manage");
+    await page.goto("/tasks/manage");
     await page.getByPlaceholder(/제목|title/i).fill("Dishes");
     await page.getByRole("spinbutton").fill("20");
     // Recurrence select defaults to daily — leave it.
@@ -86,13 +86,13 @@ test.describe("dooooz flows", () => {
     await expect(page.getByText("Dishes")).toBeVisible();
   });
 
-  test("4. Child completes chore → balance increments", async ({ page }) => {
+  test("4. Child completes task → balance increments", async ({ page }) => {
     await page.goto("/login");
     await page.getByLabel(/email/i).fill(childEmail);
     await page.getByLabel(/password/i).fill(password);
     await page.getByRole("button", { name: /log ?in|로그인/i }).click();
 
-    await page.goto("/chores");
+    await page.goto("/tasks");
 
     // Capture the balance before.
     const balanceLocator = page.getByTestId("balance").or(page.getByText(/\bpts?\b|\bpt\b/i));
@@ -128,34 +128,7 @@ test.describe("dooooz flows", () => {
     await expect(page.getByText(/-50|−50/)).toBeVisible();
   });
 
-  test("6. Monthly goal auto-completes with bonus", async ({ page }) => {
-    await page.goto("/login");
-    await page.getByLabel(/email/i).fill(parentEmail);
-    await page.getByLabel(/password/i).fill(password);
-    await page.getByRole("button", { name: /log ?in|로그인/i }).click();
-
-    await page.goto("/goals/manage");
-    await page.getByPlaceholder(/title|제목/i).fill("30 pts monthly");
-    // target points input
-    await page.getByLabel(/target.*point|목표.*점수/i).fill("30");
-    await page.getByLabel(/reward.*point|보상.*점수/i).fill("100");
-    await page.getByRole("button", { name: /추가|add|create/i }).click();
-
-    // Switch to child and earn the 30+ points.
-    await page.goto("/logout").catch(() => {});
-    await page.goto("/login");
-    await page.getByLabel(/email/i).fill(childEmail);
-    await page.getByLabel(/password/i).fill(password);
-    await page.getByRole("button", { name: /log ?in|로그인/i }).click();
-
-    await page.goto("/chores");
-    await page.getByRole("checkbox").first().check();
-
-    await page.goto("/goals");
-    await expect(page.getByText(/completed|완료/i)).toBeVisible();
-  });
-
-  test("7. Level-up → character stage", async ({ page }) => {
+  test("6. Level-up → character stage", async ({ page }) => {
     await page.goto("/login");
     await page.getByLabel(/email/i).fill(childEmail);
     await page.getByLabel(/password/i).fill(password);

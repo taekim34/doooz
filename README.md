@@ -2,7 +2,7 @@
 
 Stop nagging. Start cheering.
 
-Families lose hours every week reminding kids to do chores — and chores become a battleground. **dooooz** turns the daily grind into a multi-year adventure: parents assign, kids check off, points flow, characters evolve, and streaks keep the whole family pulling in the same direction.
+Families lose hours every week reminding kids to do their tasks — and daily tasks become a battleground. **dooooz** turns the daily grind into a multi-year adventure: parents assign, kids check off, points flow, characters evolve, and streaks keep the whole family pulling in the same direction.
 
 Built for families who want to see their kids grow — literally — over 5+ years.
 
@@ -10,36 +10,85 @@ Built for families who want to see their kids grow — literally — over 5+ yea
 
 - **Trust-based, instant credit.** Kids tap, points land. No pestering, no approval bottleneck.
 - **Points are the language.** One append-only ledger tracks every credit and redemption. No lost points, ever.
-- **Gamification that lasts.** 30 levels, 40 badges, 10 evolving characters — curves tuned for *years*, not a weekend.
-- **Goals with teeth.** Weekly, monthly, quarterly, yearly, and multi-year goals — with sub-goal support.
+- **Gamification that lasts.** 30 levels, 58 badges, 12 evolving characters — curves tuned for *years*, not a weekend.
 - **Family-first privacy.** Row-level security isolates every family at the database layer.
+- **Multilingual.** Korean, Japanese, and English out of the box.
+- **Push notifications.** Evening reminders keep everyone on track.
 
 ## Stack
 
 - Next.js 15 (App Router, RSC) + React 19 + TypeScript 5
 - Tailwind + shadcn-style primitives
-- Supabase (Postgres, Auth, Realtime, RLS)
-- Zustand + TanStack Query + Zod
+- Supabase (Postgres, Auth, RLS)
+- Zod schema validation
+- Web Push API (VAPID)
+- Deployed on Vercel
 
 ## Setup
 
 ```bash
-# 1. clone + install
-npm install
+# 1. Clone & install
+git clone https://github.com/taekim34/doooz.git
+cd doooz && npm install
 
-# 2. env
+# 2. Environment variables
 cp .env.example .env.local
-# fill NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
+# Fill in the required values (see below)
 
-# 3. supabase local
-supabase start            # spins up local Postgres + Auth + Realtime
-supabase db reset         # applies migrations + seeds characters & badges
-
-# 4. dev
+# 3. Dev server
 npm run dev               # http://localhost:3000
 ```
 
-Local Supabase migrations live in `supabase/migrations/`. `db reset` replays them in order and runs `seed.sql` last.
+### Using tene (recommended)
+
+[tene](https://github.com/tomo-kay/tene) encrypts secrets locally so AI coding agents never see them.
+
+```bash
+curl -sSfL https://tene.sh/install.sh | sh
+tene init
+tene import .env.local          # import your secrets
+rm .env.local                   # no more plaintext secrets
+tene run -- npm run dev         # secrets injected at runtime
+```
+
+### Environment Variables
+
+All variables are defined in [`.env.example`](./.env.example). Copy it and fill in the values.
+
+#### Required (no defaults — must be set)
+
+| Variable | Where to get it | Notes |
+|---|---|---|
+| `NEXT_PUBLIC_SITE_URL` | Your deployment URL | e.g. `https://<project>.vercel.app` or your custom domain. Must also be set in **Supabase Dashboard → Auth → URL Configuration** and in `supabase/config.toml`. |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase Dashboard → Settings → API | Project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase Dashboard → Settings → API Keys | Public (anon) key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase Dashboard → Settings → API Keys | Secret — never expose to client |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | `npx web-push generate-vapid-keys` | Public key |
+| `VAPID_PRIVATE_KEY` | Same command above | Private key |
+| `CRON_SECRET` | Any random string | Used to authenticate cron job requests |
+
+#### Optional (defaults pre-filled in `.env.example`)
+
+| Variable | Default | Description |
+|---|---|---|
+| `NEXT_PUBLIC_APP_NAME` | `DOOOZ` | App display name (manifest, title) |
+| `NEXT_PUBLIC_APP_DESCRIPTION` | `Family tasks, points...` | App description |
+| `NEXT_PUBLIC_THEME_COLOR` | `#7c3aed` | PWA theme color |
+| `NEXT_PUBLIC_DEFAULT_LOCALE` | `en` | Fallback language (see supported locales above) |
+| `NEXT_PUBLIC_LOCALE_COOKIE` | `doooz_locale` | Cookie name for language preference |
+| `NEXT_PUBLIC_SYNTHETIC_EMAIL_DOMAIN` | `dooooz.invalid` | Fake email domain for child accounts (no real email sent). Not required to match your site domain, but recommended for consistency. |
+| `VAPID_CONTACT_EMAIL` | `mailto:noreply@dooooz.invalid` | Push service contact URI. Same as above — matching your domain is recommended but optional. |
+| `NEXT_PUBLIC_FAMILY_STORAGE_KEY` | `doooz_family_name` | localStorage key for family name |
+
+### Deploying to Vercel
+
+1. Link repo: `vercel link`
+2. Add all **required** env vars: `vercel env add <NAME> production`
+3. Set **Supabase Auth URLs** (Dashboard → Auth → URL Configuration):
+   - **Site URL**: your Vercel domain (e.g. `https://<project>.vercel.app`)
+   - **Redirect URLs**: add `https://<project>.vercel.app/**` and `http://localhost:3000` (for local dev)
+4. Update `supabase/config.toml` → `site_url` and `additional_redirect_urls` to match
+5. Deploy: `vercel --prod`
 
 ## Scripts
 
@@ -51,7 +100,7 @@ Local Supabase migrations live in `supabase/migrations/`. `db reset` replays the
 | `npm run test:watch` | Vitest watch mode |
 | `npm run test:e2e` | Playwright E2E (requires `npm run dev` running) |
 | `npm run typecheck` | `tsc --noEmit` |
-| `npm run lint` | ESLint — enforces `no-restricted-syntax` ban on `new Date()` |
+| `npm run lint` | ESLint |
 
 ## Folder Structure
 
@@ -59,33 +108,33 @@ Local Supabase migrations live in `supabase/migrations/`. `db reset` replays the
 src/
 ├─ app/
 │  ├─ (auth)/              login, signup, onboarding
-│  ├─ (app)/               protected routes — home, chores, points, rewards, goals, family
-│  └─ api/                 route handlers (complete chore, redeem, evaluate badges, etc.)
+│  ├─ (app)/               protected routes — home, tasks, points, rewards, characters, family, settings
+│  └─ api/                 route handlers + cron jobs (evening-reminder, midnight-rollover)
 ├─ features/
 │  ├─ auth/                requireUser, getCurrentAuth
-│  └─ characters/          emoji placeholder map
+│  ├─ children/            rank calculation
+│  └─ characters/          emoji map
 ├─ lib/
-│  ├─ supabase/            client, server, admin clients + typed Database shell
-│  ├─ datetime/            family-tz utilities + injectable clock (I10)
-│  ├─ level.ts             L1–L30 threshold calculator
+│  ├─ supabase/            client, server, admin clients + typed Database
+│  ├─ datetime/            family-tz utilities + injectable clock
+│  ├─ i18n/                ko.json, ja.json, en.json + translation helpers
+│  ├─ push/                web push notification sender
+│  ├─ level.ts             L1-L30 threshold calculator
 │  ├─ streak.ts            consecutive-day streak computation
-│  └─ invariants.ts        I1–I10 documentation + ledger assertion helper
-├─ schemas/                shared zod (family, user, chore, point, reward, goal, badge)
+│  └─ invariants.ts        I1-I10 ledger assertion helper
+├─ schemas/                Zod schemas (family, user, task, point, reward, badge)
 └─ components/ui/          shadcn-style primitives
 
 supabase/
-├─ migrations/
-│  ├─ 20260411000001_initial_schema.sql   tables, RLS, triggers, indexes
-│  └─ 20260411000002_flows.sql            complete_chore, redeem_points, evaluate_*, ensure_today_instances
-└─ seed.sql                                10 characters + 40 badges
+├─ migrations/             schema, RLS, triggers, indexes
+└─ seed.sql                12 characters + 58 badges
 
 tests/
-├─ unit/                   (reserved; current unit tests live alongside sources)
-├─ integration/rls.test.ts RLS matrix (it.todo — requires Supabase local)
-└─ e2e/flows.spec.ts       7 Playwright scenarios (test.fixme)
+├─ unit/                   co-located with source files
+├─ integration/            RLS matrix
+└─ e2e/                    Playwright scenarios
 ```
 
-## Design & Gap Analysis
+## License
 
-- Full spec: [`docs/superpowers/specs/2026-04-11-dooooz-design.md`](./docs/superpowers/specs/2026-04-11-dooooz-design.md) — data model, invariants I1–I10, gamification curves, flows, testing strategy.
-- Gap analysis: [`docs/superpowers/specs/2026-04-11-dooooz-gap-analysis.md`](./docs/superpowers/specs/2026-04-11-dooooz-gap-analysis.md) — MVP checklist status, invariant enforcement map, deferred TODOs.
+[Apache License 2.0](./LICENSE)

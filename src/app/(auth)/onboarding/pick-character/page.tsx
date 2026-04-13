@@ -29,7 +29,7 @@ export default async function PickCharacterPage() {
     .from("characters")
     .select("id, name, unlock_level")
     .order("unlock_level");
-  const list = (characters ?? []) as unknown as Array<{
+  const list = (characters ?? []) as Array<{
     id: string;
     name: string;
     unlock_level: number;

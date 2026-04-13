@@ -24,7 +24,7 @@ const STATUS_VARIANT: Record<RewardRequestStatus, "default" | "secondary" | "des
 
 export default async function RewardsPage() {
   const { user, family } = await requireUser();
-  const locale = ((family as unknown as Record<string, unknown>).locale as string || "ko") as Locale;
+  const locale = (family.locale || "ko") as Locale;
   // Parents have a dedicated approvals view.
   if (user.role === "parent") redirect("/rewards/requests");
 

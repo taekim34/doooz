@@ -7,12 +7,11 @@ function ensureVapid() {
   if (vapidConfigured) return;
   const pub = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY?.trim();
   const priv = process.env.VAPID_PRIVATE_KEY?.trim();
-  console.log("[PUSH] ensureVapid pub length:", pub?.length, "priv length:", priv?.length, "pub last5:", pub?.slice(-5));
   if (pub && priv) {
+    const vapidContact = process.env.VAPID_CONTACT_EMAIL || "mailto:noreply@dooooz.invalid";
     try {
-      webpush.setVapidDetails("mailto:noreply@do-ooz.vercel.app", pub, priv);
+      webpush.setVapidDetails(vapidContact, pub, priv);
       vapidConfigured = true;
-      console.log("[PUSH] VAPID configured OK");
     } catch (e) {
       console.error("[PUSH] VAPID config failed:", e);
     }
@@ -33,12 +32,7 @@ export async function sendPushToUsers(
   userIds: string[],
   payload: PushPayload,
 ) {
-  console.log("[PUSH] sendPushToUsers called", { userIds, payload });
-
-  if (userIds.length === 0) {
-    console.log("[PUSH] no userIds, skipping");
-    return;
-  }
+  if (userIds.length === 0) return;
   ensureVapid();
   if (!vapidConfigured) {
     console.error("[PUSH] VAPID not configured, skipping");
@@ -51,8 +45,7 @@ export async function sendPushToUsers(
     .select("id, user_id, endpoint, keys_p256dh, keys_auth")
     .in("user_id", userIds);
 
-  console.log("[PUSH] subscriptions found:", subs?.length ?? 0, subErr ? `error: ${subErr.message}` : "");
-
+  if (subErr) console.error("[PUSH] subscription query failed:", subErr.message);
   if (!subs || subs.length === 0) return;
 
   const expiredIds: string[] = [];
@@ -68,11 +61,10 @@ export async function sendPushToUsers(
             },
             JSON.stringify(payload),
           );
-          console.log("[PUSH] sent OK to", sub.endpoint.slice(-20), "status:", result.statusCode);
           return result;
         } catch (err: unknown) {
           const statusCode = (err as { statusCode?: number })?.statusCode;
-          console.error("[PUSH] send FAILED to", sub.endpoint.slice(-20), "status:", statusCode, err);
+          console.error("[PUSH] send failed to", sub.endpoint.slice(-20), "status:", statusCode);
           if (statusCode === 410 || statusCode === 404) {
             expiredIds.push(sub.id);
           }
@@ -82,11 +74,8 @@ export async function sendPushToUsers(
     ),
   );
 
-  console.log("[PUSH] results:", results.map((r) => r.status));
-
   if (expiredIds.length > 0) {
     await admin.from("push_subscriptions").delete().in("id", expiredIds);
-    console.log("[PUSH] cleaned expired:", expiredIds.length);
   }
 }
 
