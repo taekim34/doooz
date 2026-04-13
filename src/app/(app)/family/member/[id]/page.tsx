@@ -186,16 +186,27 @@ export default async function MemberDetailPage({
           <CardContent className="space-y-1 text-sm">
             {taskList.map((c) => {
               const isBeg = c.template_id === null;
+              const done = c.status === "completed";
+              const overdue = c.status === "overdue";
+              const pardoned = c.status === "pardoned";
+              const chipClass = done
+                ? "bg-green-100 text-green-700"
+                : overdue
+                  ? "bg-red-100 text-red-700"
+                  : pardoned
+                    ? "bg-yellow-100 text-yellow-700"
+                    : "bg-gray-100 text-gray-600";
+              const chipLabel = isBeg
+                ? (done ? t("home.beg_success", locale) : t("home.status_pending", locale))
+                : (done ? t("home.status_done", locale) : overdue ? t("home.status_overdue", locale) : pardoned ? t("home.status_pardoned", locale) : t("home.status_pending", locale));
               return (
                 <div key={c.id} className="flex items-center justify-between border-b py-1 last:border-0">
-                  <span>
-                    {c.status === "completed" ? (isBeg ? "🎉" : "✅") : c.status === "overdue" ? "😢" : "⬜"}{" "}
+                  <span className={done ? "text-muted-foreground line-through" : ""}>
                     {c.title}
-                    {isBeg && c.status === "completed" && (
-                      <span className="ml-1 text-[10px] text-green-600">{t("tasks.beg_success", locale)}</span>
-                    )}
                   </span>
-                  <Badge variant="secondary">{c.points > 0 ? `+${c.points}` : "-"}</Badge>
+                  <span className={`shrink-0 ml-3 rounded-full px-2.5 py-0.5 text-xs font-medium ${chipClass}`}>
+                    {chipLabel}
+                  </span>
                 </div>
               );
             })}
