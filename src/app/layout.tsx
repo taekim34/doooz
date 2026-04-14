@@ -20,10 +20,10 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
-  other: {
-    "apple-mobile-web-app-capable": "yes",
-    "apple-mobile-web-app-status-bar-style": "default",
-    "mobile-web-app-capable": "yes",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: process.env.NEXT_PUBLIC_APP_NAME || "DOOOZ",
   },
 };
 
