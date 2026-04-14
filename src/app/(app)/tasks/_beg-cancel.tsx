@@ -17,7 +17,7 @@ export function BegCancelButton({ id }: { id: string }) {
   }
 
   return (
-    <Button size="sm" variant="ghost" onClick={cancel} disabled={loading} className="text-xs text-muted-foreground">
+    <Button size="sm" variant="outline" onClick={cancel} disabled={loading} className="text-xs border-red-300 text-red-600 hover:bg-red-50">
       {t("common.cancel")}
     </Button>
   );

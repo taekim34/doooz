@@ -34,3 +34,4 @@ tsconfig.tsbuildinfo
 next-env.d.ts
 AGENTS.md
 GEMINI.md
+.playwright-mcp/

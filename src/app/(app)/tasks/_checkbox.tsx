@@ -38,7 +38,8 @@ export function TaskCheckbox({
   const isPardoned = localStatus === "pardoned";
   const isOverdue = localStatus === "overdue";
   const isRejected = localStatus === "rejected";
-  const isInteractive = !readOnly && !isPardoned && !isOverdue && !isRejected && !isBeg;
+  const isRequested = localStatus === "requested";
+  const isInteractive = !readOnly && !isPardoned && !isOverdue && !isRejected && !isBeg && !isRequested;
 
   async function onToggle() {
     if (pending || !isInteractive) return;
@@ -131,6 +132,13 @@ export function TaskCheckbox({
         </span>
       );
     }
+    if (isBeg && isRequested) {
+      return (
+        <span className="rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700">
+          {t("home.status_beg_pending")}
+        </span>
+      );
+    }
     if (isRejected) {
       return (
         <span className="rounded-full bg-red-100 px-2 py-1 text-xs text-red-700">
@@ -165,9 +173,11 @@ export function TaskCheckbox({
           ? "bg-red-100 text-red-700"
           : isPardoned
             ? "bg-yellow-100 text-yellow-700"
-            : "bg-gray-100 text-gray-600";
+            : isRequested
+              ? "bg-orange-100 text-orange-700"
+              : "bg-gray-100 text-gray-600";
     const chipLabel = isBeg
-      ? (isDone ? t("tasks.beg_success") : isRejected ? t("tasks.beg_failed") : t("home.status_pending"))
+      ? (isDone ? `${t("tasks.beg_success")} +${points}` : isRejected ? t("tasks.beg_failed") : isRequested ? t("home.status_beg_pending") : t("home.status_pending"))
       : (isDone ? t("home.status_done") : isOverdue ? t("home.status_overdue") : isPardoned ? t("home.status_pardoned") : t("home.status_pending"));
     return (
       <div className="flex items-center justify-between rounded-md border p-3">
@@ -196,7 +206,7 @@ export function TaskCheckbox({
         }`}
       >
         <span>
-          {isDone ? (isBeg ? "🎉" : "✅") : isRejected ? "❌" : isPardoned ? "🫶" : isOverdue ? "⚠️" : "⬜"}
+          {isDone ? (isBeg ? "🎉" : "✅") : isRejected ? "❌" : isPardoned ? "🫶" : isRequested ? "⏳" : isOverdue ? "⚠️" : "⬜"}
         </span>
         <span className={`truncate ${isDone ? "line-through" : ""}`}>{title}</span>
         {trailing && (

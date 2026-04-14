@@ -56,7 +56,7 @@ export default async function MemberDetailPage({
           .select("id, title, points, status, template_id")
           .eq("assignee_id", member.id)
           .eq("due_date", today)
-          .in("status", ["pending", "completed", "overdue", "pardoned"])
+          .in("status", ["pending", "completed", "overdue", "pardoned", "requested"])
           .order("created_at")
       : { data: null },
     // Recent point transactions

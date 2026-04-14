@@ -178,13 +178,13 @@ export default async function TasksPage() {
             </p>
             <BegForm />
             {myRequested.length > 0 && (
-              <div className="space-y-1 pt-2">
-                <p className="text-xs text-muted-foreground">{t("tasks.beg_waiting", locale)}</p>
+              <div className="space-y-2 pt-3 border-t">
+                <p className="text-sm font-medium text-orange-700">{t("home.status_beg_pending", locale)} ({myRequested.length})</p>
                 {myRequested.map((c) => (
-                  <div key={c.id} className="flex items-center justify-between text-sm">
+                  <div key={c.id} className="flex items-center justify-between rounded-md border border-orange-200 bg-orange-50 p-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-yellow-500">⏳</span>
-                      <span>{c.title}</span>
+                      <span className="text-lg">⏳</span>
+                      <span className="text-sm font-medium">{c.title}</span>
                     </div>
                     <BegCancelButton id={c.id} />
                   </div>

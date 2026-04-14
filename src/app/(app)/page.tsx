@@ -29,7 +29,7 @@ export default async function HomePage() {
       .select("id, title, points, status, due_date, template_id")
       .eq("assignee_id", user.id)
       .gte("due_date", today)
-      .in("status", ["pending", "completed", "rejected"])
+      .in("status", ["pending", "completed", "rejected", "pardoned", "requested"])
       .order("due_date");
 
     const { data: overdueTasks } = await supabase
