@@ -10,7 +10,7 @@
  * Setup:
  *   - Requires a running `supabase start` local instance with the
  *     migrations applied.
- *   - Requires SUPABASE_SERVICE_ROLE_KEY in the env. Without it the
+ *   - Requires SUPABASE_SERVICE_SECRET_KEY in the env. Without it the
  *     whole suite is skipped cleanly (ci-friendly).
  *   - Optional: SUPABASE_URL (defaults to http://127.0.0.1:54321),
  *     SUPABASE_ANON_KEY (defaults to the CLI-printed anon key).
@@ -26,7 +26,7 @@ import {
 
 const SUPABASE_URL = process.env.SUPABASE_URL ?? "http://127.0.0.1:54321";
 const ANON_KEY = process.env.SUPABASE_ANON_KEY ?? "";
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_SECRET_KEY ?? "";
 
 const runSuite = Boolean(SERVICE_KEY && ANON_KEY);
 
