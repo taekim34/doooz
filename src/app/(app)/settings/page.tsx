@@ -136,7 +136,7 @@ export default async function SettingsPage({
         <CardContent>
           <div className="flex items-center justify-between">
             <span className="text-2xl">{characterEmoji(user.character_id, getStage(user.level))}</span>
-            <Link href={"/characters" as never} className="text-sm text-primary underline">
+            <Link href={"/characters/gallery" as never} className="text-sm text-primary underline">
               {t("settings.change_link", locale)}
             </Link>
           </div>
