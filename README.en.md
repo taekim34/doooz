@@ -24,6 +24,8 @@ Parents create tasks, kids check them off, and points land instantly — no appr
 | **Family data protection** | Family data fully isolated at database level |
 | **Multilingual** | Korean / English / Japanese + global timezones |
 
+> 💡 **App install tip (iOS):** Add to home screen after logging in from the main screen. Installing from the login page may cause layout issues.
+
 ## 📸 Screenshots
 
 | ![Dashboard](./images/DOOOZ%20dashboard.jpeg) | ![Tasks](./images/DOOOZ%20tasks1.png) |
