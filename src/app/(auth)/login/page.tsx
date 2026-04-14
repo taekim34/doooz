@@ -138,7 +138,7 @@ export default async function LoginPage({
             </Link>
             {" · "}
             <Link href="/signup" className="text-primary underline">
-              {t("auth.create_family", locale)}
+              {t("auth.signup_create_link", locale)}
             </Link>
           </p>
         </div>

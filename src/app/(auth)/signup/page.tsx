@@ -64,7 +64,7 @@ export default async function SignupPage({
           <input type="hidden" name="mode" value="create" />
           {sp.error && <p className="text-sm text-destructive">{sp.error}</p>}
           <Button type="submit" className="w-full">
-            {t("auth.create_family", locale)}
+            {t("auth.signup_button", locale)}
           </Button>
         </form>
         <div className="mt-4 space-y-2 text-center text-sm text-muted-foreground">

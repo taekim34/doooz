@@ -52,6 +52,8 @@
   "auth.role_child": "Child",
   "auth.role_label": "My Role",
   "auth.role_parent": "Parent",
+  "auth.signup_button": "Sign Up",
+  "auth.signup_create_link": "Sign up as parent",
   "auth.signup_desc": "Parent sign-up to create a new family. Register with email.",
   "auth.signup_failed": "Sign up failed",
   "auth.signup_title": "Sign Up",

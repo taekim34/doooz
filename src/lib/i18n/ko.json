@@ -52,6 +52,8 @@
   "auth.role_child": "아이",
   "auth.role_label": "내 역할",
   "auth.role_parent": "부모",
+  "auth.signup_button": "가입하기",
+  "auth.signup_create_link": "부모로 가입하기",
   "auth.signup_desc": "가족을 새로 만드는 부모용 가입이에요. 이메일로 가입합니다.",
   "auth.signup_failed": "회원가입 실패",
   "auth.signup_title": "회원가입",

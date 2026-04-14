@@ -52,6 +52,8 @@
   "auth.role_child": "子ども",
   "auth.role_label": "自分の役割",
   "auth.role_parent": "保護者",
+  "auth.signup_button": "登録する",
+  "auth.signup_create_link": "保護者として登録",
   "auth.signup_desc": "家族を新しく作る保護者用の登録です。メールで登録します。",
   "auth.signup_failed": "登録に失敗しました",
   "auth.signup_title": "新規登録",
