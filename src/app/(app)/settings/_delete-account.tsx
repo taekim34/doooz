@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { t, type Locale } from "@/lib/i18n";
+import { createClient } from "@/lib/supabase/client";
 
 export function DeleteAccount({ locale }: { locale: Locale }) {
   const router = useRouter();
@@ -29,6 +30,8 @@ export function DeleteAccount({ locale }: { locale: Locale }) {
         setError(data.error || t("settings.delete_error", locale));
         return;
       }
+      const supabase = createClient();
+      await supabase.auth.signOut();
       router.push("/login");
     } catch {
       setError(t("settings.delete_error", locale));

@@ -115,6 +115,7 @@
   "tasks.error_no_children": "子どものアカウントが必要です。",
   "tasks.error_no_days": "繰り返す曜日を1つ以上選んでください",
   "tasks.error_no_deadline": "期限を選んでください。",
+  "tasks.error_cancel_failed": "キャンセルに失敗しました",
   "tasks.error_no_title": "タイトルを入力してください。",
   "tasks.error_pardon_failed": "おまけ処理に失敗しました",
   "tasks.error_points_range": "ポイントは1〜10000の範囲です。",

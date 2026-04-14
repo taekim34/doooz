@@ -115,6 +115,7 @@
   "tasks.error_no_children": "아이 계정이 먼저 필요해요.",
   "tasks.error_no_days": "반복할 요일을 최소 하나 선택해 주세요",
   "tasks.error_no_deadline": "종료일을 선택해 주세요.",
+  "tasks.error_cancel_failed": "취소 실패",
   "tasks.error_no_title": "제목을 입력해 주세요.",
   "tasks.error_pardon_failed": "봐주기 실패",
   "tasks.error_points_range": "포인트는 1~10000 사이여야 해요.",

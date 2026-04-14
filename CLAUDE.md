@@ -79,7 +79,8 @@ pending → completed (complete_task RPC, idempotent)
 pending → overdue   (midnight rollover)
 overdue → pardoned  (pardon_task, parent-only, +50 adjustment)
 completed → pending (uncomplete_task — revokes badges!)
-requested → pending (beg approve) | deleted (cancel/reject)
+pardoned → pending  (unpardon_task, parent-only)
+requested → pending (beg approve) | rejected (reject) | deleted (cancel)
 ```
 
 ### Other Non-Obvious Rules

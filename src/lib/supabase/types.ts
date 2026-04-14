@@ -65,134 +65,6 @@ export type Database = {
         }
         Relationships: []
       }
-      task_instances: {
-        Row: {
-          assignee_id: string
-          completed_at: string | null
-          created_at: string
-          due_date: string
-          family_id: string
-          id: string
-          points: number
-          status: string
-          template_id: string | null
-          title: string
-        }
-        Insert: {
-          assignee_id: string
-          completed_at?: string | null
-          created_at?: string
-          due_date: string
-          family_id: string
-          id?: string
-          points: number
-          status?: string
-          template_id?: string | null
-          title: string
-        }
-        Update: {
-          assignee_id?: string
-          completed_at?: string | null
-          created_at?: string
-          due_date?: string
-          family_id?: string
-          id?: string
-          points?: number
-          status?: string
-          template_id?: string | null
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "task_instances_assignee_id_fkey"
-            columns: ["assignee_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "task_instances_family_id_fkey"
-            columns: ["family_id"]
-            isOneToOne: false
-            referencedRelation: "families"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "task_instances_template_id_fkey"
-            columns: ["template_id"]
-            isOneToOne: false
-            referencedRelation: "task_templates"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      task_templates: {
-        Row: {
-          active: boolean
-          assignee_id: string
-          created_at: string
-          created_by: string
-          description: string | null
-          end_date: string | null
-          family_id: string
-          id: string
-          points: number
-          recurrence: Json
-          start_date: string
-          title: string
-        }
-        Insert: {
-          active?: boolean
-          assignee_id: string
-          created_at?: string
-          created_by: string
-          description?: string | null
-          end_date?: string | null
-          family_id: string
-          id?: string
-          points: number
-          recurrence: Json
-          start_date: string
-          title: string
-        }
-        Update: {
-          active?: boolean
-          assignee_id?: string
-          created_at?: string
-          created_by?: string
-          description?: string | null
-          end_date?: string | null
-          family_id?: string
-          id?: string
-          points?: number
-          recurrence?: Json
-          start_date?: string
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "task_templates_assignee_id_fkey"
-            columns: ["assignee_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "task_templates_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "task_templates_family_id_fkey"
-            columns: ["family_id"]
-            isOneToOne: false
-            referencedRelation: "families"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       families: {
         Row: {
           created_at: string
@@ -248,7 +120,7 @@ export type Database = {
       }
       point_transactions: {
         Row: {
-          actor_id: string
+          actor_id: string | null
           amount: number
           created_at: string
           family_id: string
@@ -259,7 +131,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          actor_id: string
+          actor_id?: string | null
           amount: number
           created_at?: string
           family_id: string
@@ -270,7 +142,7 @@ export type Database = {
           user_id: string
         }
         Update: {
-          actor_id?: string
+          actor_id?: string | null
           amount?: number
           created_at?: string
           family_id?: string
@@ -432,7 +304,7 @@ export type Database = {
           active: boolean
           cost: number
           created_at: string
-          created_by: string
+          created_by: string | null
           family_id: string
           icon: string | null
           id: string
@@ -442,7 +314,7 @@ export type Database = {
           active?: boolean
           cost: number
           created_at?: string
-          created_by: string
+          created_by?: string | null
           family_id: string
           icon?: string | null
           id?: string
@@ -452,7 +324,7 @@ export type Database = {
           active?: boolean
           cost?: number
           created_at?: string
-          created_by?: string
+          created_by?: string | null
           family_id?: string
           icon?: string | null
           id?: string
@@ -468,6 +340,134 @@ export type Database = {
           },
           {
             foreignKeyName: "rewards_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      task_instances: {
+        Row: {
+          assignee_id: string
+          completed_at: string | null
+          created_at: string
+          due_date: string
+          family_id: string
+          id: string
+          points: number
+          status: string
+          template_id: string | null
+          title: string
+        }
+        Insert: {
+          assignee_id: string
+          completed_at?: string | null
+          created_at?: string
+          due_date: string
+          family_id: string
+          id?: string
+          points: number
+          status?: string
+          template_id?: string | null
+          title: string
+        }
+        Update: {
+          assignee_id?: string
+          completed_at?: string | null
+          created_at?: string
+          due_date?: string
+          family_id?: string
+          id?: string
+          points?: number
+          status?: string
+          template_id?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_instances_assignee_id_fkey"
+            columns: ["assignee_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_instances_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_instances_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "task_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      task_templates: {
+        Row: {
+          active: boolean
+          assignee_id: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          end_date: string | null
+          family_id: string
+          id: string
+          points: number
+          recurrence: Json
+          start_date: string
+          title: string
+        }
+        Insert: {
+          active?: boolean
+          assignee_id: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          end_date?: string | null
+          family_id: string
+          id?: string
+          points: number
+          recurrence: Json
+          start_date: string
+          title: string
+        }
+        Update: {
+          active?: boolean
+          assignee_id?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          end_date?: string | null
+          family_id?: string
+          id?: string
+          points?: number
+          recurrence?: Json
+          start_date?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_templates_assignee_id_fkey"
+            columns: ["assignee_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_templates_family_id_fkey"
             columns: ["family_id"]
             isOneToOne: false
             referencedRelation: "families"
@@ -573,6 +573,19 @@ export type Database = {
       }
       auth_family_id: { Args: never; Returns: string }
       auth_is_parent: { Args: never; Returns: boolean }
+      calculate_level:
+        | {
+            Args: { lifetime: number }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.calculate_level(lifetime => int8), public.calculate_level(lifetime => int4). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
+        | {
+            Args: { lifetime: number }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.calculate_level(lifetime => int8), public.calculate_level(lifetime => int4). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
       cancel_reward_request: {
         Args: { p_request_id: string }
         Returns: undefined
@@ -580,6 +593,14 @@ export type Database = {
       complete_task: {
         Args: { p_actor_id: string; p_instance_id: string }
         Returns: Json
+      }
+      delete_family: {
+        Args: { p_admin_id: string; p_family_id: string }
+        Returns: string[]
+      }
+      delete_member: {
+        Args: { p_family_id: string; p_user_id: string }
+        Returns: undefined
       }
       dooooz_midnight_rollover: { Args: never; Returns: number }
       ensure_all_today_instances: { Args: never; Returns: number }

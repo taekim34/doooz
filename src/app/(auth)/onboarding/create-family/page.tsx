@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -32,11 +31,8 @@ async function createFamilyAction(formData: FormData) {
   } = await supabase.auth.getUser();
   if (!authUser) redirect("/login");
 
-  const admin = createAdminClient();
-
   // Idempotency: if this auth user already has a users row, short-circuit.
-  // Use admin client to bypass RLS for a deterministic check during onboarding.
-  const { data: existing } = await admin
+  const { data: existing } = await supabase
     .from("users")
     .select("id, character_id")
     .eq("id", authUser.id)
@@ -50,7 +46,7 @@ async function createFamilyAction(formData: FormData) {
   let family: { id: string } | null = null;
   for (let attempt = 0; attempt < 5 && !family; attempt++) {
     const invite = customCode || generateInviteCode();
-    const { data, error } = await admin
+    const { data, error } = await supabase
       .from("families")
       .insert({ name, timezone, locale: familyLocale, invite_code: invite })
       .select("id")
@@ -64,7 +60,7 @@ async function createFamilyAction(formData: FormData) {
   }
   if (!family) redirect(`/onboarding/create-family?error=${encodeURIComponent(t("auth.error_family_create_failed", locale))}`);
 
-  const { error: uerr } = await admin.from("users").insert({
+  const { error: uerr } = await supabase.from("users").insert({
     id: authUser.id,
     family_id: family.id,
     role: "parent",

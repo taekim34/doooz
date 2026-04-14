@@ -2,7 +2,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { characterEmoji } from "@/features/characters/emoji-map";
 import { getStage } from "@/lib/level";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -79,12 +78,10 @@ async function changePasswordAction(formData: FormData) {
   if (!authUser) redirect("/login");
 
   // Verify current password by attempting sign-in
-  const admin = createAdminClient();
-  const { data: authData } = await admin.auth.admin.getUserById(authUser.id);
-  if (!authData?.user?.email) redirectWith(t("settings.error_account_not_found"));
+  if (!authUser.email) redirectWith(t("settings.error_account_not_found"));
 
   const { error: verifyErr } = await supabase.auth.signInWithPassword({
-    email: authData!.user!.email!,
+    email: authUser.email!,
     password: currentPassword,
   });
   if (verifyErr) redirectWith(t("settings.error_wrong_password"));

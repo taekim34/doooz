@@ -5,7 +5,7 @@ import { apiError } from "@/lib/api-error";
 
 /**
  * POST /api/user/delete
- * Hard-deletes the current user (non-admin member).
+ * Hard-deletes the current user (non-admin member) via atomic RPC.
  * Admin (earliest parent by created_at) must use /api/family/delete instead.
  */
 export async function POST(req: Request) {
@@ -20,57 +20,34 @@ export async function POST(req: Request) {
     return apiError(400, "confirmation required");
   }
 
-  // Get current user info
   const { data: me } = await supabase
     .from("users")
-    .select("id, family_id, role")
+    .select("id, family_id")
     .eq("id", authUser.id)
     .single();
   if (!me) return apiError(404, "user not found");
 
-  // Check if this user is the admin (earliest parent)
   const admin = createAdminClient();
-  const { data: earliestParent } = await admin
-    .from("users")
-    .select("id")
-    .eq("family_id", me.family_id)
-    .eq("role", "parent")
-    .order("created_at", { ascending: true })
-    .limit(1)
-    .single();
 
-  if (earliestParent && earliestParent.id === me.id) {
-    return apiError(403, "Admin must use family delete");
-  }
+  // Atomic RPC: nullify NO ACTION FKs + delete user row in one transaction
+  const { error: rpcErr } = await admin.rpc("delete_member", {
+    p_user_id: me.id,
+    p_family_id: me.family_id,
+  });
 
-  // 1. Set point_transactions.actor_id = NULL where actor_id = user_id
-  // NOTE: requires DB migration to make actor_id nullable (ALTER TABLE point_transactions ALTER COLUMN actor_id DROP NOT NULL)
-  await admin
-    .from("point_transactions")
-    .update({ actor_id: null } as never)
-    .eq("actor_id", me.id);
-
-  // 2. Delete reward_requests where requested_by = user_id
-  await admin
-    .from("reward_requests")
-    .delete()
-    .eq("requested_by", me.id);
-
-  // 3. Delete user from users table (CASCADE handles task_instances, task_templates, user_badges, push_subscriptions, point_transactions with user_id)
-  const { error: deleteErr } = await admin
-    .from("users")
-    .delete()
-    .eq("id", me.id);
-  if (deleteErr) {
-    console.error("[USER DELETE] users delete failed:", deleteErr);
+  if (rpcErr) {
+    if (rpcErr.message.includes("IS_ADMIN")) {
+      return apiError(403, "Admin must use family delete");
+    }
+    console.error("[USER DELETE] rpc failed:", rpcErr.message);
     return apiError(500, "delete failed");
   }
 
-  // 4. Delete auth user
+  // Delete auth user (outside transaction — Supabase Auth is a separate service)
   const { error: authErr } = await admin.auth.admin.deleteUser(me.id);
   if (authErr) {
-    console.error("[USER DELETE] auth delete failed:", authErr);
-    // User row already gone; auth cleanup failure is logged but not blocking
+    console.error("[USER DELETE] auth delete failed:", authErr.message);
+    // DB row is already gone; log but don't block
   }
 
   return NextResponse.json({ success: true });

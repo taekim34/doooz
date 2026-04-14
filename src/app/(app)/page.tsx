@@ -4,6 +4,7 @@ import { characterEmoji } from "@/features/characters/emoji-map";
 import { getStage, progressToNextLevel } from "@/lib/level";
 import { familyToday } from "@/lib/datetime/family-tz";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { t, type Locale } from "@/lib/i18n";
 import { TaskCheckbox } from "./tasks/_checkbox";
 import Link from "next/link";
@@ -89,9 +90,9 @@ export default async function HomePage() {
             <CardTitle>
               {t("home.today_tasks", locale)}
               {overdueCount > 0 && (
-                <span className="ml-2 rounded-full bg-red-100 px-2 py-1 text-xs text-red-700">
+                <StatusBadge variant="danger" className="ml-2 px-2 py-1 font-normal">
                   {t("home.missed_count", locale).replace("{count}", String(overdueCount))}
-                </span>
+                </StatusBadge>
               )}
             </CardTitle>
           </CardHeader>

@@ -1,8 +1,9 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n/useT";
+import { StatusBadge } from "@/components/ui/status-badge";
 
 type TaskCheckboxProps = {
   id: string;
@@ -32,6 +33,7 @@ export function TaskCheckbox({
   const router = useRouter();
   const t = useT();
   const [localStatus, setLocalStatus] = useState(status);
+  useEffect(() => { setLocalStatus(status); }, [status]);
   const [pending, startTransition] = useTransition();
 
   const isDone = localStatus === "completed";
@@ -127,37 +129,37 @@ export function TaskCheckbox({
   const statusBadge = (() => {
     if (isBeg && isDone) {
       return (
-        <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+        <StatusBadge variant="success" className="px-2 py-1">
           {t("tasks.beg_success")} +{points}
-        </span>
+        </StatusBadge>
       );
     }
     if (isBeg && isRequested) {
       return (
-        <span className="rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700">
+        <StatusBadge variant="pending" className="px-2 py-1">
           {t("home.status_beg_pending")}
-        </span>
+        </StatusBadge>
       );
     }
     if (isRejected) {
       return (
-        <span className="rounded-full bg-red-100 px-2 py-1 text-xs text-red-700">
+        <StatusBadge variant="danger" className="px-2 py-1 font-normal">
           {t("tasks.beg_failed")}
-        </span>
+        </StatusBadge>
       );
     }
     if (isPardoned) {
       return (
-        <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs text-yellow-800">
+        <StatusBadge variant="warning" className="px-2 py-1 font-normal">
           {t("tasks.pardon")}
-        </span>
+        </StatusBadge>
       );
     }
     if (isOverdue) {
       return (
-        <span className="rounded-full bg-red-100 px-2 py-1 text-xs text-red-700">
+        <StatusBadge variant="danger" className="px-2 py-1 font-normal">
           {t("tasks.missed")}
-        </span>
+        </StatusBadge>
       );
     }
     return <span className="text-sm font-semibold">+{points}</span>;
@@ -165,26 +167,26 @@ export function TaskCheckbox({
 
   // Read-only: chip-style label, no interactive elements
   if (readOnly) {
-    const chipClass = isDone
-      ? "bg-green-100 text-green-700"
+    const chipVariant = isDone
+      ? "success" as const
       : isRejected
-        ? "bg-red-100 text-red-700"
+        ? "danger" as const
         : isOverdue
-          ? "bg-red-100 text-red-700"
+          ? "danger" as const
           : isPardoned
-            ? "bg-yellow-100 text-yellow-700"
+            ? "warning" as const
             : isRequested
-              ? "bg-orange-100 text-orange-700"
-              : "bg-gray-100 text-gray-600";
+              ? "pending" as const
+              : "neutral" as const;
     const chipLabel = isBeg
       ? (isDone ? `${t("tasks.beg_success")} +${points}` : isRejected ? t("tasks.beg_failed") : isRequested ? t("home.status_beg_pending") : t("home.status_pending"))
       : (isDone ? t("home.status_done") : isOverdue ? t("home.status_overdue") : isPardoned ? t("home.status_pardoned") : t("home.status_pending"));
     return (
       <div className="flex items-center justify-between rounded-md border p-3">
         <span className={`truncate ${isDone ? "text-muted-foreground line-through" : ""}`}>{title}</span>
-        <span className={`shrink-0 ml-3 rounded-full px-2.5 py-0.5 text-xs font-medium ${chipClass}`}>
+        <StatusBadge variant={chipVariant} className="shrink-0 ml-3">
           {chipLabel}
-        </span>
+        </StatusBadge>
       </div>
     );
   }
@@ -201,6 +203,7 @@ export function TaskCheckbox({
         type="button"
         onClick={onToggle}
         disabled={pending || !isInteractive}
+        aria-label={`${title} — ${isDone ? t("home.status_done") : t("home.status_pending")}`}
         className={`flex min-w-0 flex-1 items-center gap-3 text-left ${
           isInteractive ? "hover:opacity-80" : "cursor-default"
         }`}

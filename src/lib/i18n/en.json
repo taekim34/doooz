@@ -115,6 +115,7 @@
   "tasks.error_no_children": "Need a child account first.",
   "tasks.error_no_days": "Select at least one day",
   "tasks.error_no_deadline": "Please select a deadline.",
+  "tasks.error_cancel_failed": "Cancel failed",
   "tasks.error_no_title": "Please enter a title.",
   "tasks.error_pardon_failed": "Pardon failed",
   "tasks.error_points_range": "Points must be 1-10000.",

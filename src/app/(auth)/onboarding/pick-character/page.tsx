@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { characterEmoji } from "@/features/characters/emoji-map";
 import { t } from "@/lib/i18n";
 import { getAuthLocale } from "@/lib/i18n/auth-locale";
@@ -14,10 +13,7 @@ async function pickAction(formData: FormData) {
     data: { user: authUser },
   } = await supabase.auth.getUser();
   if (!authUser) redirect("/login");
-  // Defense-in-depth: use admin client so this post-onboarding write
-  // always succeeds regardless of RLS state.
-  const admin = createAdminClient();
-  await admin.from("users").update({ character_id: id }).eq("id", authUser.id);
+  await supabase.from("users").update({ character_id: id }).eq("id", authUser.id);
   redirect("/");
 }
 
