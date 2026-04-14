@@ -231,6 +231,44 @@ tests/
 └─ e2e/                    Playwright scenarios
 ```
 
+## 💰 Free Tier Operations Guide
+
+DOOOZ runs entirely on Supabase + Vercel free tiers. Since there are no image/file uploads and only text data is stored, resource usage is very low.
+
+### How many families can use it?
+
+Based on 1 family = 1 parent + 2-3 kids, 10-15 task checks per day:
+
+| Resource | Free Limit | Per Family/Month | Max Families |
+|----------|-----------|-----------------|-------------|
+| Supabase bandwidth | 5GB/mo | ~6MB | ~800 |
+| Supabase DB storage | 500MB | ~230KB/mo (cumulative) | ~180 (1 year) |
+| Vercel bandwidth | 100GB/mo | ~5MB | ~18,000 |
+
+- **Single family use**: only 1-2% of free limits.
+- **100-200 families** can run for a year within free tier.
+
+### What to monitor
+
+- **Supabase Dashboard → Settings → Billing**: bandwidth, DB storage
+- **Vercel Dashboard → Usage**: bandwidth, function execution time
+
+### If DB storage runs low
+
+DB storage (500MB) will be the first limit reached with long-term use:
+- Clean up old task instances (completed past records)
+- Upgrade to Supabase Pro ($25/mo, 8GB DB)
+
+## 🤝 Contributing
+
+DOOOZ is an open-source project and we welcome contributions from everyone!
+
+- 🎨 **Designers** — We're looking for designers to help improve the UI/UX.
+- 🌍 **Multilingual & Global** — New language translations and adaptations for different countries are welcome.
+- 👨‍👩‍👧‍👦 **Test Families** — We welcome families who will use the app daily and actively test it. We can provide access to a pre-built service.
+
+Feel free to open an Issue or Pull Request!
+
 ## 📄 License
 
 [Apache License 2.0](./LICENSE)
