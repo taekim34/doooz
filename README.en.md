@@ -8,16 +8,21 @@ Families lose hours every week reminding kids to do their tasks — and daily ta
 
 Built for families who want to see their kids grow — literally — over 5+ years.
 
-## 🤩 Why DOOOZ
+## 🤩 Why DOOOZ (👉 [User Guide](./guides/user-guide.md))
 
-- **Self-check, parent-approved.** Kids check off their own tasks for instant points. Beg requests and reward redemptions require parent approval.
-- **Points are the language.** One append-only ledger tracks every credit and redemption. No lost points, ever.
-- **Kids can ask for more.** The "beg" feature lets children request extra tasks and earn bonus points — parents approve with one tap.
-- **Gamification that lasts.** 30 levels, 58 badges, 12 evolving characters — curves tuned for *years*, not a weekend.
-- **Auto-pilot.** Daily tasks auto-generate at 1 AM. Evening push reminders at 9 PM nudge incomplete items.
-- **App install & push notifications.** Add to home screen to use like a native app. Receive push alerts for beg requests, rewards, and daily reminders.
-- **Family data protection.** Each family's data is fully isolated at the database level. Parent-only features are enforced in both code and database.
-- **Multilingual.** Korean, Japanese, and English out of the box.
+Parents create tasks, kids check them off, and points land instantly — no approval needed. Kids take ownership of their own tasks. Accumulated points can be redeemed for rewards (allowance, special activities, etc.) registered by parents. With 30 levels, 58 badges, and characters that evolve through 5 stages, kids stay motivated for years.
+
+| Feature | Description |
+|---------|-------------|
+| **Self-check, instant credit** | Kids check off tasks and points land immediately! No parent approval needed |
+| **Beg** | Kids request credit for extra work → parents set and award points |
+| **Pardon** | Travel or sick days — parents waive penalty for incomplete tasks |
+| **Rewards** | Redeem points for rewards (e.g. allowance) → deducted on parent approval |
+| **Gamification that lasts** | 30 levels + 58 badges + 12 characters (5-stage evolution) — years of motivation |
+| **Auto-pilot** | 1 AM auto task generation + overdue penalty, 9 PM reminder |
+| **App install & push** | Add to home screen for a standalone app + push notifications |
+| **Family data protection** | Family data fully isolated at database level |
+| **Multilingual** | Korean / English / Japanese + global timezones |
 
 ## 📸 Screenshots
 
@@ -38,7 +43,16 @@ Built for families who want to see their kids grow — literally — over 5+ yea
 - Web Push API (VAPID)
 - Deployed on Vercel
 
-## 🔰 New to this? Ask Google or AI
+## 🌐 Use the Pre-built Service
+### [👉 DOOOZ Service Link](https://doooz.app)
+
+DOOOZ stores only text data with no image/file uploads, so server costs are very low. If you want to try it without building your own, sign up at the link above.
+
+Currently running on the free tier. If more than 100 families join, Supabase will be upgraded to a paid tier. If over 5,000 families, Vercel will also be upgraded. (Estimated capacity: ~15,000 families, ~50,000 users)
+
+However, we recommend building your own instance for the best experience. Follow the guide below.
+
+## 🔰 Build Your Own - New to this? Ask Google or AI
 
 Following this guide requires a small amount of dev environment setup.
 - **Opening a terminal** — Mac uses Terminal, Windows uses **PowerShell**. If you don't know how, Google it or ask an AI.
@@ -182,8 +196,11 @@ If you're using an AI coding tool (like Claude Code), connecting Supabase MCP le
 
 ### Prompts
 
-- **[One-shot prompt](./guides/magic-prompt-one-shot.md)** — Copy the entire prompt into an AI chat and get a working app in one go.
-- **[Step-by-step prompts](./guides/magic-prompt-steps.md)** — Follow a guided sequence of prompts, one at a time, to build the app incrementally.
+### [👉 One-shot prompt](./guides/magic-prompt-one-shot.md)
+Copy the entire prompt into an AI chat and get a working app in one go.
+
+### [👉 Step-by-step prompts](./guides/magic-prompt-steps.md)
+Follow a guided sequence of prompts, one at a time, to build the app incrementally.
 
 These guides are written in Korean but work with any AI regardless of language settings. Build your own app with your kids!
 
@@ -233,31 +250,25 @@ tests/
 
 ## 💰 Free Tier Operations Guide
 
-DOOOZ runs entirely on Supabase + Vercel free tiers. Since there are no image/file uploads and only text data is stored, resource usage is very low.
+DOOOZ stores only text data with no image/file uploads, so resource usage is very low. Based on 1 family = 1 parent + 2-3 kids, 10-15 task checks per day:
 
-### How many families can use it?
-
-Based on 1 family = 1 parent + 2-3 kids, 10-15 task checks per day:
-
-| Resource | Free Limit | Per Family/Month | Max Families |
-|----------|-----------|-----------------|-------------|
-| Supabase bandwidth | 5GB/mo | ~6MB | ~800 |
-| Supabase DB storage | 500MB | ~230KB/mo (cumulative) | ~180 (1 year) |
-| Vercel bandwidth | 100GB/mo | ~5MB | ~18,000 |
+| Tier | Cost/mo | Max Families (est.) | Stack |
+|------|---------|---------------------|-------|
+| Free | `$0` | **~200** | Supabase Free + Vercel Free |
+| Medium | ~`$27` | **~5,000** | Supabase Pro (`$25`) + DB (`$2`) + Vercel Free |
+| Large | ~`$50` | **~15,000** | Supabase Pro (`$25`) + DB (`$5`) + Vercel Pro (`$20`) |
 
 - **Single family use**: only 1-2% of free limits.
-- **100-200 families** can run for a year within free tier.
+
+### Scaling up
+
+- **Over ~200 families** — DB storage and Supabase connection limits may be reached. Upgrade to **Supabase Pro** and purchase additional DB storage.
+- **Over ~5,000 families** — The daily 1 AM cron job (task cleanup) may hit execution time limits. Upgrade to **Vercel Pro**. Vercel Pro removes cron limits, enabling support for more timezones and global coverage.
 
 ### What to monitor
 
 - **Supabase Dashboard → Settings → Billing**: bandwidth, DB storage
 - **Vercel Dashboard → Usage**: bandwidth, function execution time
-
-### If DB storage runs low
-
-DB storage (500MB) will be the first limit reached with long-term use:
-- Clean up old task instances (completed past records)
-- Upgrade to Supabase Pro ($25/mo, 8GB DB)
 
 ## 🤝 Contributing
 
