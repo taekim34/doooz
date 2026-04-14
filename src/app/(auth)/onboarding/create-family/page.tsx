@@ -56,7 +56,11 @@ async function createFamilyAction(formData: FormData) {
       .select("id")
       .single();
     if (!error) family = data;
-    else redirect(`/onboarding/create-family?error=${encodeURIComponent(t("auth.error_family_create_failed", locale))}`);
+    else {
+      console.error("[create-family] attempt", attempt, error.message, error.code);
+      if (error.code === "23505") continue; // unique violation — retry with new code
+      redirect(`/onboarding/create-family?error=${encodeURIComponent(t("auth.error_family_create_failed", locale))}`);
+    }
   }
   if (!family) redirect(`/onboarding/create-family?error=${encodeURIComponent(t("auth.error_family_create_failed", locale))}`);
 
