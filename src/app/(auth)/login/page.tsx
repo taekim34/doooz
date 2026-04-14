@@ -141,6 +141,11 @@ export default async function LoginPage({
               {t("auth.signup_create_link", locale)}
             </Link>
           </p>
+          <p>
+            <Link href="/privacy" className="text-xs text-muted-foreground underline">
+              {t("privacy.link", locale)}
+            </Link>
+          </p>
         </div>
       </CardContent>
     </Card>

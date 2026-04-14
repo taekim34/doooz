@@ -80,6 +80,11 @@ export default async function SignupPage({
               {t("auth.join_with_code", locale)}
             </Link>
           </p>
+          <p>
+            <Link href="/privacy" className="text-xs text-muted-foreground underline">
+              {t("privacy.link", locale)}
+            </Link>
+          </p>
         </div>
       </CardContent>
     </Card>
