@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { BackButton } from "@/components/ui/back-button";
 import { TimezoneSelect } from "@/components/ui/timezone-select";
 import { t, type Locale } from "@/lib/i18n";
+import { DeleteAccount } from "./_delete-account";
+import { DeleteFamily } from "./_delete-family";
 
 async function updateNameAction(formData: FormData) {
   "use server";
@@ -112,6 +114,18 @@ export default async function SettingsPage({
   const { user, family } = await requireUser();
   const locale = (family.locale || "ko") as Locale;
 
+  // Determine if current user is the family admin (earliest parent by created_at)
+  const supabaseForAdmin = await createClient();
+  const { data: earliestParent } = await supabaseForAdmin
+    .from("users")
+    .select("id")
+    .eq("family_id", family.id)
+    .eq("role", "parent")
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .single();
+  const isAdmin = earliestParent?.id === user.id;
+
   return (
     <div className="mx-auto max-w-md space-y-4">
       <BackButton fallback="/" />
@@ -201,6 +215,12 @@ export default async function SettingsPage({
           </form>
         </CardContent>
       </Card>
+
+      {isAdmin ? (
+        <DeleteFamily locale={locale} />
+      ) : (
+        <DeleteAccount locale={locale} />
+      )}
 
       <Card>
         <CardContent className="p-4">

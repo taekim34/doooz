@@ -330,5 +330,22 @@
   "settings.password_changed": "비밀번호가 변경되었어요",
   "settings.save": "저장",
   "settings.timezone": "타임존",
-  "settings.title": "설정"
+  "settings.title": "설정",
+  "settings.delete_account": "탈퇴하기",
+  "settings.delete_account_desc": "탈퇴하면 내 모든 데이터가 삭제됩니다.",
+  "settings.delete_account_confirm_title": "정말 탈퇴하시겠습니까?",
+  "settings.delete_account_warn1": "내 할일, 포인트, 배지가 삭제됩니다",
+  "settings.delete_account_warn2": "더 이상 로그인할 수 없습니다",
+  "settings.delete_account_warn3": "같은 가족에 재가입 가능합니다",
+  "settings.delete_family": "가족 전체 삭제",
+  "settings.delete_family_desc": "모든 가족 구성원과 데이터가 영구적으로 삭제됩니다.",
+  "settings.delete_family_confirm_title": "가족 전체 삭제",
+  "settings.delete_family_warn": "이 작업은 되돌릴 수 없습니다!",
+  "settings.delete_family_item1": "모든 가족 구성원 계정",
+  "settings.delete_family_item2": "모든 할일, 포인트, 보상 기록",
+  "settings.delete_family_item3": "모든 레벨, 배지, 캐릭터 정보",
+  "settings.delete_confirm_input": "확인하려면 \"DELETE\"를 입력하세요:",
+  "settings.delete_confirm_button": "영구 삭제",
+  "settings.delete_error": "삭제에 실패했습니다. 다시 시도해주세요.",
+  "settings.delete_admin_error": "가족 관리자는 개인 탈퇴가 불가합니다. '가족 전체 삭제'를 이용해주세요."
 }

@@ -16,7 +16,7 @@ export const pointTransactionSchema = z.object({
   kind: pointKindSchema,
   reason: z.string().min(1).max(200),
   related_task_id: z.string().uuid().nullable().optional(),
-  actor_id: z.string().uuid(),
+  actor_id: z.string().uuid().nullable(),
 });
 
 export const redeemInputSchema = z.object({

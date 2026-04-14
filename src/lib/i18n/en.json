@@ -330,5 +330,22 @@
   "settings.password_changed": "Password changed",
   "settings.save": "Save",
   "settings.timezone": "Timezone",
-  "settings.title": "Settings"
+  "settings.title": "Settings",
+  "settings.delete_account": "Delete Account",
+  "settings.delete_account_desc": "All your data will be permanently deleted.",
+  "settings.delete_account_confirm_title": "Are you sure you want to leave?",
+  "settings.delete_account_warn1": "Your tasks, points, and badges will be deleted",
+  "settings.delete_account_warn2": "You will no longer be able to log in",
+  "settings.delete_account_warn3": "You can rejoin the same family",
+  "settings.delete_family": "Delete Entire Family",
+  "settings.delete_family_desc": "All family members and data will be permanently deleted.",
+  "settings.delete_family_confirm_title": "Delete Entire Family",
+  "settings.delete_family_warn": "This action cannot be undone!",
+  "settings.delete_family_item1": "All family member accounts",
+  "settings.delete_family_item2": "All tasks, points, and reward records",
+  "settings.delete_family_item3": "All levels, badges, and character data",
+  "settings.delete_confirm_input": "Type \"DELETE\" to confirm:",
+  "settings.delete_confirm_button": "Permanently Delete",
+  "settings.delete_error": "Deletion failed. Please try again.",
+  "settings.delete_admin_error": "Family admin cannot leave individually. Use 'Delete Entire Family' instead."
 }

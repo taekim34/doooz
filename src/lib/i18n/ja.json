@@ -330,5 +330,22 @@
   "settings.password_changed": "パスワードが変更されました",
   "settings.save": "保存",
   "settings.timezone": "タイムゾーン",
-  "settings.title": "設定"
+  "settings.title": "設定",
+  "settings.delete_account": "退会する",
+  "settings.delete_account_desc": "退会するとすべてのデータが削除されます。",
+  "settings.delete_account_confirm_title": "本当に退会しますか？",
+  "settings.delete_account_warn1": "やること、ポイント、バッジが削除されます",
+  "settings.delete_account_warn2": "ログインできなくなります",
+  "settings.delete_account_warn3": "同じファミリーに再参加できます",
+  "settings.delete_family": "ファミリー全体を削除",
+  "settings.delete_family_desc": "すべてのファミリーメンバーとデータが永久に削除されます。",
+  "settings.delete_family_confirm_title": "ファミリー全体を削除",
+  "settings.delete_family_warn": "この操作は取り消せません！",
+  "settings.delete_family_item1": "すべてのファミリーメンバーのアカウント",
+  "settings.delete_family_item2": "すべてのやること、ポイント、ごほうびの記録",
+  "settings.delete_family_item3": "すべてのレベル、バッジ、キャラクター情報",
+  "settings.delete_confirm_input": "確認するには「DELETE」と入力してください：",
+  "settings.delete_confirm_button": "完全に削除",
+  "settings.delete_error": "削除に失敗しました。もう一度お試しください。",
+  "settings.delete_admin_error": "ファミリー管理者は個人退会できません。「ファミリー全体を削除」をご利用ください。"
 }
