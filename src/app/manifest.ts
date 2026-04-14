@@ -9,7 +9,9 @@ export default function manifest(): MetadataRoute.Manifest {
     description:
       process.env.NEXT_PUBLIC_APP_DESCRIPTION ||
       "Family tasks, points, and multi-year adventures.",
+    id: "/",
     start_url: "/",
+    scope: "/",
     display: "standalone",
     background_color: themeColor,
     theme_color: themeColor,
