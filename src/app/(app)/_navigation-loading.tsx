@@ -40,7 +40,7 @@ export function NavigationLoading({ children }: { children: React.ReactNode }) {
     }
   }, [pathname, searchParams, hide]);
 
-  // Intercept link clicks to show overlay immediately
+  // Intercept link clicks and form submits to show overlay immediately
   useEffect(() => {
     function onClick(e: MouseEvent) {
       const anchor = (e.target as HTMLElement).closest("a");
@@ -50,8 +50,18 @@ export function NavigationLoading({ children }: { children: React.ReactNode }) {
       // Internal navigation — show loading
       show();
     }
+    function onSubmit(e: Event) {
+      const form = e.target as HTMLFormElement;
+      if (form.getAttribute("action") || form.method === "post") {
+        show();
+      }
+    }
     document.addEventListener("click", onClick, { capture: true });
-    return () => document.removeEventListener("click", onClick, { capture: true });
+    document.addEventListener("submit", onSubmit, { capture: true });
+    return () => {
+      document.removeEventListener("click", onClick, { capture: true });
+      document.removeEventListener("submit", onSubmit, { capture: true });
+    };
   }, [show]);
 
   return (
