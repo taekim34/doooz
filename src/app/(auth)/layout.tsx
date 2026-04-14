@@ -22,7 +22,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
   return (
     <LocaleProvider locale={locale}>
       <NavigationLoading>
-        <main className="flex min-h-screen items-center justify-center bg-muted/30 p-4">
+        <main className="flex h-[100dvh] items-center justify-center bg-muted/30 p-4 overflow-auto">
           <div className="w-full max-w-md">
             <div className="mb-6 flex items-center justify-between">
               <div />
