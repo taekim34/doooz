@@ -42,33 +42,25 @@ async function createFamilyAction(formData: FormData) {
     redirect("/onboarding/pick-character");
   }
 
-  // Use custom code or auto-generate; retry on collision
-  let family: { id: string } | null = null;
-  for (let attempt = 0; attempt < 5 && !family; attempt++) {
+  // Atomic family + owner creation via RPC (avoids RLS chicken-and-egg on SELECT)
+  let familyId: string | null = null;
+  for (let attempt = 0; attempt < 5 && !familyId; attempt++) {
     const invite = customCode || generateInviteCode();
-    const { data, error } = await supabase
-      .from("families")
-      .insert({ name, timezone, locale: familyLocale, invite_code: invite })
-      .select("id")
-      .single();
-    if (!error) family = data;
+    const { data, error } = await supabase.rpc("create_family_with_owner", {
+      p_name: name,
+      p_timezone: timezone,
+      p_locale: familyLocale,
+      p_invite_code: invite,
+      p_display_name: displayName,
+    });
+    if (!error) familyId = data;
     else {
       console.error("[create-family] attempt", attempt, error.message, error.code);
       if (error.code === "23505") continue; // unique violation — retry with new code
       redirect(`/onboarding/create-family?error=${encodeURIComponent(t("auth.error_family_create_failed", locale))}`);
     }
   }
-  if (!family) redirect(`/onboarding/create-family?error=${encodeURIComponent(t("auth.error_family_create_failed", locale))}`);
-
-  const { error: uerr } = await supabase.from("users").insert({
-    id: authUser.id,
-    family_id: family.id,
-    role: "parent",
-    display_name: displayName,
-  });
-  if (uerr) {
-    redirect(`/onboarding/create-family?error=${encodeURIComponent(t("auth.error_family_create_failed", locale))}`);
-  }
+  if (!familyId) redirect(`/onboarding/create-family?error=${encodeURIComponent(t("auth.error_family_create_failed", locale))}`);
 
   redirect("/onboarding/pick-character");
 }
