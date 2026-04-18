@@ -35,6 +35,7 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/signup") ||
     pathname.startsWith("/join") ||
     pathname.startsWith("/onboarding") ||
+    pathname.startsWith("/privacy") ||
     pathname.startsWith("/api/cron/");
 
   if (!user && !isPublicPath) {
