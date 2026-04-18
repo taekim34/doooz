@@ -131,9 +131,6 @@ export default async function LoginPage({
             <p className="text-sm font-medium" style={{ color: "#22C55E" }}>
               {t("auth.forgot_sent", locale)}
             </p>
-            <p className="text-xs" style={{ color: "#9CA3AF" }}>
-              {t("auth.forgot_no_email_hint", locale)}
-            </p>
             <Link href="/login" className="inline-block text-sm underline" style={{ color: "#6366F1" }}>
               {t("auth.login_button", locale)}
             </Link>
@@ -165,9 +162,6 @@ export default async function LoginPage({
             >
               {t("auth.forgot_submit", locale)}
             </button>
-            <p className="text-center text-xs" style={{ color: "#9CA3AF" }}>
-              {t("auth.forgot_no_email_hint", locale)}
-            </p>
             <div className="text-center">
               <Link href="/login" className="text-sm underline" style={{ color: "#6366F1" }}>
                 {t("auth.login_button", locale)}
