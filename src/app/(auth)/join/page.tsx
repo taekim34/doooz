@@ -40,6 +40,7 @@ async function joinAction(formData: FormData) {
   if (!displayName) redirectWith(t("auth.error_name_required", locale));
   if (pin.length < 6) redirectWith(t("auth.error_password_min", locale));
 
+  // WHY: admin required — invite link join needs cross-family lookup before user has a family_id
   const admin = createAdminClient();
 
   // 1. Look up the family by name + invite code (both must match).

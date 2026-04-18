@@ -27,6 +27,7 @@ export async function POST(req: Request) {
     .single();
   if (!me) return apiError(404, "user not found");
 
+  // WHY: admin required — user deletion needs auth.admin.deleteUser and cross-table cleanup
   const admin = createAdminClient();
 
   // Atomic RPC: nullify NO ACTION FKs + delete user row in one transaction

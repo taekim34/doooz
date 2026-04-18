@@ -22,6 +22,7 @@ async function joinAction(formData: FormData) {
   } = await supabase.auth.getUser();
   if (!authUser) redirect("/login");
 
+  // WHY: admin required — joining a family requires reading another family's invite code, which RLS blocks
   const admin = createAdminClient();
   const { data: fam } = await admin
     .from("families")

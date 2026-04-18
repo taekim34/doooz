@@ -9,7 +9,7 @@ describe("CharacterAvatar", () => {
   });
 
   it("falls back to neutral emoji for unknown character id", () => {
-    render(<CharacterAvatar characterId={null} stage={0} size="sm" />);
+    render(<CharacterAvatar characterId={null} stage={1} size="sm" />);
     const el = screen.getByRole("img", { hidden: true });
     expect(el).toBeInTheDocument();
   });

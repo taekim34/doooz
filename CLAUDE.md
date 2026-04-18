@@ -48,11 +48,11 @@ Next.js 15 App Router + React 19 + TS 5 + Supabase (Postgres/Auth/RLS) + Tailwin
 
 ### Supabase Clients — NEVER Mix
 
-| Context | Client | RLS |
-|---------|--------|-----|
-| RSC / Server Actions / API routes | `server.ts` | Yes |
-| Client Components | `client.ts` | Yes |
-| `/api/cron/*` only | `admin.ts` | **No** — bypasses RLS |
+| Context                           | Client      | RLS                   |
+| --------------------------------- | ----------- | --------------------- |
+| RSC / Server Actions / API routes | `server.ts` | Yes                   |
+| Client Components                 | `client.ts` | Yes                   |
+| `/api/cron/*` only                | `admin.ts`  | **No** — bypasses RLS |
 
 **`admin.ts` in actions/routes = cross-family data leak.**
 
