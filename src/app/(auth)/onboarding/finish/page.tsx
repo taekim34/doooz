@@ -1,15 +1,10 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { FadeUp } from "@/components/ui/fade-up";
-import { EyebrowLabel } from "@/components/ui/eyebrow-label";
-import { CharacterAvatar } from "@/components/ui/character-avatar";
-import { InviteCodeCard } from "@/components/ui/invite-code-card";
-import { Confetti } from "@/components/ui/confetti";
-import { buttonVariants } from "@/components/ui/button";
 import { t } from "@/lib/i18n";
 import { getAuthLocale } from "@/lib/i18n/auth-locale";
 import Link from "next/link";
 import type { Route } from "next";
+import { CopyButton } from "./_copy-button";
 
 export default async function OnboardingFinishPage() {
   const locale = await getAuthLocale();
@@ -36,62 +31,276 @@ export default async function OnboardingFinishPage() {
 
   if (!family) redirect("/");
 
-  return (
-    <div className="space-y-6 text-center">
-      <Confetti />
+  const inviteCode = family.invite_code ?? "---";
 
-      <FadeUp>
-        <EyebrowLabel className="text-center">
-          {t("auth.setup_complete", locale)}
-        </EyebrowLabel>
-        <h1
-          className="mt-2 text-3xl font-extrabold"
-          style={{ color: "var(--ink)" }}
+  return (
+    <div
+      style={{
+        position: "relative",
+        minHeight: "100dvh",
+        background: "#FFFFFF",
+        padding: "64px 28px 32px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        overflow: "hidden",
+      }}
+    >
+      {/* Decorative blob – large radial */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: -180,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: 520,
+          height: 520,
+          opacity: 0.75,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(closest-side, #FFE4E9 0%, #FFF5EC 45%, rgba(255,245,236,0) 72%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Decorative blob – small glow */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: -40,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: 220,
+          height: 220,
+          opacity: 0.5,
+          borderRadius: "50%",
+          filter: "blur(24px)",
+          background:
+            "radial-gradient(closest-side, #FFB4C6 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Content */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
+          maxWidth: 400,
+        }}
+      >
+        {/* Check icon */}
+        <div
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: "50%",
+            background: "linear-gradient(135deg, #FF6B9D, #FFA07A)",
+            boxShadow:
+              "0 8px 20px -6px rgba(255,107,157,0.45), inset 0 1px 0 rgba(255,255,255,0.45)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+          }}
         >
-          {family.name} {t("auth.family_created", locale)}
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#FFFFFF"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+
+        {/* Step label */}
+        <p
+          style={{
+            marginTop: 20,
+            fontSize: 12,
+            fontWeight: 700,
+            textTransform: "uppercase",
+            color: "#6366F1",
+            letterSpacing: "0.15em",
+          }}
+        >
+          STEP 3 of 3 {t("auth.setup_complete", locale)}
+        </p>
+
+        {/* Title */}
+        <h1
+          style={{
+            marginTop: 12,
+            fontSize: 40,
+            fontWeight: 800,
+            lineHeight: 1.15,
+            letterSpacing: "-0.03em",
+            color: "#0A0A0A",
+            textAlign: "center",
+            whiteSpace: "pre-line",
+          }}
+        >
+          {t("auth.family_created", locale)}
         </h1>
-        <p className="mt-2 text-sm" style={{ color: "var(--muted)" }}>
+
+        {/* Description */}
+        <p
+          style={{
+            marginTop: 12,
+            fontSize: 17,
+            fontWeight: 500,
+            color: "#6B7280",
+            textAlign: "center",
+            lineHeight: 1.5,
+          }}
+        >
+          <span style={{ fontWeight: 700, color: "#0A0A0A" }}>
+            {family.name}
+          </span>{" "}
           {t("auth.invite_family_desc", locale)}
         </p>
-      </FadeUp>
 
-      <FadeUp delay={80}>
-        <div className="flex justify-center">
-          <div className="animate-bounce">
-            <CharacterAvatar
-              characterId={user.character_id}
-              stage={1}
-              size="hero"
+        {/* Invite code section */}
+        <div
+          style={{
+            marginTop: 32,
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          {/* Invite code label */}
+          <p
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              textTransform: "uppercase",
+              color: "#9CA3AF",
+              letterSpacing: "0.15em",
+              marginBottom: 12,
+            }}
+          >
+            {t("auth.invite_code_label", locale)}
+          </p>
+
+          {/* Code box */}
+          <div
+            style={{
+              width: "100%",
+              borderRadius: 14,
+              padding: "16px 20px",
+              background: "#FAFAFA",
+              border: "1.5px dashed #E5E7EB",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <span
+              style={{
+                fontSize: 24,
+                fontWeight: 800,
+                letterSpacing: "0.08em",
+                color: "#FF6B9D",
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              {inviteCode}
+            </span>
+
+            <CopyButton
+              code={inviteCode}
+              copyLabel={t("family.copy", locale)}
+              copiedLabel={t("family.copied", locale)}
             />
           </div>
         </div>
-      </FadeUp>
 
-      <FadeUp delay={160}>
-        <InviteCodeCard
-          code={family.invite_code ?? "---"}
-          copyLabel={t("family.copy", locale)}
-          copiedLabel={t("family.copied", locale)}
-        />
-      </FadeUp>
+        {/* CTA section */}
+        <div
+          style={{
+            marginTop: 32,
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            alignItems: "center",
+          }}
+        >
+          {/* Primary CTA */}
+          <a
+            href={`https://sharer.kakao.com/talk/friends/picker/shorturl?url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_APP_URL ?? ""}/join?code=${inviteCode}`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              width: "100%",
+              height: 56,
+              borderRadius: 10,
+              background: "#0A0A0A",
+              color: "#FFFFFF",
+              fontSize: 16,
+              fontWeight: 700,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              textDecoration: "none",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            💬 카카오톡으로 초대
+          </a>
 
-      <FadeUp delay={240}>
-        <div className="space-y-3">
+          {/* Secondary CTA */}
           <Link
             href={"/signup" as Route}
-            className={buttonVariants({ className: "w-full" })}
+            style={{
+              width: "100%",
+              height: 48,
+              borderRadius: 10,
+              background: "#FFFFFF",
+              border: "1px solid #E5E5E5",
+              color: "#0A0A0A",
+              fontSize: 15,
+              fontWeight: 700,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              textDecoration: "none",
+              cursor: "pointer",
+            }}
           >
             {t("auth.create_child_account", locale)}
           </Link>
+
+          {/* Skip link */}
           <Link
             href={"/" as Route}
-            className="block text-sm font-medium"
-            style={{ color: "var(--muted)" }}
+            style={{
+              marginTop: 4,
+              fontSize: 14,
+              fontWeight: 500,
+              color: "#6366F1",
+              textDecoration: "none",
+            }}
           >
             {t("auth.skip_for_now", locale)} →
           </Link>
         </div>
-      </FadeUp>
+      </div>
     </div>
   );
 }
