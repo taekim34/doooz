@@ -14,6 +14,18 @@ import { OnboardingAccordion } from "./_onboarding-accordion";
 import { LocalePill } from "./_locale-pill";
 import type { Locale } from "@/lib/i18n";
 
+async function resetPasswordAction(formData: FormData) {
+  "use server";
+  const email = String(formData.get("email") || "").trim();
+  if (!email) redirect("/login?forgot=1&error=email_required");
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/login`,
+  });
+  if (error) redirect(`/login?forgot=1&error=${encodeURIComponent(error.message)}`);
+  redirect("/login?forgot=1&sent=1");
+}
+
 async function emailLoginAction(formData: FormData) {
   "use server";
   const email = String(formData.get("email") || "");
@@ -79,7 +91,7 @@ async function familyLoginAction(formData: FormData) {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; tab?: string; need_confirm?: string }>;
+  searchParams: Promise<{ error?: string; tab?: string; need_confirm?: string; forgot?: string; sent?: string }>;
 }) {
   const sp = await searchParams;
   const locale = await getAuthLocale();
@@ -99,6 +111,70 @@ export default async function LoginPage({
         <Link href="/login" className="inline-block text-sm underline" style={{ color: "#6366F1" }}>
           {t("auth.login_button", locale)}
         </Link>
+      </div>
+    );
+  }
+
+  if (sp.forgot) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center">
+          <h2 className="text-xl font-bold">{t("auth.forgot_title", locale)}</h2>
+          <p className="mt-2 text-sm" style={{ color: "#9CA3AF" }}>
+            {t("auth.forgot_desc", locale)}
+          </p>
+        </div>
+
+        {sp.sent ? (
+          <div className="space-y-4 text-center">
+            <div className="text-5xl">📧</div>
+            <p className="text-sm font-medium" style={{ color: "#22C55E" }}>
+              {t("auth.forgot_sent", locale)}
+            </p>
+            <p className="text-xs" style={{ color: "#9CA3AF" }}>
+              {t("auth.forgot_no_email_hint", locale)}
+            </p>
+            <Link href="/login" className="inline-block text-sm underline" style={{ color: "#6366F1" }}>
+              {t("auth.login_button", locale)}
+            </Link>
+          </div>
+        ) : (
+          <form action={resetPasswordAction} className="flex flex-col" style={{ gap: 16 }}>
+            <FormField label={t("auth.email_placeholder", locale)}>
+              <StyledInput type="email" name="email" placeholder="you@family.com" required />
+            </FormField>
+            {sp.error && (
+              <p className="text-sm text-destructive">
+                {sp.error === "email_required" ? t("auth.email_required", locale) : sp.error}
+              </p>
+            )}
+            <button
+              type="submit"
+              className="w-full text-white transition-transform hover:translate-y-[-1px]"
+              style={{
+                marginTop: 8,
+                height: 48,
+                borderRadius: 10,
+                fontSize: 15,
+                fontWeight: 600,
+                background: "#0A0A0A",
+                border: "none",
+                letterSpacing: "-0.01em",
+                boxShadow: "0 1px 2px rgba(10,10,10,0.04)",
+              }}
+            >
+              {t("auth.forgot_submit", locale)}
+            </button>
+            <p className="text-center text-xs" style={{ color: "#9CA3AF" }}>
+              {t("auth.forgot_no_email_hint", locale)}
+            </p>
+            <div className="text-center">
+              <Link href="/login" className="text-sm underline" style={{ color: "#6366F1" }}>
+                {t("auth.login_button", locale)}
+              </Link>
+            </div>
+          </form>
+        )}
       </div>
     );
   }

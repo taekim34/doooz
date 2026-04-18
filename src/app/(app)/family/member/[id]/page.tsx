@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { BackButton } from "@/components/ui/back-button";
 import { StageProgress } from "@/app/(app)/characters/_stage-progress";
 import { TaskCheckbox } from "@/app/(app)/tasks/_checkbox";
+import { ResetPasswordButton } from "@/app/(app)/family/member/_reset-password";
 import { t, type Locale } from "@/lib/i18n";
 
 interface MemberRow {
@@ -29,7 +30,7 @@ export default async function MemberDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const { family } = await requireUser();
+  const { user: currentUser, family } = await requireUser();
   const locale = (family.locale || "ko") as Locale;
 
   const supabase = await createClient();
@@ -129,6 +130,9 @@ export default async function MemberDetailPage({
             </div>
           </div>
           {isChild && <StageProgress currentStage={stage} locale={locale} />}
+          {currentUser.role === "parent" && (
+            <ResetPasswordButton userId={member.id} memberName={member.display_name} />
+          )}
         </CardContent>
       </Card>
 
