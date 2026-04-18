@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { Input } from "@/components/ui/input";
 
 const STORAGE_KEY =
   process.env.NEXT_PUBLIC_FAMILY_STORAGE_KEY || "doooz_family_name";
@@ -18,7 +17,7 @@ export function FamilyNameInput({ defaultValue, placeholder }: { defaultValue?: 
   }, []);
 
   return (
-    <Input
+    <input
       ref={ref}
       name="family_name"
       placeholder={placeholder || defaultValue || ""}
@@ -28,6 +27,15 @@ export function FamilyNameInput({ defaultValue, placeholder }: { defaultValue?: 
       onChange={(e) => {
         const v = e.target.value.trim();
         if (v) localStorage.setItem(STORAGE_KEY, v);
+      }}
+      style={{
+        height: 48, width: "100%", borderRadius: 10,
+        padding: "0 16px", outline: "none",
+        background: "#FAFAFA", border: "1px solid #F0F0F0",
+        fontSize: 17, fontWeight: 500, color: "#0A0A0A",
+        fontFamily: "inherit",
+        transition: "border-color 150ms, background 150ms",
+        boxSizing: "border-box",
       }}
     />
   );
