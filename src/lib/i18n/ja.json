@@ -191,6 +191,8 @@
   "home.no_tasks": "今日のやることはありません。",
   "home.pending_approvals": "承認待ち",
   "home.report": "レポート",
+  "home.role_adventurer": "冒険者",
+  "home.streak_days": "{days}日連続達成!",
   "home.status_done": "完了",
   "home.status_pending": "未完了",
   "home.status_rejected": "却下",

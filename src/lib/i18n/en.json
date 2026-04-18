@@ -191,6 +191,8 @@
   "home.no_tasks": "No tasks today.",
   "home.pending_approvals": "Pending",
   "home.report": "Report",
+  "home.role_adventurer": "Adventurer",
+  "home.streak_days": "{days}-day streak!",
   "home.status_done": "Done",
   "home.status_pending": "Pending",
   "home.status_rejected": "Rejected",
