@@ -213,6 +213,7 @@
   "home.status_overdue": "Missed",
   "home.status_beg_pending": "Beg pending",
   "home.status_pardoned": "Pardon",
+  "home.today_done": "Today Done",
   "home.today_tasks": "Today's Tasks",
   "home.today_summary": "Today's Task Status",
   "home.total_tasks": "Total Tasks",

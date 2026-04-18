@@ -12,7 +12,7 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "rounded-md p-4",
+        "rounded-[14px] p-4",
         className,
       )}
       style={{
@@ -20,10 +20,20 @@ export function StatCard({
         boxShadow: "0 1px 2px rgba(10,10,10,0.04)",
       }}
     >
-      <div className="text-xs font-medium" style={{ color: "var(--muted)" }}>
+      <div
+        className="text-[11px] font-semibold"
+        style={{ color: "var(--muted)" }}
+      >
         {label}
       </div>
-      <div className="mt-1 text-2xl font-bold" style={{ color: "var(--ink)" }}>
+      <div
+        className="mt-1 text-[22px] font-extrabold"
+        style={{
+          color: "var(--ink)",
+          letterSpacing: "-0.02em",
+          fontFeatureSettings: '"tnum" 1',
+        }}
+      >
         {value}
       </div>
     </div>

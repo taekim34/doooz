@@ -213,6 +213,7 @@
   "home.status_overdue": "미완료",
   "home.status_beg_pending": "조르기 중",
   "home.status_pardoned": "봐주기",
+  "home.today_done": "오늘 완료",
   "home.today_tasks": "오늘의 할일",
   "home.today_summary": "오늘의 할일 현황",
   "home.total_tasks": "전체 할일",
