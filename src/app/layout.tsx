@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toast";
 import { RegisterSW } from "./_register-sw";
+import { pretendard } from "@/lib/fonts";
 
 const DEFAULT_LOCALE = process.env.NEXT_PUBLIC_DEFAULT_LOCALE || "en";
 const LOCALE_COOKIE = process.env.NEXT_PUBLIC_LOCALE_COOKIE || "doooz_locale";
@@ -42,7 +43,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         <RegisterSW />
       </head>
-      <body className="min-h-screen bg-background font-sans antialiased">
+      <body className={`${pretendard.variable} min-h-screen bg-background font-sans antialiased`}>
         {children}
         <Toaster />
       </body>
