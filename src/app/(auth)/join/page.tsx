@@ -1,5 +1,4 @@
 import { randomUUID } from "node:crypto";
-import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -118,23 +117,8 @@ export default async function JoinPage({
   const locale = await getAuthLocale();
   return (
     <>
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-        <div style={{
-          fontSize: 12, fontWeight: 700, textTransform: "uppercase",
-          color: "#6366F1", letterSpacing: "0.15em",
-        }}>DOOOZ &middot; {t("auth.brand_subtitle", locale)}</div>
-        <Image
-          src="/login-logo.png"
-          alt="DOOOZ"
-          width={400}
-          height={400}
-          priority
-          style={{ marginTop: 12, width: 200, height: 200, display: "block", objectFit: "contain" }}
-        />
-      </div>
-
       <h1 style={{
-        marginTop: 20, fontSize: 24, fontWeight: 800,
+        marginTop: 0, fontSize: 24, fontWeight: 800,
         color: "#0A0A0A", letterSpacing: "-0.02em", textAlign: "center",
       }}>
         {t("auth.join_family", locale)}
@@ -236,6 +220,11 @@ export default async function JoinPage({
           {t("auth.first_time_create", locale)}{" "}
           <Link href="/signup" style={{ fontSize: 14, fontWeight: 500, color: "#6366F1", textDecoration: "none" }}>
             {t("auth.email_signup", locale)}
+          </Link>
+        </p>
+        <p style={{ margin: "8px 0 0" }}>
+          <Link href="/privacy" style={{ fontSize: 13, fontWeight: 500, color: "#6B7280", textDecoration: "none" }}>
+            {t("privacy.link", locale)}
           </Link>
         </p>
       </div>
