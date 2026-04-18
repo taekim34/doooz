@@ -163,6 +163,18 @@
   .transition-spring {
     transition: all var(--duration-base) var(--ease-spring);
   }
+  .gradient-text {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .glass-button {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
 }
 
 /* Reduced motion — hard override */

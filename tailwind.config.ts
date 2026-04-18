@@ -70,11 +70,43 @@ const config: Config = {
       },
       animation: {
         fadeInUp: "fadeInUp var(--duration-long) var(--ease-spring) both",
+        rise: "rise 640ms var(--ease-spring) both",
+        checkPop: "checkPop 720ms var(--ease-spring) both",
+        cardIn: "cardIn 400ms var(--ease-spring) 100ms both",
+        cardOut: "cardOut 300ms cubic-bezier(0.4,0,1,1) both",
+        bounce: "bounce 1.4s ease-in-out 300ms infinite",
+        confettiFall: "confettiFall 1.5s cubic-bezier(0.3,0.1,0.6,1) both",
       },
       keyframes: {
         fadeInUp: {
           from: { opacity: "0", transform: "translateY(2rem)", filter: "blur(4px)" },
           to: { opacity: "1", transform: "translateY(0)", filter: "blur(0)" },
+        },
+        rise: {
+          from: { opacity: "0", transform: "translateY(10px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        checkPop: {
+          "0%": { transform: "scale(0)" },
+          "70%": { transform: "scale(1.1)" },
+          "100%": { transform: "scale(1)" },
+        },
+        cardIn: {
+          from: { opacity: "0", transform: "scale(0.8)" },
+          to: { opacity: "1", transform: "scale(1)" },
+        },
+        cardOut: {
+          from: { opacity: "1", transform: "scale(1)" },
+          to: { opacity: "0", transform: "scale(0.95)" },
+        },
+        bounce: {
+          "0%, 100%": { transform: "translateY(0) rotate(-4deg)" },
+          "50%": { transform: "translateY(-6px) rotate(-4deg)" },
+        },
+        confettiFall: {
+          "0%": { opacity: "0", transform: "translateY(-20px) rotate(var(--rot, 0deg))" },
+          "10%": { opacity: "1" },
+          "100%": { opacity: "0", transform: "translateY(800px) rotate(calc(var(--rot, 0deg) + 540deg))" },
         },
       },
     },
