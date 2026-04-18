@@ -30,14 +30,15 @@ export function StyledInput({
   return (
     <input
       className={cn(
-        "h-12 w-full rounded-md px-4 text-base outline-none transition-colors",
+        "h-12 w-full rounded-[10px] px-4 text-[17px] font-medium outline-none transition-colors",
         "focus:border-[color:var(--ink)] focus:bg-white",
         className,
       )}
       style={{
-        background: "var(--card)",
-        border: "1px solid var(--border, #F0F0F0)",
+        background: "#FAFAFA",
+        border: "1px solid #F0F0F0",
         color: "var(--ink)",
+        boxSizing: "border-box",
       }}
       {...props}
     />

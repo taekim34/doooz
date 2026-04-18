@@ -5,7 +5,6 @@ import { getCurrentAuth } from "@/features/auth/current-user";
 import { LocaleProvider } from "@/lib/i18n/context";
 import { AuthLocaleSwitcher } from "./_locale-switcher";
 import { NavigationLoading } from "@/app/(app)/_navigation-loading";
-import { GlowBlob } from "@/components/ui/glow-blob";
 import type { Locale } from "@/lib/i18n";
 
 export default async function AuthLayout({ children }: { children: React.ReactNode }) {
@@ -28,7 +27,14 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
           className="relative flex h-[100dvh] items-center justify-center overflow-auto p-4"
           style={{ background: "var(--bg)" }}
         >
-          <GlowBlob className="top-0 right-0 h-64 w-64" color="#FFE4E9" />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-[120px] -top-[120px] h-[420px] w-[420px] rounded-full opacity-40"
+            style={{
+              filter: "blur(8px)",
+              background: "radial-gradient(closest-side, #FFE4E9 0%, rgba(255,228,233,0.4) 45%, transparent 75%)",
+            }}
+          />
           <div className="relative z-10 w-full max-w-md">
             <div className="mb-6 flex items-center justify-between">
               <div />
