@@ -15,7 +15,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <LocaleProvider locale={locale}>
       <Suspense>
         <NavigationLoading>
-          <div className="flex min-h-screen flex-col md:flex-row">
+          <div data-mode={user.role === "child" ? "kid" : "parent"} className="flex min-h-screen flex-col md:flex-row">
             <AppNav role={user.role} userName={user.display_name} familyName={family.name} locale={locale} />
             <main className="flex-1 p-4 pb-24 md:p-8 md:pb-8">{children}</main>
             <PushSubscriber />

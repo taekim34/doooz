@@ -30,8 +30,10 @@ resource-backup/
 docs/
 .bkit/
 .claude/
+.ww-w-ai/
 tsconfig.tsbuildinfo
 next-env.d.ts
 AGENTS.md
 GEMINI.md
 .playwright-mcp/
+.superpowers/

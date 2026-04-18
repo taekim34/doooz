@@ -5,7 +5,12 @@ export const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("rounded-lg border bg-card text-card-foreground shadow-sm", className)}
+      className={cn(
+        "bg-[color:var(--card)] text-[color:var(--ink)] rounded-lg shadow-card",
+        // Kid mode: add inner highlight for raised-from-surface feel
+        "[&:where([data-mode='kid']_*,[data-mode='kid'])]:shadow-[0_20px_40px_-16px_rgba(45,27,61,0.12),inset_0_1px_0_rgba(255,255,255,0.6)]",
+        className,
+      )}
       {...props}
     />
   ),
@@ -23,7 +28,7 @@ export const CardTitle = React.forwardRef<HTMLDivElement, React.HTMLAttributes<H
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+      className={cn("text-lg font-semibold leading-tight tracking-tight heading-ko", className)}
       {...props}
     />
   ),

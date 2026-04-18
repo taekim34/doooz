@@ -26,6 +26,7 @@ export async function POST(req: Request) {
     .single();
   if (!me) return apiError(404, "user not found");
 
+  // WHY: admin required — cascading family deletion needs auth.admin to remove all members' auth accounts
   const admin = createAdminClient();
 
   // Atomic RPC: admin check + nullify NO ACTION FKs + delete family in one transaction

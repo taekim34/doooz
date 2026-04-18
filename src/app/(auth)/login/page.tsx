@@ -37,6 +37,7 @@ async function familyLoginAction(formData: FormData) {
 
   if (!familyName || !displayName || !password) redirectWith(t("auth.error_all_required", locale));
 
+  // WHY: admin required — pre-auth state has no RLS session; need family+user lookup and auth.admin.getUserById
   const admin = createAdminClient();
 
   // 1. Find family by name

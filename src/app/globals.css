@@ -2,13 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =========================
+   L1 · Foundation tokens (shared across modes)
+   ========================= */
 @layer base {
   :root {
+    /* Font */
+    --font-sans: var(--font-pretendard), "Apple SD Gothic Neo", system-ui, -apple-system, sans-serif;
+
+    /* Spacing grid — 4px base (for custom utilities only; Tailwind default scale still applies) */
+    --space-unit: 0.25rem;
+
+    /* Motion */
+    --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-fast: 200ms;
+    --duration-base: 400ms;
+    --duration-long: 500ms;
+
+    /* Shadow primitives (will be consumed by L2) */
+    --shadow-card-kid: 0 20px 40px -16px rgba(45, 27, 61, 0.12);
+    --shadow-card-kid-inset: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    --shadow-card-parent: 0 1px 2px rgba(10, 10, 10, 0.04);
+    --shadow-cta-kid: 0 10px 24px rgba(45, 27, 61, 0.3);
+
+    /* z-index layering */
+    --z-nav: 40;
+    --z-overlay: 50;
+    --z-decorative: 60;
+
+    /* Existing shadcn tokens preserved for backward compatibility — values updated in L2 */
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
-    --primary: 262 83% 58%;
+    --primary: 240 10% 3.9%;
     --primary-foreground: 0 0% 98%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
@@ -20,41 +47,132 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 262 83% 58%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --primary: 263 70% 65%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 263 70% 65%;
+    --ring: 240 10% 3.9%;
   }
 }
 
+/* =========================
+   L2 · Semantic tokens — PARENT mode (default when neither kid nor dark)
+   ========================= */
+@layer base {
+  [data-mode="parent"] {
+    /* Color palette */
+    --bg: #ffffff;
+    --card: #fafafa;
+    --card-raw: 0 0% 98%;
+    --ink: #0a0a0a;
+    --muted: #9ca3af;
+    --primary-color: #0a0a0a;
+    --accent-color: #6366f1;
+    --accent-gradient: linear-gradient(90deg, #6366f1, #8b7ab8);
+
+    /* Radius */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-pill: 10px;
+
+    /* Shadow */
+    --shadow-card: var(--shadow-card-parent);
+    --shadow-card-inset: none;
+
+    /* Shadcn compat — map to parent */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 4%;
+    --primary: 0 0% 4%;
+    --primary-foreground: 0 0% 100%;
+    --ring: 0 0% 4%;
+    --border: 220 14% 96%;
+  }
+}
+
+/* =========================
+   L2 · Semantic tokens — KID mode
+   ========================= */
+@layer base {
+  [data-mode="kid"] {
+    --bg: #fff5ec;
+    --bg-gradient: linear-gradient(135deg, #fff5ec 0%, #ffe4e9 40%, #e5efff 100%);
+    --card: #ffffff;
+    --card-raw: 0 0% 100%;
+    --ink: #2d1b3d;
+    --muted: #6b7280;
+    --primary-color: #ff6b9d;
+    --accent-color: #ff6b9d;
+    --accent-gradient: linear-gradient(90deg, #ff6b9d, #ffa07a);
+
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 22px;
+    --radius-pill: 9999px;
+
+    --shadow-card: var(--shadow-card-kid);
+    --shadow-card-inset: var(--shadow-card-kid-inset);
+
+    /* Shadcn compat — map to kid */
+    --background: 26 100% 96%;
+    --foreground: 275 38% 17%;
+    --primary: 340 100% 71%;
+    --primary-foreground: 0 0% 100%;
+    --ring: 340 100% 71%;
+    --border: 350 60% 94%;
+  }
+}
+
+/* =========================
+   Base element rules
+   ========================= */
 @layer base {
   * {
     @apply border-border;
   }
+  html {
+    /* Default mode = parent so (auth) without explicit wrapper still looks clean */
+  }
   body {
-    @apply bg-background text-foreground;
-    /* iOS PWA: prevent content from extending behind system bars */
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--ink);
+    word-break: keep-all;
+    -webkit-font-smoothing: antialiased;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
     padding-left: env(safe-area-inset-left, 0px);
     padding-right: env(safe-area-inset-right, 0px);
+  }
+  [data-mode="kid"] body,
+  body[data-mode="kid"] {
+    background: var(--bg-gradient);
+  }
+  [data-nums] {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Korean heading rhythm — applied via class, not element, to stay opt-in */
+  .heading-ko {
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    word-break: keep-all;
+  }
+}
+
+/* =========================
+   Motion
+   ========================= */
+@layer utilities {
+  .transition-spring {
+    transition: all var(--duration-base) var(--ease-spring);
+  }
+}
+
+/* Reduced motion — hard override */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

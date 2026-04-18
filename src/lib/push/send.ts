@@ -39,6 +39,7 @@ export async function sendPushToUsers(
     return;
   }
 
+  // WHY: admin required — push needs to read all family members' subscriptions across RLS boundaries
   const admin = createAdminClient();
   const { data: subs, error: subErr } = await admin
     .from("push_subscriptions")
@@ -83,6 +84,7 @@ export async function sendPushToUsers(
  * Send push to all parents in a family.
  */
 export async function pushToParents(familyId: string, payload: PushPayload) {
+  // WHY: admin required — querying parent users by family_id without a caller session
   const admin = createAdminClient();
   const { data } = await admin
     .from("users")
