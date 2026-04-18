@@ -17,7 +17,7 @@ async function pickAction(formData: FormData) {
   } = await supabase.auth.getUser();
   if (!authUser) redirect("/login");
   await supabase.from("users").update({ character_id: id }).eq("id", authUser.id);
-  redirect("/");
+  redirect("/onboarding/finish");
 }
 
 export default async function PickCharacterPage() {
