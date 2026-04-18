@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 const STORAGE_KEY =
   process.env.NEXT_PUBLIC_FAMILY_STORAGE_KEY || "doooz_family_name";
 
-export function FamilyNameInput({ defaultValue }: { defaultValue?: string }) {
+export function FamilyNameInput({ defaultValue, placeholder }: { defaultValue?: string; placeholder?: string }) {
   const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export function FamilyNameInput({ defaultValue }: { defaultValue?: string }) {
     <Input
       ref={ref}
       name="family_name"
-      placeholder={defaultValue || ""}
+      placeholder={placeholder || defaultValue || ""}
       defaultValue={defaultValue}
       required
       maxLength={40}

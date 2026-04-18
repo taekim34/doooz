@@ -10,7 +10,7 @@ import { t } from "@/lib/i18n";
 import { getAuthLocale } from "@/lib/i18n/auth-locale";
 import { FormField, StyledInput } from "@/components/ui/form-field";
 import { PasswordInput } from "@/components/ui/password-input";
-import { OnboardingAccordion } from "./_onboarding-accordion";
+import { StartSheet } from "./_start-sheet";
 import { LocalePill } from "./_locale-pill";
 import type { Locale } from "@/lib/i18n";
 
@@ -208,7 +208,7 @@ export default async function LoginPage({
           {/* Family login (default) */}
           <form data-tab="family" action={familyLoginAction} className="flex flex-col" style={{ gap: 16 }}>
             <FormField label={t("auth.family_name_label", locale)}>
-              <FamilyNameInput />
+              <FamilyNameInput placeholder={t("auth.family_name_placeholder", locale)} />
             </FormField>
             <FormField label={t("auth.my_name_label", locale)}>
               <StyledInput name="display_name" placeholder={t("auth.my_name_placeholder", locale)} required />
@@ -240,7 +240,7 @@ export default async function LoginPage({
 
           {/* Email login */}
           <form data-tab="email" action={emailLoginAction} className="flex flex-col" style={{ gap: 16 }}>
-            <FormField label={t("auth.email_placeholder", locale)}>
+            <FormField label={t("auth.email_label", locale)}>
               <StyledInput type="email" name="email" placeholder="you@family.com" required />
             </FormField>
             <FormField label={t("auth.password", locale)}>
@@ -279,7 +279,7 @@ export default async function LoginPage({
           </Link>
         </div>
 
-        <OnboardingAccordion
+        <StartSheet
           joinLabel={t("auth.join_family", locale)}
           joinSub={t("auth.join_family_sub", locale)}
           createLabel={t("auth.signup_create_link", locale)}
