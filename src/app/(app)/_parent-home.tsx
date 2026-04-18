@@ -5,6 +5,7 @@ import { KidRow } from "@/components/ui/kid-row";
 import { Card, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { getStage } from "@/lib/level";
+import { nowDate } from "@/lib/datetime/clock";
 import { t, type Locale } from "@/lib/i18n";
 import Link from "next/link";
 import type { Route } from "next";
@@ -49,7 +50,7 @@ export function ParentHome({
       {/* Header */}
       <FadeUp>
         <EyebrowLabel>
-          {new Date().toLocaleDateString(
+          {nowDate().toLocaleDateString(
             locale === "ko"
               ? "ko-KR"
               : locale === "ja"
