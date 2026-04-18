@@ -104,8 +104,8 @@ export default async function LoginPage({
     <Card>
       <CardHeader>
         <FadeUp>
-          <EyebrowLabel className="text-center">{t("auth.welcome_back", locale)}</EyebrowLabel>
-          <CardTitle className="mt-1 text-center text-2xl">{t("auth.login_title", locale)}</CardTitle>
+          <EyebrowLabel className="text-center">{t("auth.brand_subtitle", locale)}</EyebrowLabel>
+          <CardTitle className="mt-1 text-center text-2xl">{t("auth.brand_heading", locale)}</CardTitle>
         </FadeUp>
         <FadeUp delay={80}>
           <div className="mt-3 flex justify-center gap-2">

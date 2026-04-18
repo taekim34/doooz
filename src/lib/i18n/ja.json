@@ -1,5 +1,7 @@
 {
   "auth.already_have_account": "すでにアカウントをお持ちですか？",
+  "auth.brand_heading": "今日も一緒に頑張ろう",
+  "auth.brand_subtitle": "DOOOZ · 家族の一日",
   "auth.check_email_desc": "認証メールを送りました。\nメール内のリンクをクリックすると登録が完了します。",
   "auth.check_email_title": "メールを確認してください",
   "auth.create_family": "家族を作る",

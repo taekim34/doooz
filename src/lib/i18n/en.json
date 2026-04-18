@@ -1,5 +1,7 @@
 {
   "auth.already_have_account": "Already have an account?",
+  "auth.brand_heading": "Let's do it together",
+  "auth.brand_subtitle": "DOOOZ · Our Family's Day",
   "auth.check_email_desc": "We sent a verification email.\nClick the link in the email to complete sign up.",
   "auth.check_email_title": "Check your email",
   "auth.create_family": "Create Family",

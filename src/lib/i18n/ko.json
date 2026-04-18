@@ -1,5 +1,7 @@
 {
   "auth.already_have_account": "이미 계정이 있으신가요?",
+  "auth.brand_heading": "오늘도 함께 해요",
+  "auth.brand_subtitle": "DOOOZ · 우리 가족의 하루",
   "auth.check_email_desc": "인증 메일을 보냈어요.\n이메일의 링크를 클릭하면 가입이 완료됩니다.",
   "auth.check_email_title": "이메일을 확인해주세요",
   "auth.create_family": "가족 만들기",
