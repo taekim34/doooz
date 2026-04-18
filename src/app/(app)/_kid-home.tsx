@@ -112,7 +112,7 @@ export function KidHome({
 
   return (
     <div className="relative mx-auto max-w-lg space-y-6 pb-8">
-      <GlowBlob className="-top-20 -left-16 h-64 w-64" color="var(--accent-color)" style={{ opacity: 0.5 }} />
+      <GlowBlob className="-top-20 -left-16 h-64 w-64" color="#FFB4C6" style={{ opacity: 0.5 }} />
       <GlowBlob className="top-40 -right-20 h-72 w-72" color="#FFD5B8" style={{ opacity: 0.4 }} />
 
       {/* Streak */}
@@ -125,8 +125,9 @@ export function KidHome({
       {/* Hero card */}
       <FadeUp delay={80}>
         <div
-          className="relative overflow-hidden rounded-[22px] p-7"
+          className="relative overflow-hidden rounded-[22px]"
           style={{
+            padding: "28px 24px 24px",
             background: "var(--card)",
             boxShadow: "0 20px 40px -16px rgba(45,27,61,0.12), inset 0 1px 0 rgba(255,255,255,0.6)",
           }}
@@ -248,7 +249,7 @@ export function KidHome({
             href="/tasks"
             className="flex items-center gap-2 rounded-full py-2 pl-6 pr-2 text-white transition-spring hover:translate-y-[-2px]"
             style={{
-              background: "var(--ink)",
+              background: "#1A0F26",
               boxShadow: "0 18px 36px -12px rgba(26,15,38,0.55), inset 0 1px 0 rgba(255,255,255,0.08)",
             }}
           >
