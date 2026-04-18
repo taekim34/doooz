@@ -286,11 +286,6 @@ export default async function LoginPage({
           createSub={t("auth.create_family_sub", locale)}
         />
 
-        <div style={{ marginTop: 24 }}>
-          <Link href="/privacy" className="block text-center text-xs" style={{ color: "#9CA3AF" }}>
-            {t("privacy.link", locale)}
-          </Link>
-        </div>
       </div>
     </div>
   );
