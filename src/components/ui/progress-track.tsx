@@ -17,7 +17,7 @@ export function ProgressTrack({ value, size = "md", className }: ProgressTrackPr
       aria-valuemin={0}
       aria-valuemax={100}
       className={cn(
-        "w-full overflow-hidden rounded-pill bg-black/5",
+        "w-full overflow-hidden rounded-pill",
         // Kid: taller, more visible
         "h-3",
         size === "sm" && "h-2",
@@ -27,17 +27,34 @@ export function ProgressTrack({ value, size = "md", className }: ProgressTrackPr
           "[&:where([data-mode='parent']_*,[data-mode='parent'])]:h-0.5",
         className,
       )}
+      style={{
+        background: "color-mix(in srgb, var(--ink) 6%, transparent)",
+      }}
     >
       <div
         data-fill=""
         className={cn(
-          "h-full rounded-pill transition-spring",
+          "relative h-full rounded-pill transition-spring",
           "bg-[image:var(--accent-gradient)]",
           "[&:where([data-mode='parent']_*,[data-mode='parent'])]:bg-none",
           "[&:where([data-mode='parent']_*,[data-mode='parent'])]:bg-[color:var(--ink)]",
         )}
-        style={{ width: `${clamped}%` }}
-      />
+        style={{
+          width: `${clamped}%`,
+          boxShadow:
+            "0 0 12px color-mix(in srgb, var(--accent-color) 60%, transparent), inset 0 1px 0 rgba(255,255,255,0.5)",
+        }}
+      >
+        {/* Glass shine overlay */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 rounded-pill"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 60%)",
+          }}
+        />
+      </div>
     </div>
   );
 }
