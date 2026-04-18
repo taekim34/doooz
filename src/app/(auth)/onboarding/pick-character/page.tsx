@@ -1,8 +1,11 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { characterEmoji } from "@/features/characters/emoji-map";
 import { t } from "@/lib/i18n";
 import { getAuthLocale } from "@/lib/i18n/auth-locale";
+import { FadeUp } from "@/components/ui/fade-up";
+import { CharacterAvatar } from "@/components/ui/character-avatar";
+import { EyebrowLabel } from "@/components/ui/eyebrow-label";
+import { LevelPill } from "@/components/ui/level-pill";
 
 async function pickAction(formData: FormData) {
   "use server";
@@ -33,23 +36,42 @@ export default async function PickCharacterPage() {
 
   return (
     <div>
-      <h2 className="mb-4 text-center text-xl font-semibold">{t("auth.pick_character", locale)}</h2>
+      <FadeUp>
+        <EyebrowLabel className="text-center">STEP 3 of 3</EyebrowLabel>
+        <h2
+          className="mb-6 text-center text-3xl font-extrabold"
+          style={{ color: "var(--ink)" }}
+        >
+          {t("auth.pick_character", locale)}
+        </h2>
+      </FadeUp>
       <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
-        {list.map((c) => {
+        {list.map((c, i) => {
           const locked = c.unlock_level > 0;
           return (
-            <form key={c.id} action={pickAction}>
-              <input type="hidden" name="character_id" value={c.id} />
-              <button
-                type="submit"
-                disabled={locked}
-                className="flex w-full flex-col items-center rounded-lg border bg-background p-4 text-sm shadow-sm transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                <span className="text-4xl">{characterEmoji(c.id, 1)}</span>
-                <span className="mt-2">{c.name}</span>
-                {locked && <span className="text-xs text-muted-foreground">Lv.{c.unlock_level} {t("auth.unlock", locale)}</span>}
-              </button>
-            </form>
+            <FadeUp key={c.id} delay={i * 60}>
+              <form action={pickAction}>
+                <input type="hidden" name="character_id" value={c.id} />
+                <button
+                  type="submit"
+                  disabled={locked}
+                  className="relative flex w-full flex-col items-center rounded-lg p-4 text-sm transition-spring hover:translate-y-[-2px] disabled:pointer-events-none disabled:opacity-40"
+                  style={{
+                    background: "var(--card)",
+                    border: "1px solid var(--border, #f0f0f0)",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                  }}
+                >
+                  <CharacterAvatar characterId={c.id} stage={1} size="md" />
+                  <span className="mt-2" style={{ color: "var(--ink)" }}>{c.name}</span>
+                  {locked && (
+                    <div className="absolute top-2 right-2">
+                      <LevelPill level={c.unlock_level} />
+                    </div>
+                  )}
+                </button>
+              </form>
+            </FadeUp>
           );
         })}
       </div>
