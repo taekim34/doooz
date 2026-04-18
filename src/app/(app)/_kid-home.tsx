@@ -8,6 +8,7 @@ import { StreakBadge } from "@/components/ui/streak-badge";
 import { TaskCard } from "@/components/ui/task-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CelebrationOverlay } from "@/components/ui/celebration-overlay";
+import { GlowBlob } from "@/components/ui/glow-blob";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -110,7 +111,10 @@ export function KidHome({
   const doneCount = todayTasks.filter((tk) => getStatus(tk) === "completed").length;
 
   return (
-    <div className="mx-auto max-w-lg space-y-6 pb-8">
+    <div className="relative mx-auto max-w-lg space-y-6 pb-8">
+      <GlowBlob className="-top-20 -left-16 h-64 w-64" color="var(--accent-color)" style={{ opacity: 0.5 }} />
+      <GlowBlob className="top-40 -right-20 h-72 w-72" color="#FFD5B8" style={{ opacity: 0.4 }} />
+
       {/* Streak */}
       {streakDays > 0 && (
         <FadeUp className="flex justify-center">
@@ -120,51 +124,75 @@ export function KidHome({
 
       {/* Hero card */}
       <FadeUp delay={80}>
-        <Card className="overflow-hidden">
-          <CardContent className="flex items-center gap-5 p-6">
+        <div
+          className="relative overflow-hidden rounded-[22px] p-7"
+          style={{
+            background: "var(--card)",
+            boxShadow: "0 20px 40px -16px rgba(45,27,61,0.12), inset 0 1px 0 rgba(255,255,255,0.6)",
+          }}
+        >
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-0 right-0 top-0 h-36"
+            style={{ background: "radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--accent-color) 20%, transparent) 0%, transparent 60%)" }}
+          />
+          <div className="relative flex items-center gap-5">
             <div className="relative">
               <CharacterAvatar characterId={user.character_id} stage={stage} size="hero" />
-              <div className="absolute -bottom-1 -right-1">
+              <div className="absolute -bottom-1.5 -right-2">
                 <LevelPill level={user.level} />
               </div>
             </div>
             <div className="flex-1 min-w-0">
               <EyebrowLabel>{t("home.role_adventurer")}</EyebrowLabel>
-              <div className="text-lg font-bold" style={{ color: "var(--ink)" }}>
+              <div className="mt-1 text-[28px] font-bold leading-tight" style={{ color: "var(--ink)", letterSpacing: "-0.3px" }}>
                 {user.display_name}
               </div>
-              <ProgressTrack value={Math.round(progressFraction * 100)} className="mt-2" />
-              <div className="mt-1 text-xs" style={{ color: "var(--muted)" }}>
-                {user.lifetime_earned.toLocaleString()} / {nextThreshold?.toLocaleString() ?? "MAX"} pt
+              <div className="mt-0.5 text-[13px] font-medium" style={{ color: "color-mix(in srgb, var(--ink) 55%, transparent)" }}>
+                {t("home.next_level_prefix")}{" "}
+                <span className="font-bold" style={{ color: "var(--accent-color)" }}>
+                  {nextThreshold ? (nextThreshold - user.lifetime_earned).toLocaleString() : 0}pt
+                </span>
               </div>
             </div>
-            <div className="text-right shrink-0">
-              <div className="text-xs" style={{ color: "var(--muted)" }}>{t("home.current_points")}</div>
-              <div className="text-3xl font-extrabold gradient-text">
-                {user.current_balance.toLocaleString()}
-              </div>
+          </div>
+          <div className="relative mt-6">
+            <div className="mb-2 flex items-baseline justify-between gap-2">
+              <span className="text-[13px] font-semibold" style={{ color: "color-mix(in srgb, var(--ink) 60%, transparent)" }}>
+                {t("home.exp")}
+              </span>
+              <span className="text-[13px] font-bold" style={{ color: "var(--ink)" }}>
+                <span style={{ color: "var(--accent-color)" }}>{user.lifetime_earned.toLocaleString()}</span>
+                <span style={{ color: "color-mix(in srgb, var(--ink) 40%, transparent)" }}> / {nextThreshold?.toLocaleString() ?? "MAX"} pt</span>
+              </span>
             </div>
-          </CardContent>
-        </Card>
+            <ProgressTrack value={Math.round(progressFraction * 100)} />
+          </div>
+        </div>
       </FadeUp>
 
       {/* Today's missions */}
       <FadeUp delay={160}>
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-base">{t("home.today_tasks")}</CardTitle>
-              <span className="text-sm font-semibold" style={{ color: "var(--accent-color)" }}>
+        <div>
+          <div className="mb-3 flex items-baseline justify-between">
+            <h2 className="text-[20px] font-extrabold" style={{ color: "var(--ink)", letterSpacing: "-0.3px" }}>
+              {t("home.today_tasks")}
+            </h2>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[13px] font-bold" style={{ color: "var(--accent-color)" }}>
                 {doneCount}/{todayTasks.length}
               </span>
-            </div>
-            {overdueCount > 0 && (
-              <span className="text-xs text-red-500">
-                {t("home.missed_count").replace("{count}", String(overdueCount))}
+              <span className="text-[13px] font-medium" style={{ color: "color-mix(in srgb, var(--ink) 55%, transparent)" }}>
+                {t("home.completed")}
               </span>
-            )}
-          </CardHeader>
-          <CardContent className="space-y-1">
+            </div>
+          </div>
+          {overdueCount > 0 && (
+            <span className="text-xs text-red-500">
+              {t("home.missed_count").replace("{count}", String(overdueCount))}
+            </span>
+          )}
+          <div className="space-y-3">
             {todayTasks.length === 0 && (
               <p className="text-sm" style={{ color: "var(--muted)" }}>{t("home.no_tasks")}</p>
             )}
@@ -179,18 +207,20 @@ export function KidHome({
                 disabled={pending || getStatus(task) === "overdue" || getStatus(task) === "pardoned"}
               />
             ))}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </FadeUp>
 
-      {/* Badges */}
-      {earnedBadges.length > 0 && (
-        <FadeUp delay={240}>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">{t("home.badges")}</CardTitle>
-            </CardHeader>
-            <CardContent>
+      {/* Badges - always show */}
+      <FadeUp delay={240}>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">{t("home.badges")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {earnedBadges.length === 0 ? (
+              <p className="text-sm" style={{ color: "var(--muted)" }}>{t("home.no_badges")}</p>
+            ) : (
               <div className="flex flex-wrap gap-3">
                 {earnedBadges.map((b) => (
                   <div
@@ -206,10 +236,34 @@ export function KidHome({
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-        </FadeUp>
-      )}
+            )}
+          </CardContent>
+        </Card>
+      </FadeUp>
+
+      {/* Beg more FAB */}
+      <FadeUp delay={320}>
+        <div className="flex justify-center">
+          <a
+            href="/tasks"
+            className="flex items-center gap-2 rounded-full py-2 pl-6 pr-2 text-white transition-spring hover:translate-y-[-2px]"
+            style={{
+              background: "var(--ink)",
+              boxShadow: "0 18px 36px -12px rgba(26,15,38,0.55), inset 0 1px 0 rgba(255,255,255,0.08)",
+            }}
+          >
+            <span className="text-base font-bold" style={{ letterSpacing: "-0.2px" }}>{t("home.beg_more")}</span>
+            <span
+              className="ml-1 flex h-9 w-9 items-center justify-center rounded-full"
+              style={{ background: "var(--accent-gradient)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.4)" }}
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3.5 8h9m0 0L8.5 4m4 4l-4 4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </span>
+          </a>
+        </div>
+      </FadeUp>
 
       {/* Celebration overlay */}
       {celebration && (
