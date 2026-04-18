@@ -1,18 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { Card, CardContent } from "@/components/ui/card";
 import { FamilyNameInput } from "../join/_family-name-input";
 import { LoginTabs } from "./_login-tabs";
 import { t } from "@/lib/i18n";
 import { getAuthLocale } from "@/lib/i18n/auth-locale";
-import { FadeUp } from "@/components/ui/fade-up";
-import { EyebrowLabel } from "@/components/ui/eyebrow-label";
 import { FormField, StyledInput } from "@/components/ui/form-field";
 import { PasswordInput } from "@/components/ui/password-input";
 import { OnboardingAccordion } from "./_onboarding-accordion";
+import { LocalePill } from "./_locale-pill";
+import type { Locale } from "@/lib/i18n";
 
 async function emailLoginAction(formData: FormData) {
   "use server";
@@ -83,103 +83,145 @@ export default async function LoginPage({
 }) {
   const sp = await searchParams;
   const locale = await getAuthLocale();
+  const cookieStore = await cookies();
+  const currentLocale = (cookieStore.get("doooz_locale")?.value || "ko") as Locale;
 
   if (sp.need_confirm) {
     return (
-      <Card>
-        <CardContent className="space-y-6 p-8 text-center">
-          <div className="text-5xl">📧</div>
-          <div>
-            <h2 className="text-xl font-bold">{t("auth.email_not_confirmed_title", locale)}</h2>
-            <p className="mt-2 whitespace-pre-line text-sm text-muted-foreground">{t("auth.email_not_confirmed_desc", locale)}</p>
-          </div>
-          <Link href="/login" className="inline-block text-sm text-primary underline">
-            {t("auth.login_button", locale)}
-          </Link>
-        </CardContent>
-      </Card>
+      <div className="space-y-6 text-center">
+        <div className="text-5xl">📧</div>
+        <div>
+          <h2 className="text-xl font-bold">{t("auth.email_not_confirmed_title", locale)}</h2>
+          <p className="mt-2 whitespace-pre-line text-sm" style={{ color: "#9CA3AF" }}>
+            {t("auth.email_not_confirmed_desc", locale)}
+          </p>
+        </div>
+        <Link href="/login" className="inline-block text-sm underline" style={{ color: "#6366F1" }}>
+          {t("auth.login_button", locale)}
+        </Link>
+      </div>
     );
   }
+
   return (
-    <div>
+    <div className="relative flex flex-col">
+      {/* Top-right locale switcher */}
+      <LocalePill current={currentLocale} />
+
       {/* Brand section */}
-      <FadeUp>
-        <div className="flex flex-col items-center text-center">
-          <EyebrowLabel style={{ color: "#6366F1" }}>{t("auth.brand_subtitle", locale)}</EyebrowLabel>
-          <div className="mt-4">
-            <Image src="/logo.png" alt="DOOOZ" width={280} height={280} priority className="h-[140px] w-[140px]" />
-          </div>
+      <div className="flex flex-col items-center text-center">
+        <div
+          style={{
+            fontSize: 12,
+            fontWeight: 700,
+            textTransform: "uppercase",
+            color: "#6366F1",
+            letterSpacing: "0.15em",
+          }}
+        >
+          {t("auth.brand_subtitle", locale)}
         </div>
-      </FadeUp>
+        <Image
+          src="/logo.png"
+          alt="DOOOZ"
+          width={280}
+          height={280}
+          priority
+          className="mt-4 block object-contain"
+          style={{ width: 140, height: 140 }}
+        />
+      </div>
 
       {/* Form */}
-      <FadeUp delay={160}>
-        <div className="mt-10">
-          <LoginTabs defaultTab={sp.tab === "email" ? "email" : "family"}>
-            {/* Family login (default) */}
-            <form data-tab="family" action={familyLoginAction} className="flex flex-col gap-4">
-              <FormField label={t("auth.family_name_label", locale)}>
-                <FamilyNameInput />
-              </FormField>
-              <FormField label={t("auth.my_name_label", locale)}>
-                <StyledInput name="display_name" placeholder={t("auth.my_name_placeholder", locale)} required />
-              </FormField>
-              <FormField label={t("auth.password", locale)}>
-                <PasswordInput name="password" placeholder={t("auth.password", locale)} required />
-              </FormField>
-              {sp.tab !== "email" && sp.error && (
-                <p className="text-sm text-destructive">{sp.error}</p>
-              )}
-              <button
-                type="submit"
-                className="mt-2 h-12 w-full rounded-[10px] text-[15px] font-semibold text-white transition-spring hover:translate-y-[-1px]"
-                style={{ background: "#0A0A0A", boxShadow: "0 1px 2px rgba(10,10,10,0.04)" }}
-              >
-                {t("auth.login_button", locale)}
-              </button>
-            </form>
+      <div style={{ marginTop: 24 }}>
+        <LoginTabs defaultTab={sp.tab === "email" ? "email" : "family"}>
+          {/* Family login (default) */}
+          <form data-tab="family" action={familyLoginAction} className="flex flex-col" style={{ gap: 16 }}>
+            <FormField label={t("auth.family_name_label", locale)}>
+              <FamilyNameInput />
+            </FormField>
+            <FormField label={t("auth.my_name_label", locale)}>
+              <StyledInput name="display_name" placeholder={t("auth.my_name_placeholder", locale)} required />
+            </FormField>
+            <FormField label={t("auth.password", locale)}>
+              <PasswordInput name="password" placeholder={t("auth.password", locale)} required />
+            </FormField>
+            {sp.tab !== "email" && sp.error && (
+              <p className="text-sm text-destructive">{sp.error}</p>
+            )}
+            <button
+              type="submit"
+              className="w-full text-white transition-transform hover:translate-y-[-1px]"
+              style={{
+                marginTop: 8,
+                height: 48,
+                borderRadius: 10,
+                fontSize: 15,
+                fontWeight: 600,
+                background: "#0A0A0A",
+                border: "none",
+                letterSpacing: "-0.01em",
+                boxShadow: "0 1px 2px rgba(10,10,10,0.04)",
+              }}
+            >
+              {t("auth.login_button", locale)}
+            </button>
+          </form>
 
-            {/* Email login */}
-            <form data-tab="email" action={emailLoginAction} className="flex flex-col gap-4">
-              <FormField label={t("auth.email_placeholder", locale)}>
-                <StyledInput type="email" name="email" placeholder="you@family.com" required />
-              </FormField>
-              <FormField label={t("auth.password", locale)}>
-                <PasswordInput name="password" placeholder="••••••••" required />
-              </FormField>
-              {sp.tab === "email" && sp.error && (
-                <p className="text-sm text-destructive">{sp.error}</p>
-              )}
-              <button
-                type="submit"
-                className="mt-2 h-12 w-full rounded-[10px] text-[15px] font-semibold text-white transition-spring hover:translate-y-[-1px]"
-                style={{ background: "#0A0A0A", boxShadow: "0 1px 2px rgba(10,10,10,0.04)" }}
-              >
-                {t("auth.login_button", locale)}
-              </button>
-            </form>
-          </LoginTabs>
+          {/* Email login */}
+          <form data-tab="email" action={emailLoginAction} className="flex flex-col" style={{ gap: 16 }}>
+            <FormField label={t("auth.email_placeholder", locale)}>
+              <StyledInput type="email" name="email" placeholder="you@family.com" required />
+            </FormField>
+            <FormField label={t("auth.password", locale)}>
+              <PasswordInput name="password" placeholder="••••••••" required />
+            </FormField>
+            {sp.tab === "email" && sp.error && (
+              <p className="text-sm text-destructive">{sp.error}</p>
+            )}
+            <button
+              type="submit"
+              className="w-full text-white transition-transform hover:translate-y-[-1px]"
+              style={{
+                marginTop: 8,
+                height: 48,
+                borderRadius: 10,
+                fontSize: 15,
+                fontWeight: 600,
+                background: "#0A0A0A",
+                border: "none",
+                letterSpacing: "-0.01em",
+                boxShadow: "0 1px 2px rgba(10,10,10,0.04)",
+              }}
+            >
+              {t("auth.login_button", locale)}
+            </button>
+          </form>
+        </LoginTabs>
 
-          <div className="mt-3 text-center">
-            <Link href="/login?forgot=1" className="text-sm font-medium" style={{ color: "#6366F1" }}>
-              {t("auth.forgot_password", locale)}
-            </Link>
-          </div>
-
-          <OnboardingAccordion
-            joinLabel={t("auth.join_family", locale)}
-            joinSub={t("auth.join_family_sub", locale)}
-            createLabel={t("auth.signup_create_link", locale)}
-            createSub={t("auth.create_family_sub", locale)}
-          />
-
-          <div className="mt-6">
-            <Link href="/privacy" className="block text-center text-xs" style={{ color: "#9CA3AF" }}>
-              {t("privacy.link", locale)}
-            </Link>
-          </div>
+        <div className="flex items-center justify-center" style={{ marginTop: 16 }}>
+          <Link
+            href="/login?forgot=1"
+            className="whitespace-nowrap"
+            style={{ fontSize: 14, fontWeight: 500, color: "#6366F1" }}
+          >
+            {t("auth.forgot_password", locale)}
+          </Link>
         </div>
-      </FadeUp>
+
+        <OnboardingAccordion
+          joinLabel={t("auth.join_family", locale)}
+          joinSub={t("auth.join_family_sub", locale)}
+          createLabel={t("auth.signup_create_link", locale)}
+          createSub={t("auth.create_family_sub", locale)}
+        />
+
+        <div style={{ marginTop: 24 }}>
+          <Link href="/privacy" className="block text-center text-xs" style={{ color: "#9CA3AF" }}>
+            {t("privacy.link", locale)}
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
