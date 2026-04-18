@@ -122,7 +122,7 @@ export default async function LoginPage({
           {t("auth.brand_subtitle", locale)}
         </div>
         <Image
-          src="/logo.png"
+          src="/home-logo.png"
           alt="DOOOZ"
           width={280}
           height={280}
