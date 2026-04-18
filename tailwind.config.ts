@@ -50,9 +50,9 @@ const config: Config = {
         sans: "var(--font-sans)",
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        sm: "var(--radius-sm)",
+        md: "var(--radius-md)",
+        lg: "var(--radius-lg)",
         pill: "var(--radius-pill)",
       },
       boxShadow: {
