@@ -61,7 +61,7 @@ export function AppNav({
         className="sticky top-0 z-40 flex items-center gap-2 border-b px-4 py-2 md:hidden"
         style={{ background: "var(--bg)", borderColor: "var(--border, #f0f0f0)" }}
       >
-        <Image src="/logo.png" alt="DOOOZ" width={54} height={54} priority className="h-[27px] w-[27px]" />
+        <Image src="/home-logo.png" alt="DOOOZ" width={54} height={54} priority className="h-[27px] w-[27px]" />
         <span className="text-xs" style={{ color: "var(--muted)" }}>{familyName}</span>
       </header>
 
@@ -71,7 +71,7 @@ export function AppNav({
         style={{ background: "color-mix(in srgb, var(--bg) 95%, var(--card))", borderColor: "var(--border, #f0f0f0)" }}
       >
         <div className="mb-6">
-          <Image src="/logo.png" alt="DOOOZ" width={80} height={80} priority className="h-[40px] w-[40px]" />
+          <Image src="/home-logo.png" alt="DOOOZ" width={80} height={80} priority className="h-[40px] w-[40px]" />
           <div className="text-xs" style={{ color: "var(--muted)" }}>{familyName}</div>
           <div className="mt-1 text-xs" style={{ color: "var(--muted)" }}>
             {userName} · {role === "parent" ? t("nav.parent") : t("nav.child")}
