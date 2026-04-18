@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -9,9 +10,9 @@ import { t } from "@/lib/i18n";
 import { getAuthLocale } from "@/lib/i18n/auth-locale";
 import { FadeUp } from "@/components/ui/fade-up";
 import { EyebrowLabel } from "@/components/ui/eyebrow-label";
-import { CharacterAvatar } from "@/components/ui/character-avatar";
 import { FormField, StyledInput } from "@/components/ui/form-field";
 import { PasswordInput } from "@/components/ui/password-input";
+import { OnboardingAccordion } from "./_onboarding-accordion";
 
 async function emailLoginAction(formData: FormData) {
   "use server";
@@ -105,34 +106,9 @@ export default async function LoginPage({
       <FadeUp>
         <div className="flex flex-col items-center text-center">
           <EyebrowLabel style={{ color: "#6366F1" }}>{t("auth.brand_subtitle", locale)}</EyebrowLabel>
-          <div
-            className="mt-4 text-5xl font-extrabold"
-            style={{ color: "var(--ink)", letterSpacing: "-0.03em", lineHeight: 1 }}
-          >
-            doooz
+          <div className="mt-4">
+            <Image src="/logo.png" alt="DOOOZ" width={280} height={280} priority className="h-[140px] w-[140px]" />
           </div>
-          <p className="mt-4 text-[17px] font-medium" style={{ color: "#6B7280", textWrap: "balance" }}>
-            {t("auth.brand_heading", locale)}
-          </p>
-        </div>
-      </FadeUp>
-
-      {/* Avatar tiles */}
-      <FadeUp delay={80}>
-        <div className="mt-7 flex items-center justify-center gap-3" aria-hidden>
-          {[
-            { id: "fox", rot: -2, bg: "linear-gradient(135deg,#FFE4E9 0%,#FFF5EC 100%)" },
-            { id: "cat", rot: 0, bg: "linear-gradient(135deg,#E5EFFF 0%,#FFE4E9 100%)" },
-            { id: "bear", rot: 2, bg: "linear-gradient(135deg,#FFF5EC 0%,#FFE0C8 100%)" },
-          ].map((c) => (
-            <div
-              key={c.id}
-              className="flex h-[42px] w-[42px] items-center justify-center rounded-xl text-[22px] animate-rise"
-              style={{ background: c.bg, transform: `rotate(${c.rot}deg)` }}
-            >
-              <CharacterAvatar characterId={c.id} stage={1} size="xs" />
-            </div>
-          ))}
         </div>
       </FadeUp>
 
@@ -184,15 +160,18 @@ export default async function LoginPage({
             </form>
           </LoginTabs>
 
-          <div className="mt-5 flex items-center justify-center gap-3">
-            <Link href="/join" className="text-sm font-medium" style={{ color: "#6366F1" }}>
-              {t("auth.join_family", locale)}
-            </Link>
-            <span style={{ color: "#D4D4D8" }}>·</span>
-            <Link href="/signup" className="text-sm font-bold" style={{ color: "#6366F1" }}>
-              {t("auth.signup_create_link", locale)}
+          <div className="mt-3 text-center">
+            <Link href="/login?forgot=1" className="text-sm font-medium" style={{ color: "#6366F1" }}>
+              {t("auth.forgot_password", locale)}
             </Link>
           </div>
+
+          <OnboardingAccordion
+            joinLabel={t("auth.join_family", locale)}
+            joinSub={t("auth.join_family_sub", locale)}
+            createLabel={t("auth.signup_create_link", locale)}
+            createSub={t("auth.create_family_sub", locale)}
+          />
 
           <div className="mt-6">
             <Link href="/privacy" className="block text-center text-xs" style={{ color: "#9CA3AF" }}>
