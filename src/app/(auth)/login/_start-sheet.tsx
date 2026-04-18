@@ -153,8 +153,11 @@ export function StartSheet({
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
           boxShadow: "0 -20px 40px -12px rgba(10,10,10,0.18)",
-          transform: open ? "translateY(0)" : "translateY(105%)",
-          transition: "transform 360ms cubic-bezier(0.22,1,0.36,1)",
+          transform: open ? "translateY(0)" : "translateY(110%)",
+          visibility: open ? "visible" : "hidden",
+          transition: open
+            ? "transform 360ms cubic-bezier(0.22,1,0.36,1), visibility 0ms"
+            : "transform 360ms cubic-bezier(0.22,1,0.36,1), visibility 0ms 360ms",
           padding: "10px 20px 28px",
           maxWidth: 480,
           marginLeft: "auto",
