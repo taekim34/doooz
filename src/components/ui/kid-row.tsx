@@ -3,6 +3,7 @@ import { CharacterAvatar } from "@/components/ui/character-avatar";
 import { ProgressTrack } from "@/components/ui/progress-track";
 import Link from "next/link";
 import type { Route } from "next";
+import type { CharacterStage } from "@/lib/level";
 
 type KidRowProps = {
   href: string;
@@ -34,7 +35,7 @@ export function KidRow({
         className,
       )}
     >
-      <CharacterAvatar characterId={characterId} stage={stage} size="md" />
+      <CharacterAvatar characterId={characterId} stage={stage as CharacterStage} size="md" />
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2">
           <span className="truncate text-sm font-semibold" style={{ color: "var(--ink)" }}>
