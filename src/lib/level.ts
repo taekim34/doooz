@@ -59,7 +59,7 @@ export type CharacterStage = 1 | 2 | 3 | 4 | 5;
 
 /**
  * Stage mapping: 5 equal bands across the 30-level table.
- * 새싹 L1-6, 성장 L7-12, 도약 L13-18, 영웅 L19-24, 전설 L25-30.
+ * 병아리 L1-6, 루키 L7-12, 용사 L13-18, 영웅 L19-24, 전설 L25-30.
  */
 export function getStage(level: number): CharacterStage {
   if (level <= 6) return 1;

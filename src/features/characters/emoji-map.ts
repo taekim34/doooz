@@ -1,6 +1,6 @@
 /**
  * Emoji placeholders for the 12 characters × 5 evolution stages.
- * Baby (L1-6) → Child (L7-12) → Teen (L13-18) → Hero (L19-24) → Legend (L25-30)
+ * 병아리 (L1-6) → 루키 (L7-12) → 용사 (L13-18) → 영웅 (L19-24) → 전설 (L25-30)
  * Replace with SVG illustrations later (schema unchanged).
  */
 import type { CharacterStage } from "@/lib/level";
