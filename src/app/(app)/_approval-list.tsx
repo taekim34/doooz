@@ -3,6 +3,7 @@ import { ApprovalRow } from "@/components/ui/approval-row";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
+import { now } from "@/lib/datetime/clock";
 
 type Approval = {
   id: string;
@@ -21,7 +22,7 @@ export function ApprovalList({
   const [pending, startTransition] = useTransition();
 
   function timeAgo(iso: string): string {
-    const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+    const mins = Math.round((now() - new Date(iso).getTime()) / 60000);
     if (mins < 1) return "방금";
     if (mins < 60) return `${mins}분 전`;
     const hrs = Math.round(mins / 60);
