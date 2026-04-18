@@ -44,6 +44,7 @@
   "auth.join_with_code": "초대코드로 가입 (이메일 불필요)",
   "auth.login_button": "로그인",
   "auth.login_title": "로그인",
+  "auth.welcome_back": "다시 만나서 반가워요",
   "auth.my_name_label": "내 이름",
   "auth.my_name_placeholder": "예: 민준",
   "auth.password": "비밀번호",

@@ -44,6 +44,7 @@
   "auth.join_with_code": "招待コードで登録（メール不要）",
   "auth.login_button": "ログイン",
   "auth.login_title": "ログイン",
+  "auth.welcome_back": "おかえりなさい",
   "auth.my_name_label": "自分の名前",
   "auth.my_name_placeholder": "例：太郎",
   "auth.password": "パスワード",

@@ -4,11 +4,15 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { FamilyNameInput } from "../join/_family-name-input";
 import { LoginTabs } from "./_login-tabs";
 import { t } from "@/lib/i18n";
 import { getAuthLocale } from "@/lib/i18n/auth-locale";
+import { FadeUp } from "@/components/ui/fade-up";
+import { EyebrowLabel } from "@/components/ui/eyebrow-label";
+import { CharacterAvatar } from "@/components/ui/character-avatar";
+import { FormField, StyledInput } from "@/components/ui/form-field";
+import { PasswordInput } from "@/components/ui/password-input";
 
 async function emailLoginAction(formData: FormData) {
   "use server";
@@ -99,21 +103,31 @@ export default async function LoginPage({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("auth.login_title", locale)}</CardTitle>
+        <FadeUp>
+          <EyebrowLabel className="text-center">{t("auth.welcome_back", locale)}</EyebrowLabel>
+          <CardTitle className="mt-1 text-center text-2xl">{t("auth.login_title", locale)}</CardTitle>
+        </FadeUp>
+        <FadeUp delay={80}>
+          <div className="mt-3 flex justify-center gap-2">
+            <CharacterAvatar characterId="fox" stage={1} size="sm" />
+            <CharacterAvatar characterId="cat" stage={1} size="sm" />
+            <CharacterAvatar characterId="bear" stage={1} size="sm" />
+          </div>
+        </FadeUp>
       </CardHeader>
       <CardContent>
         <LoginTabs defaultTab={sp.tab === "email" ? "email" : "family"}>
           {/* Family login (default) */}
           <form data-tab="family" action={familyLoginAction} className="space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium">{t("auth.family_name_label", locale)}</label>
+            <FormField label={t("auth.family_name_label", locale)}>
               <FamilyNameInput />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium">{t("auth.my_name_label", locale)}</label>
-              <Input name="display_name" placeholder={t("auth.my_name_placeholder", locale)} required />
-            </div>
-            <Input type="password" name="password" placeholder={t("auth.password", locale)} required />
+            </FormField>
+            <FormField label={t("auth.my_name_label", locale)}>
+              <StyledInput name="display_name" placeholder={t("auth.my_name_placeholder", locale)} required />
+            </FormField>
+            <FormField label={t("auth.password", locale)}>
+              <PasswordInput name="password" placeholder={t("auth.password", locale)} required />
+            </FormField>
             {sp.tab !== "email" && sp.error && (
               <p className="text-sm text-destructive">{sp.error}</p>
             )}
@@ -122,8 +136,12 @@ export default async function LoginPage({
 
           {/* Email login */}
           <form data-tab="email" action={emailLoginAction} className="space-y-4">
-            <Input type="email" name="email" placeholder={t("auth.email_placeholder", locale)} required />
-            <Input type="password" name="password" placeholder={t("auth.password", locale)} required />
+            <FormField label={t("auth.email_placeholder", locale)}>
+              <StyledInput type="email" name="email" placeholder={t("auth.email_placeholder", locale)} required />
+            </FormField>
+            <FormField label={t("auth.password", locale)}>
+              <PasswordInput name="password" placeholder={t("auth.password", locale)} required />
+            </FormField>
             {sp.tab === "email" && sp.error && (
               <p className="text-sm text-destructive">{sp.error}</p>
             )}
@@ -131,19 +149,19 @@ export default async function LoginPage({
           </form>
         </LoginTabs>
 
-        <div className="mt-4 space-y-2 text-center text-sm text-muted-foreground">
+        <div className="mt-4 space-y-2 text-center text-sm" style={{ color: "var(--muted)" }}>
           <p>
             {t("auth.first_time", locale)}{" "}
-            <Link href="/join" className="text-primary underline">
+            <Link href="/join" className="underline" style={{ color: "var(--accent-color)" }}>
               {t("auth.join_family", locale)}
             </Link>
             {" · "}
-            <Link href="/signup" className="text-primary underline">
+            <Link href="/signup" className="underline" style={{ color: "var(--accent-color)" }}>
               {t("auth.signup_create_link", locale)}
             </Link>
           </p>
           <p>
-            <Link href="/privacy" className="text-xs text-muted-foreground underline">
+            <Link href="/privacy" className="text-xs underline" style={{ color: "var(--muted)" }}>
               {t("privacy.link", locale)}
             </Link>
           </p>

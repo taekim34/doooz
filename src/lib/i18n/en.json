@@ -44,6 +44,7 @@
   "auth.join_with_code": "Join with invite code (no email needed)",
   "auth.login_button": "Login",
   "auth.login_title": "Login",
+  "auth.welcome_back": "Welcome back",
   "auth.my_name_label": "My Name",
   "auth.my_name_placeholder": "e.g. John",
   "auth.password": "Password",
