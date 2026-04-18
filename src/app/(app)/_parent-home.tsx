@@ -1,9 +1,10 @@
 import { FadeUp } from "@/components/ui/fade-up";
 import { EyebrowLabel } from "@/components/ui/eyebrow-label";
+import { SectionLabel } from "@/components/ui/section-label";
 import { StatCard } from "@/components/ui/stat-card";
 import { KidRow } from "@/components/ui/kid-row";
-import { Card, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
+import { ApprovalList } from "./_approval-list";
 import { getStage } from "@/lib/level";
 import { nowDate } from "@/lib/datetime/clock";
 import { t, type Locale } from "@/lib/i18n";
@@ -28,16 +29,30 @@ type Task = {
   template_id: string | null;
 };
 
+type Approval = {
+  id: string;
+  kidName: string;
+  taskTitle: string;
+  points: number;
+  createdAt: string;
+};
+
 export function ParentHome({
   familyName,
   locale,
   kids,
   tasks,
+  approvals,
+  weeklyPoints,
+  streakDays,
 }: {
   familyName: string;
   locale: Locale;
   kids: Kid[];
   tasks: Task[];
+  approvals: Approval[];
+  weeklyPoints: number;
+  streakDays: number;
 }) {
   const totalTasks = tasks.length;
   const totalDone = tasks.filter((c) => c.status === "completed").length;
@@ -80,27 +95,40 @@ export function ParentHome({
             value={pendingApprovals}
           />
         </div>
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          <StatCard
+            label={t("home.weekly_points", locale)}
+            value={weeklyPoints.toLocaleString()}
+          />
+          <StatCard
+            label={t("home.streak", locale)}
+            value={`${streakDays}일`}
+          />
+        </div>
       </FadeUp>
 
       {/* Kid list */}
       <FadeUp delay={160}>
+        <SectionLabel>{t("home.section_kids", locale)}</SectionLabel>
         <div className="space-y-1">
           {kids.length === 0 && (
-            <Card>
-              <CardContent
-                className="p-6 text-sm"
-                style={{ color: "var(--muted)" }}
+            <div
+              className="rounded-[14px] p-6 text-sm"
+              style={{
+                background: "var(--card)",
+                color: "var(--muted)",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+              }}
+            >
+              {t("home.no_children", locale)}{" "}
+              <Link
+                href="/family/invite"
+                className="underline"
+                style={{ color: "var(--accent-color)" }}
               >
-                {t("home.no_children", locale)}{" "}
-                <Link
-                  href="/family/invite"
-                  className="underline"
-                  style={{ color: "var(--accent-color)" }}
-                >
-                  {t("home.invite_code", locale)}
-                </Link>
-              </CardContent>
-            </Card>
+                {t("home.invite_code", locale)}
+              </Link>
+            </div>
           )}
           {kids.map((k) => {
             const kidTasks = tasks.filter((c) => c.assignee_id === k.id);
@@ -122,6 +150,14 @@ export function ParentHome({
           })}
         </div>
       </FadeUp>
+
+      {/* Approval section */}
+      {approvals.length > 0 && (
+        <FadeUp delay={200}>
+          <SectionLabel>{t("home.section_approvals", locale)}</SectionLabel>
+          <ApprovalList approvals={approvals} />
+        </FadeUp>
+      )}
 
       {/* Quick actions */}
       <FadeUp delay={240}>

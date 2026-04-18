@@ -80,30 +80,78 @@ export default async function HomePage() {
   }
 
   // Parent path
-  const [{ data: members }, { data: todaysTasks }] = await Promise.all([
-    supabase
-      .from("users")
-      .select("id, display_name, level, current_balance, lifetime_earned, character_id")
-      .eq("family_id", family.id)
-      .eq("role", "child"),
-    supabase
-      .from("task_instances")
-      .select("id, assignee_id, title, points, status, template_id")
-      .eq("family_id", family.id)
-      .eq("due_date", today)
-      .order("title"),
-  ]);
+  const [{ data: members }, { data: todaysTasks }, { data: pendingBegs }] =
+    await Promise.all([
+      supabase
+        .from("users")
+        .select(
+          "id, display_name, level, current_balance, lifetime_earned, character_id",
+        )
+        .eq("family_id", family.id)
+        .eq("role", "child"),
+      supabase
+        .from("task_instances")
+        .select("id, assignee_id, title, points, status, template_id")
+        .eq("family_id", family.id)
+        .eq("due_date", today)
+        .order("title"),
+      supabase
+        .from("task_instances")
+        .select("id, title, points, created_at, assignee_id")
+        .eq("family_id", family.id)
+        .eq("status", "requested")
+        .order("created_at", { ascending: false }),
+    ]);
+
+  // Build approval objects with kid names
+  const kidMap = new Map(
+    ((members ?? []) as Array<{ id: string; display_name: string }>).map(
+      (k) => [k.id, k.display_name],
+    ),
+  );
+  const approvals = (
+    (pendingBegs ?? []) as Array<{
+      id: string;
+      title: string;
+      points: number;
+      created_at: string;
+      assignee_id: string;
+    }>
+  ).map((b) => ({
+    id: b.id,
+    kidName: kidMap.get(b.assignee_id) ?? "",
+    taskTitle: b.title,
+    points: b.points,
+    createdAt: b.created_at,
+  }));
 
   return (
     <ParentHome
       familyName={family.name}
       locale={locale}
-      kids={(members ?? []) as Array<{
-        id: string; display_name: string; level: number; current_balance: number; lifetime_earned: number; character_id: string | null;
-      }>}
-      tasks={(todaysTasks ?? []) as Array<{
-        id: string; assignee_id: string; title: string; points: number; status: string; template_id: string | null;
-      }>}
+      kids={
+        (members ?? []) as Array<{
+          id: string;
+          display_name: string;
+          level: number;
+          current_balance: number;
+          lifetime_earned: number;
+          character_id: string | null;
+        }>
+      }
+      tasks={
+        (todaysTasks ?? []) as Array<{
+          id: string;
+          assignee_id: string;
+          title: string;
+          points: number;
+          status: string;
+          template_id: string | null;
+        }>
+      }
+      approvals={approvals}
+      weeklyPoints={0}
+      streakDays={0}
     />
   );
 }
