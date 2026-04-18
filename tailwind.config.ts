@@ -46,10 +46,36 @@ const config: Config = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      fontFamily: {
+        sans: "var(--font-sans)",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        pill: "var(--radius-pill)",
+      },
+      boxShadow: {
+        card: "var(--shadow-card)",
+        cardInset: "var(--shadow-card-inset)",
+        cta: "var(--shadow-cta-kid)",
+      },
+      transitionTimingFunction: {
+        spring: "var(--ease-spring)",
+      },
+      transitionDuration: {
+        fast: "var(--duration-fast, 200ms)",
+        base: "var(--duration-base, 400ms)",
+        long: "var(--duration-long, 500ms)",
+      },
+      animation: {
+        fadeInUp: "fadeInUp var(--duration-long) var(--ease-spring) both",
+      },
+      keyframes: {
+        fadeInUp: {
+          from: { opacity: "0", transform: "translateY(2rem)", filter: "blur(4px)" },
+          to: { opacity: "1", transform: "translateY(0)", filter: "blur(0)" },
+        },
       },
     },
   },
