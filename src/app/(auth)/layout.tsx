@@ -38,7 +38,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
           <div className="relative z-10 w-full max-w-md">
             <div className="mb-6 flex items-center justify-between">
               <div />
-              <Image src="/logo.png" alt="DOOOZ" width={160} height={53} priority />
+              <Image src="/logo.png" alt="DOOOZ" width={120} height={120} priority className="h-[60px] w-[60px]" />
               {showLocaleSwitcher ? <AuthLocaleSwitcher current={locale} /> : <div />}
             </div>
             {children}
