@@ -8,7 +8,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-[color:var(--primary-color)] text-white hover:scale-[1.02] motion-reduce:hover:scale-100 shadow-sm [&[data-mode='kid']]:shadow-cta",
+          "bg-[color:var(--primary-color)] text-white hover:scale-[1.02] motion-reduce:hover:scale-100 shadow-sm [&:where([data-mode='kid']_*,[data-mode='kid'])]:shadow-cta",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:scale-[1.02] motion-reduce:hover:scale-100",
         outline:
