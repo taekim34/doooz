@@ -23,6 +23,7 @@ test-results
 
 supabase/.temp
 supabase/.branches
+backups/
 .vercel
 
 .tene/

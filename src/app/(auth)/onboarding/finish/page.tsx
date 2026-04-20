@@ -38,7 +38,7 @@ export default async function OnboardingFinishPage() {
       style={{
         position: "relative",
         minHeight: "100dvh",
-        background: "#FFFFFF",
+        background: "var(--bg)",
         padding: "64px 28px 32px",
         display: "flex",
         flexDirection: "column",
@@ -131,7 +131,7 @@ export default async function OnboardingFinishPage() {
             fontSize: 12,
             fontWeight: 700,
             textTransform: "uppercase",
-            color: "#6366F1",
+            color: "var(--accent)",
             letterSpacing: "0.15em",
           }}
         >
@@ -146,7 +146,7 @@ export default async function OnboardingFinishPage() {
             fontWeight: 800,
             lineHeight: 1.15,
             letterSpacing: "-0.03em",
-            color: "#0A0A0A",
+            color: "var(--ink)",
             textAlign: "center",
             whiteSpace: "pre-line",
           }}
@@ -160,12 +160,12 @@ export default async function OnboardingFinishPage() {
             marginTop: 12,
             fontSize: 17,
             fontWeight: 500,
-            color: "#6B7280",
+            color: "var(--ink-muted)",
             textAlign: "center",
             lineHeight: 1.5,
           }}
         >
-          <span style={{ fontWeight: 700, color: "#0A0A0A" }}>
+          <span style={{ fontWeight: 700, color: "var(--ink)" }}>
             {family.name}
           </span>{" "}
           {t("auth.invite_family_desc", locale)}
@@ -187,7 +187,7 @@ export default async function OnboardingFinishPage() {
               fontSize: 12,
               fontWeight: 700,
               textTransform: "uppercase",
-              color: "#9CA3AF",
+              color: "var(--ink-subtle)",
               letterSpacing: "0.15em",
               marginBottom: 12,
             }}
@@ -201,8 +201,8 @@ export default async function OnboardingFinishPage() {
               width: "100%",
               borderRadius: 14,
               padding: "16px 20px",
-              background: "#FAFAFA",
-              border: "1.5px dashed #E5E7EB",
+              background: "var(--surface-raised)",
+              border: "1.5px dashed var(--border)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -239,17 +239,16 @@ export default async function OnboardingFinishPage() {
             alignItems: "center",
           }}
         >
-          {/* Primary CTA */}
-          <a
-            href={`https://sharer.kakao.com/talk/friends/picker/shorturl?url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_APP_URL ?? ""}/join?code=${inviteCode}`)}`}
-            target="_blank"
-            rel="noopener noreferrer"
+          {/* Primary CTA — create child account (per mockup) */}
+          <Link
+            href={"/signup" as Route}
             style={{
               width: "100%",
               height: 56,
               borderRadius: 10,
-              background: "#0A0A0A",
-              color: "#FFFFFF",
+              background: "var(--bg)",
+              border: "1px solid var(--border)",
+              color: "var(--ink)",
               fontSize: 16,
               fontWeight: 700,
               display: "flex",
@@ -257,44 +256,48 @@ export default async function OnboardingFinishPage() {
               justifyContent: "center",
               gap: 8,
               textDecoration: "none",
-              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            <span>{t("auth.create_child_account", locale)}</span>
+            <span style={{ color: "var(--ink-subtle)" }}>→</span>
+          </Link>
+
+          {/* Secondary CTA — Kakao invite */}
+          <a
+            href={`https://sharer.kakao.com/talk/friends/picker/shorturl?url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_APP_URL ?? ""}/join?code=${inviteCode}`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              width: "100%",
+              height: 48,
+              borderRadius: 10,
+              background: "var(--bg)",
+              border: "1px solid var(--border)",
+              color: "var(--ink)",
+              fontSize: 15,
+              fontWeight: 700,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              textDecoration: "none",
               cursor: "pointer",
             }}
           >
             💬 카카오톡으로 초대
           </a>
 
-          {/* Secondary CTA */}
-          <Link
-            href={"/signup" as Route}
-            style={{
-              width: "100%",
-              height: 48,
-              borderRadius: 10,
-              background: "#FFFFFF",
-              border: "1px solid #E5E5E5",
-              color: "#0A0A0A",
-              fontSize: 15,
-              fontWeight: 700,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              textDecoration: "none",
-              cursor: "pointer",
-            }}
-          >
-            {t("auth.create_child_account", locale)}
-          </Link>
-
           {/* Skip link */}
           <Link
             href={"/" as Route}
             style={{
-              marginTop: 4,
-              fontSize: 14,
+              marginTop: 8,
+              fontSize: 13,
               fontWeight: 500,
-              color: "#6366F1",
-              textDecoration: "none",
+              color: "var(--ink-subtle)",
+              textDecoration: "underline",
+              textUnderlineOffset: 4,
             }}
           >
             {t("auth.skip_for_now", locale)} →

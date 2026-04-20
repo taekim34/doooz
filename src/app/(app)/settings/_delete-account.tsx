@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { t, type Locale } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 
@@ -42,25 +41,25 @@ export function DeleteAccount({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-destructive">
-            {t("settings.delete_account", locale)}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p className="text-sm text-muted-foreground">
-            {t("settings.delete_account_desc", locale)}
-          </p>
-          <Button
-            variant="destructive"
-            className="w-full"
-            onClick={() => setOpen(true)}
-          >
-            {t("settings.delete_account", locale)}
-          </Button>
-        </CardContent>
-      </Card>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        style={{
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          fontSize: 14,
+          fontWeight: 600,
+          color: "var(--error)",
+          letterSpacing: "-0.01em",
+          padding: "10px 0",
+          textAlign: "left",
+          display: "block",
+          width: "100%",
+        }}
+      >
+        {t("settings.delete_account", locale)}
+      </button>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>

@@ -95,17 +95,17 @@ export default async function LoginPage({
         <div style={{ textAlign: "center" }}>
           <h2 style={{
             margin: 0, fontSize: 24, fontWeight: 800,
-            color: "#0A0A0A", letterSpacing: "-0.02em",
+            color: "var(--ink)", letterSpacing: "-0.02em",
           }}>{t("auth.email_not_confirmed_title", locale)}</h2>
           <p style={{
             marginTop: 8, fontSize: 14, fontWeight: 500,
-            color: "#6B7280", whiteSpace: "pre-line",
+            color: "var(--ink-muted)", whiteSpace: "pre-line",
           }}>
             {t("auth.email_not_confirmed_desc", locale)}
           </p>
         </div>
         <Link href="/login" style={{
-          fontSize: 14, fontWeight: 500, color: "#6366F1", textDecoration: "none",
+          fontSize: 14, fontWeight: 500, color: "var(--accent)", textDecoration: "none",
         }}>
           {t("auth.login_button", locale)}
         </Link>
@@ -114,82 +114,138 @@ export default async function LoginPage({
   }
 
   if (sp.forgot) {
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-        <div style={{ textAlign: "center" }}>
+    if (sp.sent) {
+      /* Forgot password success screen with dzRise stagger animation */
+      return (
+        <div style={{
+          display: "flex", flexDirection: "column", alignItems: "center",
+          gap: 24, textAlign: "center",
+        }}>
+          {/* Green check icon */}
+          <div style={{
+            fontSize: 64, lineHeight: 1, color: "var(--success)",
+            opacity: 0, animation: "dzRise 640ms cubic-bezier(0.16,1,0.3,1) 40ms both",
+          }}>&#x2705;</div>
+
+          {/* Title */}
           <h2 style={{
             margin: 0, fontSize: 24, fontWeight: 800,
-            color: "#0A0A0A", letterSpacing: "-0.02em",
+            color: "var(--ink)", letterSpacing: "-0.02em",
+            opacity: 0, animation: "dzRise 640ms cubic-bezier(0.16,1,0.3,1) 80ms both",
+          }}>{t("auth.forgot_sent_title", locale)}</h2>
+
+          {/* Description */}
+          <p style={{
+            margin: 0, fontSize: 14, fontWeight: 400,
+            color: "var(--ink-muted)", lineHeight: 1.6,
+            opacity: 0, animation: "dzRise 640ms cubic-bezier(0.16,1,0.3,1) 120ms both",
+          }}>
+            {t("auth.forgot_sent_desc", locale)}
+          </p>
+
+          {/* CTA - back to login */}
+          <Link href="/login" style={{
+            display: "flex", alignItems: "center", justifyContent: "center",
+            height: 48, width: "100%", borderRadius: 10,
+            fontSize: 15, fontWeight: 600, color: "var(--on-accent)",
+            background: "var(--ink)", textDecoration: "none",
+            letterSpacing: "-0.01em",
+            boxShadow: "0 1px 2px rgba(10,10,10,0.04)",
+            opacity: 0, animation: "dzRise 640ms cubic-bezier(0.16,1,0.3,1) 160ms both",
+          }}>
+            {t("auth.forgot_return_login", locale)}
+          </Link>
+
+          {/* Resend link */}
+          <Link href="/login?forgot=1" style={{
+            fontSize: 14, fontWeight: 500, color: "var(--accent)",
+            textDecoration: "none",
+            opacity: 0, animation: "dzRise 640ms cubic-bezier(0.16,1,0.3,1) 200ms both",
+          }}>
+            {t("auth.forgot_resend", locale)}
+          </Link>
+        </div>
+      );
+    }
+
+    /* Forgot password form */
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+        {/* Back link */}
+        <Link href="/login" style={{
+          fontSize: 14, fontWeight: 500, color: "var(--accent)",
+          textDecoration: "none", alignSelf: "flex-start",
+        }}>
+          {t("common.back", locale)}
+        </Link>
+
+        {/* Eyebrow */}
+        <div style={{
+          fontSize: 12, fontWeight: 700, textTransform: "uppercase",
+          color: "var(--accent)", letterSpacing: "0.15em", textAlign: "center",
+        }}>
+          {t("auth.brand_subtitle", locale)}
+        </div>
+
+        {/* Icon + Title + Description */}
+        <div style={{
+          display: "flex", flexDirection: "column", alignItems: "center",
+          textAlign: "center", gap: 12,
+        }}>
+          <div style={{ fontSize: 64, lineHeight: 1 }}>&#x1F510;</div>
+          <h2 style={{
+            margin: 0, fontSize: 24, fontWeight: 800,
+            color: "var(--ink)", letterSpacing: "-0.02em",
           }}>{t("auth.forgot_title", locale)}</h2>
           <p style={{
-            marginTop: 8, fontSize: 14, fontWeight: 500, color: "#6B7280",
+            margin: 0, fontSize: 14, fontWeight: 400, color: "var(--ink-muted)",
+            lineHeight: 1.6,
           }}>
             {t("auth.forgot_desc", locale)}
           </p>
         </div>
 
-        {sp.sent ? (
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-            <div style={{ fontSize: 48 }}>&#x1F4E7;</div>
-            <p style={{ margin: 0, fontSize: 14, fontWeight: 500, color: "#22C55E" }}>
-              {t("auth.forgot_sent", locale)}
+        {/* Form */}
+        <form action={resetPasswordAction} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <input
+            type="email"
+            name="email"
+            placeholder="you@family.com"
+            required
+            style={{
+              height: 48, width: "100%", borderRadius: 10,
+              padding: "0 16px", outline: "none",
+              background: "var(--surface-raised)", border: "1px solid var(--border-subtle)",
+              fontSize: 17, fontWeight: 500, color: "var(--ink)",
+              transition: "border-color 150ms, background 150ms",
+              boxSizing: "border-box" as const,
+            }}
+          />
+          {sp.error && (
+            <p style={{ margin: 0, fontSize: 13, fontWeight: 500, color: "var(--error)" }}>
+              {sp.error === "email_required" ? t("auth.email_required", locale) : sp.error}
             </p>
+          )}
+          <button
+            type="submit"
+            style={{
+              height: 48, width: "100%", borderRadius: 10,
+              fontSize: 15, fontWeight: 600, color: "var(--on-accent)",
+              background: "var(--ink)", border: "none", cursor: "pointer",
+              letterSpacing: "-0.01em",
+              boxShadow: "0 1px 2px rgba(10,10,10,0.04)",
+            }}
+          >
+            {t("auth.forgot_submit", locale)}
+          </button>
+          <div style={{ textAlign: "center" }}>
             <Link href="/login" style={{
-              fontSize: 14, fontWeight: 500, color: "#6366F1", textDecoration: "none",
+              fontSize: 14, fontWeight: 500, color: "var(--accent)", textDecoration: "none",
             }}>
-              {t("auth.login_button", locale)}
+              {t("auth.forgot_return_login", locale)}
             </Link>
           </div>
-        ) : (
-          <form action={resetPasswordAction} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <span style={{
-                fontSize: 12, fontWeight: 700, textTransform: "uppercase",
-                color: "#9CA3AF", letterSpacing: "0.15em",
-              }}>{t("auth.email_placeholder", locale)}</span>
-              <input
-                type="email"
-                name="email"
-                placeholder="you@family.com"
-                required
-                style={{
-                  height: 48, width: "100%", borderRadius: 10,
-                  padding: "0 16px", outline: "none",
-                  background: "#FAFAFA", border: "1px solid #F0F0F0",
-                  fontSize: 17, fontWeight: 500, color: "#0A0A0A",
-                  fontFamily: "inherit",
-                  transition: "border-color 150ms, background 150ms",
-                  boxSizing: "border-box" as const,
-                }}
-              />
-            </label>
-            {sp.error && (
-              <p style={{ margin: 0, fontSize: 13, fontWeight: 500, color: "#EF4444" }}>
-                {sp.error === "email_required" ? t("auth.email_required", locale) : sp.error}
-              </p>
-            )}
-            <button
-              type="submit"
-              style={{
-                marginTop: 8, height: 48, width: "100%", borderRadius: 10,
-                fontSize: 15, fontWeight: 600, color: "#fff",
-                background: "#0A0A0A", border: "none", cursor: "pointer",
-                letterSpacing: "-0.01em",
-                boxShadow: "0 1px 2px rgba(10,10,10,0.04)",
-                fontFamily: "inherit",
-              }}
-            >
-              {t("auth.forgot_submit", locale)}
-            </button>
-            <div style={{ textAlign: "center" }}>
-              <Link href="/login" style={{
-                fontSize: 14, fontWeight: 500, color: "#6366F1", textDecoration: "none",
-              }}>
-                {t("auth.login_button", locale)}
-              </Link>
-            </div>
-          </form>
-        )}
+        </form>
       </div>
     );
   }

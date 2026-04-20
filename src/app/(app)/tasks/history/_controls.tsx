@@ -1,6 +1,6 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, type CSSProperties } from "react";
 import { useT } from "@/lib/i18n/useT";
 
 type Child = { id: string; display_name: string };
@@ -32,25 +32,42 @@ export function HistoryControls({
     [router, searchParams],
   );
 
-  return (
-    <div className="flex flex-wrap items-center gap-3">
-      {/* Calendar date picker */}
-      <input
-        type="date"
-        value={currentDate}
-        onChange={(e) => push({ date: e.target.value })}
-        className="rounded-md border px-3 py-2 text-sm"
-      />
+  const chipStyle = (on: boolean): CSSProperties => ({
+    display: "flex",
+    alignItems: "center",
+    gap: 6,
+    height: 32,
+    padding: "0 14px",
+    borderRadius: 9999,
+    cursor: "pointer",
+    fontSize: 13,
+    fontWeight: 700,
+    letterSpacing: "-0.01em",
+    color: on ? "var(--on-accent)" : "var(--ink-muted)",
+    background: on ? "var(--ink)" : "var(--surface-sunken)",
+    border: "none",
+    transition: "background 160ms, color 160ms",
+    whiteSpace: "nowrap",
+    flexShrink: 0,
+  });
 
-      {/* Child tabs (parent only) */}
+  return (
+    <div
+      style={{
+        marginTop: 12,
+        display: "flex",
+        flexWrap: "wrap",
+        alignItems: "center",
+        gap: 8,
+      }}
+    >
+      {/* Child filter chips (parent only) */}
       {isParent && childList.length > 0 && (
-        <div className="flex gap-1 rounded-md border p-1">
+        <>
           <button
             type="button"
             onClick={() => push({ child: null })}
-            className={`rounded px-3 py-1 text-sm ${
-              !currentChildId ? "bg-primary text-primary-foreground" : "hover:bg-muted"
-            }`}
+            style={chipStyle(!currentChildId)}
           >
             {t("tasks.filter_all")}
           </button>
@@ -59,17 +76,45 @@ export function HistoryControls({
               key={c.id}
               type="button"
               onClick={() => push({ child: c.id })}
-              className={`rounded px-3 py-1 text-sm ${
-                currentChildId === c.id
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-muted"
-              }`}
+              style={chipStyle(currentChildId === c.id)}
             >
               {c.display_name}
             </button>
           ))}
-        </div>
+        </>
       )}
+
+      {/* Calendar date picker — native input with mockup pill styling */}
+      <label
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          height: 32,
+          padding: "0 12px",
+          borderRadius: 9999,
+          background: "var(--surface-raised)",
+          border: "1px solid var(--border-subtle)",
+          cursor: "pointer",
+          flexShrink: 0,
+        }}
+      >
+        <input
+          type="date"
+          value={currentDate}
+          onChange={(e) => push({ date: e.target.value })}
+          style={{
+            border: "none",
+            outline: "none",
+            background: "transparent",
+            fontSize: 12,
+            fontWeight: 600,
+            color: "var(--ink)",
+            cursor: "pointer",
+            padding: 0,
+            fontFeatureSettings: '"tnum" 1',
+          }}
+        />
+      </label>
     </div>
   );
 }

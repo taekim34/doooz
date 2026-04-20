@@ -2,15 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =========================================================================
+   DESIGN SYSTEM ARCHITECTURE
+   =========================================================================
+   Two systems coexist:
+
+   [CUSTOM] doooz tokens — role(parent/kid) × theme(warm/cool) = 4 combinations.
+     Use: --bg, --ink, --surface, --accent, --border, --error, --success, etc.
+     Why: shadcn's single-axis (light/dark) can't handle 2-axis theming.
+     When: page layouts, inline styles, any role/theme-aware styling.
+
+   [SHADCN] shadcn/ui compat — HSL tokens consumed by shadcn components.
+     Use: --background, --foreground, --primary, --destructive, etc.
+     Why: Button, Card, Input, Dialog, Badge need these for CVA variants.
+     When: shadcn component internals only (components/ui/*.tsx).
+     Limit: HSL format, single theme axis, no role awareness.
+
+   RULE: New components → use [CUSTOM] tokens.
+         Existing shadcn components (Button, Card, etc.) → keep [SHADCN].
+         Never mix: don't use --background in page code, don't use --ink in shadcn.
+   ========================================================================= */
+
 /* =========================
-   L1 · Foundation tokens (shared across modes)
+   L1 · [CUSTOM] Foundation tokens (shared across all role×theme)
    ========================= */
 @layer base {
   :root {
     /* Font */
     --font-sans: var(--font-pretendard), "Apple SD Gothic Neo", system-ui, -apple-system, sans-serif;
 
-    /* Spacing grid — 4px base (for custom utilities only; Tailwind default scale still applies) */
+    /* Spacing grid — 4px base */
     --space-unit: 0.25rem;
 
     /* Motion */
@@ -19,18 +40,57 @@
     --duration-base: 400ms;
     --duration-long: 500ms;
 
-    /* Shadow primitives (will be consumed by L2) */
+    /* [CUSTOM] Brand accents — role-scoped, theme-invariant */
+    --accent-parent: #6366F1;
+    --accent-parent-end: #8B7AB8;
+    --accent-parent-soft: #EEF2FF;
+    --accent-kid: #FF6B9D;
+    --accent-kid-end: #FFA07A;
+    --accent-kid-soft: #FFE4E9;
+
+    /* [CUSTOM] Status — shared across all themes */
+    --success: #22C55E;
+    --success-strong: #10B981;
+    --success-bg: #DCFCE7;
+    --error: #EF4444;
+    --error-strong: #DC2626;
+    --error-bg: #FEE2E2;
+    --warning: #F59E0B;
+    --warning-bg: #FEF3C7;
+    --info: #6366F1;
+    --info-bg: #EEF2FF;
+
+    /* [CUSTOM] Neutrals — theme-invariant grayscale ramp */
+    --neutral-0: #FFFFFF;
+    --neutral-50: #FAFAFA;
+    --neutral-100: #F5F5F5;
+    --neutral-200: #E5E5E5;
+    --neutral-300: #D4D4D8;
+    --neutral-400: #9CA3AF;
+    --neutral-500: #6B7280;
+    --neutral-900: #0A0A0A;
+
+    /* [CUSTOM] Shadows */
     --shadow-card-kid: 0 20px 40px -16px rgba(45, 27, 61, 0.12);
     --shadow-card-kid-inset: inset 0 1px 0 rgba(255, 255, 255, 0.6);
     --shadow-card-parent: 0 1px 2px rgba(10, 10, 10, 0.04);
     --shadow-cta-kid: 0 10px 24px rgba(45, 27, 61, 0.3);
+    --shadow-card: 0 8px 20px -10px rgba(0, 0, 0, 0.08);
+    --shadow-accent-kid: 0 8px 20px -6px rgba(255, 107, 157, 0.45);
+    --shadow-accent-parent: 0 8px 20px -6px rgba(99, 102, 241, 0.40);
 
-    /* z-index layering */
+    /* [CUSTOM] Radii */
+    --radius-card: 16px;
+    --radius-pill: 9999px;
+
+    /* [CUSTOM] z-index */
     --z-nav: 40;
     --z-overlay: 50;
     --z-decorative: 60;
 
-    /* Existing shadcn tokens preserved for backward compatibility — values updated in L2 */
+    /* [SHADCN] Base tokens — consumed by shadcn components only.
+       Do NOT use these in page code; use [CUSTOM] --ink, --bg, etc. instead.
+       Values are overridden per theme in L2 sections below. */
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -52,55 +112,136 @@
 }
 
 /* =========================
-   L2 · Semantic tokens — PARENT mode (default when neither kid nor dark)
+   L2 · Parent × Warm (default)
    ========================= */
 @layer base {
-  [data-mode="parent"] {
-    /* Color palette */
-    --bg: #ffffff;
-    --card: #fafafa;
-    --card-raw: 0 0% 98%;
-    --ink: #0a0a0a;
-    --muted: #9ca3af;
-    --primary-color: #0a0a0a;
-    --accent-color: #6366f1;
-    --accent-gradient: linear-gradient(90deg, #6366f1, #8b7ab8);
+  [data-theme="warm"],
+  :root {
+    /* [CUSTOM] Semantic surface/ink/border — use these in page code */
+    --bg: #FFFFFF;
+    --bg-subtle: #FAFAFA;
+    --surface: #FFFFFF;
+    --surface-raised: #FAFAFA;
+    --surface-sunken: #F5F5F5;
 
-    /* Radius */
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 14px;
-    --radius-pill: 10px;
+    --ink: #0A0A0A;
+    --ink-muted: #6B7280;
+    --ink-subtle: #9CA3AF;
+    --ink-disabled: #D4D4D8;
+    --ink-placeholder: #C5C5C8;
+    --on-accent: #FFFFFF;
 
-    /* Shadow */
+    --border: #E5E5E5;
+    --border-subtle: #F0F0F0;
+    --divider: #F3F4F6;
+
+    /* [CUSTOM] Accent — resolves to parent accent in this theme */
+    --accent: var(--accent-parent);
+    --accent-end: var(--accent-parent-end);
+    --accent-soft: var(--accent-parent-soft);
+    --accent-gradient: linear-gradient(135deg, #6366F1 0%, #8B7AB8 100%);
+
     --shadow-card: var(--shadow-card-parent);
     --shadow-card-inset: none;
 
-    /* Shadcn compat — map to parent */
+    /* [SHADCN] Overrides for shadcn components in this theme */
     --background: 0 0% 100%;
     --foreground: 0 0% 4%;
     --primary: 0 0% 4%;
     --primary-foreground: 0 0% 100%;
     --ring: 0 0% 4%;
-    --border: 220 14% 96%;
   }
 }
 
 /* =========================
-   L2 · Semantic tokens — KID mode
+   L2 · Parent × Cool
    ========================= */
 @layer base {
-  [data-mode="kid"] {
-    --bg: #fff5ec;
-    --bg-gradient: linear-gradient(135deg, #fff5ec 0%, #ffe4e9 40%, #e5efff 100%);
-    --card: #ffffff;
-    --card-raw: 0 0% 100%;
-    --ink: #2d1b3d;
-    --muted: #6b7280;
-    --primary-color: #ff6b9d;
-    --accent-color: #ff6b9d;
-    --accent-gradient: linear-gradient(90deg, #ff6b9d, #ffa07a);
+  [data-role="parent"][data-theme="cool"] {
+    --bg: #E5EFFF;
+    --bg-subtle: #F0F4FF;
+    --surface: #FFFFFF;
+    --surface-raised: #FFFFFF;
+    --surface-sunken: #F5F5F5;
 
+    --ink: #2D1B3D;
+    --ink-muted: #6B7280;
+    --ink-subtle: #9CA3AF;
+    --ink-disabled: #D4D4D8;
+    --ink-placeholder: #C5C5C8;
+    --on-accent: #FFFFFF;
+
+    --border: #E5E5E5;
+    --border-subtle: #F0F0F0;
+    --divider: #F3F4F6;
+
+    --accent: var(--accent-parent);
+    --accent-end: var(--accent-parent-end);
+    --accent-soft: var(--accent-parent-soft);
+    --accent-gradient: linear-gradient(135deg, #6366F1 0%, #8B7AB8 100%);
+
+    --shadow-card: var(--shadow-card-kid);
+    --shadow-card-inset: var(--shadow-card-kid-inset);
+
+    /* [SHADCN] */
+    --background: 224 100% 96%;
+    --foreground: 275 38% 17%;
+    --primary: 239 84% 67%;
+    --primary-foreground: 0 0% 100%;
+    --ring: 239 84% 67%;
+  }
+}
+
+/* =========================
+   L2 · Role tokens — PARENT (radius, shadow overrides)
+   ========================= */
+@layer base {
+  [data-role="parent"] {
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-pill: 10px;
+  }
+}
+
+/* =========================
+   L2 · Theme tokens — KID × COOL
+   ========================= */
+@layer base {
+  [data-role="kid"][data-theme="cool"] {
+    --bg: #E5EFFF;
+    --bg-subtle: #F0F4FF;
+    --surface: #FFFFFF;
+    --surface-raised: #FFFFFF;
+    --surface-sunken: #F5F5F5;
+
+    --ink: #2D1B3D;
+    --ink-muted: #6B7280;
+    --ink-subtle: #9CA3AF;
+    --ink-disabled: #D4D4D8;
+    --ink-placeholder: #C5C5C8;
+    --on-accent: #FFFFFF;
+
+    --border: #E5E5E5;
+    --border-subtle: #F0F0F0;
+    --divider: #F3F4F6;
+
+    --accent: var(--accent-kid);
+    --accent-end: var(--accent-kid-end);
+    --accent-soft: var(--accent-kid-soft);
+    --accent-gradient: linear-gradient(135deg, #FF6B9D 0%, #FFA07A 100%);
+    --hero-bg-gradient: linear-gradient(135deg, #F0F4FF 0%, #E5EFFF 40%, #FFE4E9 100%);
+
+    --shadow-card: var(--shadow-card-kid);
+    --shadow-card-inset: var(--shadow-card-kid-inset);
+  }
+}
+
+/* =========================
+   L2 · Role tokens — KID (radius, shadow overrides)
+   ========================= */
+@layer base {
+  [data-role="kid"] {
     --radius-sm: 10px;
     --radius-md: 14px;
     --radius-lg: 22px;
@@ -108,14 +249,39 @@
 
     --shadow-card: var(--shadow-card-kid);
     --shadow-card-inset: var(--shadow-card-kid-inset);
+  }
 
-    /* Shadcn compat — map to kid */
+  /* Kid + warm: pink accent + warm bg */
+  [data-role="kid"][data-theme="warm"] {
+    --bg: #FFF5EC;
+    --bg-subtle: #FFE4E9;
+    --surface: #FFFFFF;
+    --surface-raised: #FFFFFF;
+    --surface-sunken: #F5F5F5;
+
+    --ink: #2D1B3D;
+    --ink-muted: #6B7280;
+    --ink-subtle: #9CA3AF;
+    --ink-disabled: #D4D4D8;
+    --ink-placeholder: #C5C5C8;
+    --on-accent: #FFFFFF;
+
+    --border: #E5E5E5;
+    --border-subtle: #F0F0F0;
+    --divider: #F3F4F6;
+
+    --accent: var(--accent-kid);
+    --accent-end: var(--accent-kid-end);
+    --accent-soft: var(--accent-kid-soft);
+    --accent-gradient: linear-gradient(135deg, #FF6B9D 0%, #FFA07A 100%);
+    --hero-bg-gradient: linear-gradient(135deg, #FFF5EC 0%, #FFE4E9 40%, #E5EFFF 100%);
+
+    /* [SHADCN] */
     --background: 26 100% 96%;
     --foreground: 275 38% 17%;
     --primary: 340 100% 71%;
     --primary-foreground: 0 0% 100%;
     --ring: 340 100% 71%;
-    --border: 350 60% 94%;
   }
 }
 
@@ -140,8 +306,8 @@
     padding-left: env(safe-area-inset-left, 0px);
     padding-right: env(safe-area-inset-right, 0px);
   }
-  [data-mode="kid"] body,
-  body[data-mode="kid"] {
+  [data-role="kid"] body,
+  body[data-role="kid"] {
     background: var(--bg-gradient);
   }
   [data-nums] {
@@ -174,6 +340,20 @@
     -webkit-backdrop-filter: blur(12px);
     background: rgba(255, 255, 255, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+}
+
+/* =========================
+   Auth page entrance animation
+   ========================= */
+@keyframes dzRise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

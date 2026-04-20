@@ -1,16 +1,17 @@
 import { redirect, notFound } from "next/navigation";
+import Link from "next/link";
+import { BackButton, StatCard } from "@/components/atoms";
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
 import { characterEmoji } from "@/features/characters/emoji-map";
-import { getStage, progressToNextLevel } from "@/lib/level";
+import { getStage } from "@/lib/level";
 import { familyToday, formatDateInFamilyTz } from "@/lib/datetime/family-tz";
 import { getRank } from "@/features/children/rank";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
-import { BackButton } from "@/components/ui/back-button";
-import { TaskCheckbox } from "../../tasks/_checkbox";
 import { t, type Locale } from "@/lib/i18n";
+import { tileGrad } from "@/lib/tile-grad";
+import { Section } from "@/components/organisms";
+
+const ACCENT = "var(--accent)";
 
 interface ChildRow {
   id: string;
@@ -48,29 +49,31 @@ export default async function ChildDetailPage({
   }
 
   const today = familyToday(family.timezone);
-  const [{ data: tasks }, { data: txs }, { data: earnedBadges }] = await Promise.all([
-    supabase
-      .from("task_instances")
-      .select("id, title, points, status")
-      .eq("assignee_id", child.id)
-      .eq("due_date", today)
-      .order("created_at"),
-    supabase
-      .from("point_transactions")
-      .select("id, amount, reason, kind, created_at, task_instances(due_date)")
-      .eq("user_id", child.id)
-      .order("created_at", { ascending: false })
-      .limit(20),
-    supabase
-      .from("user_badges")
-      .select("badge_id, earned_at, badges(name, icon)")
-      .eq("user_id", child.id)
-      .order("earned_at", { ascending: false }),
-  ]);
+  const [{ data: tasks }, { data: txs }, { data: earnedBadges }] =
+    await Promise.all([
+      supabase
+        .from("task_instances")
+        .select("id, title, points, status")
+        .eq("assignee_id", child.id)
+        .eq("due_date", today)
+        .order("created_at"),
+      supabase
+        .from("point_transactions")
+        .select(
+          "id, amount, reason, kind, created_at, task_instances(due_date)",
+        )
+        .eq("user_id", child.id)
+        .order("created_at", { ascending: false })
+        .limit(10),
+      supabase
+        .from("user_badges")
+        .select("badge_id, earned_at, badges(name, icon)")
+        .eq("user_id", child.id)
+        .order("earned_at", { ascending: false }),
+    ]);
 
   const rank = await getRank(child.id, family.id);
   const stage = getStage(child.level);
-  const progress = progressToNextLevel(child.lifetime_earned);
 
   const taskList = (tasks ?? []) as Array<{
     id: string;
@@ -91,110 +94,394 @@ export default async function ChildDetailPage({
     badges: { name: string; icon: string | null } | null;
   }>;
 
+  const doneCount = taskList.filter((t) => t.status === "completed").length;
+
+  function statusMeta(status: string) {
+    if (status === "completed")
+      return { dot: "var(--success)", text: "var(--ink)", strike: true, label: "+" };
+    if (status === "overdue" || status === "pardoned")
+      return { dot: "var(--error)", text: "var(--ink-subtle)", strike: false, label: "+" };
+    return { dot: "#C7C7CC", text: "var(--ink)", strike: false, label: "+" };
+  }
+
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      <BackButton fallback="/" />
+    <div
+      className="relative min-h-screen"
+      style={{
+        background: "var(--bg)",
+        color: "var(--ink)",      }}
+    >
+      {/* Back */}
+      <div
+        style={{
+          padding: "12px 20px 8px",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <BackButton href="/" />
+      </div>
 
-      <Card>
-        <CardContent className="flex items-center gap-6 p-6">
-          <div className="text-6xl">{characterEmoji(child.character_id, stage)}</div>
-          <div className="flex-1">
-            <div className="text-xl font-bold">{child.display_name}</div>
-            <div className="text-sm text-muted-foreground">
-              Lv.{child.level} · {t("children.ranking", locale)} {rank.rank}/{rank.total}
-            </div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
-              <div
-                className="h-full bg-primary"
-                style={{ width: `${Math.round(progress.fraction * 100)}%` }}
-              />
-            </div>
-            <div className="mt-1 text-xs text-muted-foreground">
-              {child.lifetime_earned.toLocaleString()} /{" "}
-              {progress.nextThreshold?.toLocaleString() ?? "MAX"} pt
-            </div>
+      <div className="mx-auto max-w-md" style={{ padding: "4px 20px 28px" }}>
+        {/* Hero */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            marginBottom: 18,
+          }}
+        >
+          <div
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: 16,
+              background: tileGrad(child.character_id, child.id),
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+              boxShadow: "0 10px 24px -18px rgba(10,10,10,0.18)",
+            }}
+          >
+            <span aria-hidden style={{ fontSize: 36, lineHeight: 1 }}>
+              {characterEmoji(child.character_id, stage)}
+            </span>
           </div>
-          <div className="text-right">
-            <div className="text-xs text-muted-foreground">{t("children.current_points", locale)}</div>
-            <div className="text-3xl font-bold">
-              {child.current_balance.toLocaleString()}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("children.today_tasks", locale)}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-1 text-sm">
-          {taskList.length === 0 && (
-            <p className="text-muted-foreground">{t("children.no_tasks_today", locale)}</p>
-          )}
-          {taskList.map((c) => (
-            <TaskCheckbox
-              key={c.id}
-              id={c.id}
-              title={c.title}
-              points={c.points}
-              status={c.status}
-              readOnly
-            />
-          ))}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("children.recent_points", locale)}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-1 text-sm">
-          {txList.length === 0 && <p className="text-muted-foreground">{t("children.no_history", locale)}</p>}
-          {txList.map((tx) => (
-            <div
-              key={tx.id}
-              className="flex items-center justify-between border-b py-1 last:border-0"
+          <div
+            style={{
+              flex: 1,
+              minWidth: 0,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <h1
+              style={{
+                margin: 0,
+                fontSize: 24,
+                fontWeight: 800,
+                letterSpacing: "-0.02em",
+                color: "var(--ink)",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
             >
-              <span>
-                <span className="text-muted-foreground">{tx.task_instances?.due_date ?? formatDateInFamilyTz(tx.created_at, family.timezone, "yyyy-MM-dd")}</span>{" "}
-                {tx.kind === "penalty" && "😢 "}
-                {tx.kind === "adjustment" && `${t("children.adjustment", locale)} · `}
-                {tx.reason}
-              </span>
-              <span
-                className={
-                  tx.kind === "penalty"
-                    ? "text-red-600"
-                    : tx.amount >= 0
-                      ? "text-green-600"
-                      : "text-red-600"
-                }
-              >
-                {tx.amount >= 0 ? "+" : ""}
-                {tx.amount}
-              </span>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("children.badges", locale)} ({badges.length})</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {badges.length === 0 && (
-              <p className="text-sm text-muted-foreground">{t("children.no_badges", locale)}</p>
-            )}
-            {badges.map((b) => (
-              <span key={b.badge_id} className="rounded-full border px-3 py-1 text-xs">
-                {b.badges?.icon} {b.badges?.name}
-              </span>
-            ))}
+              {child.display_name}
+            </h1>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                height: 24,
+                padding: "0 10px",
+                borderRadius: 9999,
+                background: ACCENT,
+                color: "var(--on-accent)",
+                fontSize: 11.5,
+                fontWeight: 800,
+                letterSpacing: "-0.01em",
+                whiteSpace: "nowrap",
+                flexShrink: 0,
+                fontFeatureSettings: '"tnum" 1',
+              }}
+            >
+              Lv.{child.level}
+            </span>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+
+        {/* Stats */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gap: 8,
+          }}
+        >
+          <StatCard
+            value={`${child.current_balance.toLocaleString()} pt`}
+            label={t("children.current_points", locale)}
+          />
+          <StatCard
+            value={`${doneCount}/${taskList.length}`}
+            label={
+              locale === "ko"
+                ? "오늘 완료"
+                : locale === "ja"
+                  ? "今日完了"
+                  : "Today"
+            }
+          />
+          <StatCard
+            value={`#${rank.rank}`}
+            label={t("children.ranking", locale)}
+          />
+        </div>
+
+        {/* Today's tasks */}
+        <Section
+          title={t("children.today_tasks", locale)}
+          hint={`${doneCount}/${taskList.length}`}
+        >
+          {taskList.length === 0 ? (
+            <p
+              style={{
+                fontSize: 13,
+                color: "var(--ink-subtle)",
+                padding: "10px 0",
+                margin: 0,
+              }}
+            >
+              {t("children.no_tasks_today", locale)}
+            </p>
+          ) : (
+            <div>
+              {taskList.map((task, i) => {
+                const meta = statusMeta(task.status);
+                return (
+                  <div
+                    key={task.id}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      height: 48,
+                      borderBottom:
+                        i === taskList.length - 1
+                          ? "none"
+                          : "1px solid var(--border)",
+                    }}
+                  >
+                    <span
+                      aria-hidden
+                      style={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: 9999,
+                        background: meta.dot,
+                        flexShrink: 0,
+                      }}
+                    />
+                    <div
+                      style={{
+                        fontSize: 15,
+                        fontWeight: 500,
+                        color: meta.text,
+                        letterSpacing: "-0.01em",
+                        flex: 1,
+                        minWidth: 0,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        textDecoration: meta.strike ? "line-through" : "none",
+                        textDecorationColor: "var(--ink-subtle)",
+                      }}
+                    >
+                      {task.title}
+                    </div>
+                    <span
+                      style={{
+                        fontSize: 14,
+                        fontWeight: 700,
+                        color:
+                          task.status === "completed" ? "var(--success)" : "var(--ink)",
+                        letterSpacing: "-0.01em",
+                        fontFeatureSettings: '"tnum" 1',
+                        whiteSpace: "nowrap",
+                        flexShrink: 0,
+                      }}
+                    >
+                      +{task.points} pt
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </Section>
+
+        {/* Transactions */}
+        <Section title={t("children.recent_points", locale)}>
+          {txList.length === 0 ? (
+            <p
+              style={{
+                fontSize: 13,
+                color: "var(--ink-subtle)",
+                padding: "10px 0",
+                margin: 0,
+              }}
+            >
+              {t("children.no_history", locale)}
+            </p>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              {txList.map((tx) => {
+                const positive = tx.amount > 0;
+                const dateStr =
+                  tx.task_instances?.due_date ??
+                  formatDateInFamilyTz(
+                    tx.created_at,
+                    family.timezone,
+                    "MM-dd",
+                  );
+                return (
+                  <div
+                    key={tx.id}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      padding: "10px 2px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: 9999,
+                        background: "var(--surface-sunken)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                        fontSize: 14,
+                      }}
+                    >
+                      <span aria-hidden>
+                        {tx.kind === "penalty"
+                          ? "😢"
+                          : positive
+                            ? "✨"
+                            : "🎁"}
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        flex: 1,
+                        minWidth: 0,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 1,
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: 14,
+                          fontWeight: 500,
+                          color: "var(--ink)",
+                          letterSpacing: "-0.01em",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {tx.kind === "adjustment" &&
+                          `${t("children.adjustment", locale)} · `}
+                        {tx.reason}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 400,
+                          color: "var(--ink-subtle)",
+                          letterSpacing: "-0.01em",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {dateStr}
+                      </div>
+                    </div>
+                    <span
+                      style={{
+                        fontSize: 14,
+                        fontWeight: 700,
+                        color:
+                          tx.kind === "penalty" || tx.amount < 0
+                            ? "var(--error)"
+                            : "var(--success)",
+                        letterSpacing: "-0.01em",
+                        fontFeatureSettings: '"tnum" 1',
+                        whiteSpace: "nowrap",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {tx.amount >= 0 ? "+" : ""}
+                      {tx.amount.toLocaleString()} pt
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </Section>
+
+        {/* Badges */}
+        <Section
+          title={t("children.badges", locale)}
+          hint={`${badges.length}`}
+        >
+          {badges.length === 0 ? (
+            <p
+              style={{
+                fontSize: 13,
+                color: "var(--ink-subtle)",
+                padding: "10px 0",
+                margin: 0,
+              }}
+            >
+              {t("children.no_badges", locale)}
+            </p>
+          ) : (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr",
+                gap: 8,
+              }}
+            >
+              {badges.map((b) => (
+                <div
+                  key={b.badge_id}
+                  style={{
+                    padding: "12px 6px 10px",
+                    borderRadius: 14,
+                    background: "var(--surface-raised)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 6,
+                  }}
+                >
+                  <span aria-hidden style={{ fontSize: 30, lineHeight: 1 }}>
+                    {b.badges?.icon}
+                  </span>
+                  <div
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 500,
+                      color: "var(--ink)",
+                      letterSpacing: "-0.01em",
+                      textAlign: "center",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      width: "100%",
+                    }}
+                  >
+                    {b.badges?.name}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </Section>
+      </div>
     </div>
   );
 }
+
+

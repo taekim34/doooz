@@ -1,5 +1,5 @@
 "use client";
-import { ApprovalRow } from "@/components/ui/approval-row";
+import { ApprovalRow } from "@/components/molecules";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -55,13 +55,11 @@ export function ApprovalList({
       {approvals.map((a) => (
         <ApprovalRow
           key={a.id}
-          kidName={a.kidName}
+          childName={a.kidName}
           taskTitle={a.taskTitle}
           points={a.points}
-          timeAgo={timeAgo(a.createdAt)}
           onApprove={() => handleAction(a.id, "approve")}
           onReject={() => handleAction(a.id, "reject")}
-          disabled={pending}
         />
       ))}
     </div>

@@ -44,6 +44,20 @@ Next.js 15 App Router + React 19 + TS 5 + Supabase (Postgres/Auth/RLS) + Tailwin
 - `_` prefix = client component co-located with server page
 - Types: `npx supabase gen types typescript` → `lib/supabase/types.ts`
 
+### Design System — Two Systems Coexist
+
+**[CUSTOM] doooz tokens** — 2-axis theming: role(parent/kid) × theme(warm/cool) = 4 combos.
+- Use `--bg`, `--ink`, `--surface`, `--accent`, `--border`, `--error`, `--success`, etc.
+- Use for: page layouts, inline styles, any role/theme-aware styling.
+- Defined in `globals.css` with `[data-role][data-theme]` selectors.
+
+**[SHADCN] shadcn/ui tokens** — HSL-based, single-axis (light/dark).
+- Use `--background`, `--foreground`, `--primary`, `--destructive`, etc.
+- Use for: shadcn component internals only (`components/ui/*.tsx`).
+- Limitation: can't handle role×theme matrix; kept for CVA variant compatibility.
+
+**Rule:** New components → `[CUSTOM]` tokens. shadcn components (Button, Card, etc.) → `[SHADCN]`. Never cross: don't use `--background` in pages, don't use `--ink` inside shadcn components.
+
 ## Critical Rules
 
 ### Supabase Clients — NEVER Mix

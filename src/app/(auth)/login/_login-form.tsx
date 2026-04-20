@@ -1,40 +1,22 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import type { Route } from "next";
 import { useT } from "@/lib/i18n/useT";
-import { useLocale } from "@/lib/i18n/context";
-import type { Locale } from "@/lib/i18n";
-
-const LOCALE_COOKIE = process.env.NEXT_PUBLIC_LOCALE_COOKIE || "doooz_locale";
 const FAMILY_STORAGE_KEY = process.env.NEXT_PUBLIC_FAMILY_STORAGE_KEY || "doooz_family_name";
 
-const LOCALES: { v: Locale; label: string }[] = [
-  { v: "ko", label: "\ud55c\uad6d\uc5b4" },
-  { v: "en", label: "English" },
-  { v: "ja", label: "\u65e5\u672c\u8a9e" },
-];
-
-const inputStyle: React.CSSProperties = {
-  height: 48, width: "100%", borderRadius: 10,
-  padding: "0 16px", outline: "none",
-  background: "#FAFAFA", border: "1px solid #F0F0F0",
-  fontSize: 17, fontWeight: 500, color: "#0A0A0A",
-  fontFamily: "inherit",
-  transition: "border-color 150ms, background 150ms",
-  boxSizing: "border-box",
-};
+const inputCls =
+  "h-12 w-full rounded-[10px] bg-[color:var(--surface-raised)] border border-[color:var(--border-subtle)] px-4 text-[17px] font-medium text-[color:var(--ink)] outline-none transition-[border-color,background] duration-150";
 
 function handleFocus(e: React.FocusEvent<HTMLInputElement>) {
-  e.currentTarget.style.borderColor = "#0A0A0A";
-  e.currentTarget.style.background = "#FFFFFF";
+  e.currentTarget.style.borderColor = "var(--ink)";
+  e.currentTarget.style.background = "var(--bg)";
 }
 function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
-  e.currentTarget.style.borderColor = "#F0F0F0";
-  e.currentTarget.style.background = "#FAFAFA";
+  e.currentTarget.style.borderColor = "var(--border-subtle)";
+  e.currentTarget.style.background = "var(--surface-raised)";
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
@@ -42,19 +24,10 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
       <span style={{
         fontSize: 12, fontWeight: 700, textTransform: "uppercase",
-        color: "#9CA3AF", letterSpacing: "0.15em",
+        color: "var(--ink-subtle)", letterSpacing: "0.15em",
       }}>{label}</span>
       {children}
     </label>
-  );
-}
-
-function GlobeIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <circle cx="7" cy="7" r="5.5" stroke="#0A0A0A" strokeWidth="1.3"/>
-      <path d="M1.5 7h11M7 1.5c1.7 2 1.7 9 0 11M7 1.5c-1.7 2-1.7 9 0 11" stroke="#0A0A0A" strokeWidth="1.3" strokeLinecap="round"/>
-    </svg>
   );
 }
 
@@ -95,11 +68,10 @@ function OnboardCard({
       style={{
         display: "flex", width: "100%", alignItems: "center", gap: 14,
         padding: "0 16px", height: 60, borderRadius: 14,
-        cursor: "pointer", textAlign: "left", fontFamily: "inherit",
         textDecoration: "none",
-        background: isPrimary ? "#FF6B7A" : "#FFFFFF",
-        color: isPrimary ? "#fff" : "#0A0A0A",
-        border: isPrimary ? "none" : "1px solid #E5E5E5",
+        background: isPrimary ? "#FF6B7A" : "var(--bg)",
+        color: isPrimary ? "var(--on-accent)" : "var(--ink)",
+        border: isPrimary ? "none" : "1px solid var(--border)",
         boxShadow: isPrimary
           ? "0 10px 22px -10px rgba(255,107,122,0.5)"
           : "0 1px 2px rgba(10,10,10,0.03)",
@@ -111,18 +83,18 @@ function OnboardCard({
       <span style={{
         flexShrink: 0, display: "flex", height: 36, width: 36,
         alignItems: "center", justifyContent: "center", borderRadius: 10,
-        background: isPrimary ? "rgba(255,255,255,0.18)" : "#FAFAFA",
-        border: isPrimary ? "none" : "1px solid #F0F0F0",
+        background: isPrimary ? "rgba(255,255,255,0.18)" : "var(--surface-raised)",
+        border: isPrimary ? "none" : "1px solid var(--border-subtle)",
       }}>{icon}</span>
       <span style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", lineHeight: 1.15 }}>
         <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.01em" }}>{title}</span>
         <span style={{
           marginTop: 3, fontSize: 12.5, fontWeight: 500,
-          color: isPrimary ? "rgba(255,255,255,0.75)" : "#9CA3AF",
+          color: isPrimary ? "rgba(255,255,255,0.75)" : "var(--ink-subtle)",
         }}>{subtitle}</span>
       </span>
       <svg width="8" height="14" viewBox="0 0 8 14" fill="none" style={{ flexShrink: 0 }}>
-        <path d="M1.5 1.5l5 5.5-5 5.5" stroke={isPrimary ? "rgba(255,255,255,0.85)" : "#9CA3AF"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M1.5 1.5l5 5.5-5 5.5" stroke={isPrimary ? "rgba(255,255,255,0.85)" : "var(--ink-subtle)"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     </Link>
   );
@@ -140,27 +112,12 @@ export function LoginForm({
   emailLoginAction: (formData: FormData) => void;
 }) {
   const t = useT();
-  const currentLocale = useLocale();
-  const router = useRouter();
 
   const [loginType, setLoginType] = useState<"family" | "email">(defaultTab);
   const [showPw, setShowPw] = useState(false);
-  const [localeOpen, setLocaleOpen] = useState(false);
   const [onbOpen, setOnbOpen] = useState(false);
-  const [loc, setLoc] = useState<Locale>(currentLocale);
 
-  const localeRef = useRef<HTMLDivElement>(null);
   const familyInputRef = useRef<HTMLInputElement>(null);
-
-  // Close locale dropdown on outside click
-  useEffect(() => {
-    if (!localeOpen) return;
-    const onDoc = (e: MouseEvent) => {
-      if (localeRef.current && !localeRef.current.contains(e.target as Node)) setLocaleOpen(false);
-    };
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, [localeOpen]);
 
   // Restore cached family name
   useEffect(() => {
@@ -171,88 +128,18 @@ export function LoginForm({
     }
   }, []);
 
-  function selectLocale(v: Locale) {
-    setLoc(v);
-    setLocaleOpen(false);
-    document.cookie = `${LOCALE_COOKIE}=${v};path=/;max-age=31536000`;
-    router.refresh();
-  }
-
   return (
     <>
-      {/* Top-right locale switcher */}
-      <div ref={localeRef} style={{ position: "absolute", top: 20, right: 20, zIndex: 5 }}>
-        <button
-          type="button"
-          onClick={() => setLocaleOpen(v => !v)}
-          aria-haspopup="listbox"
-          aria-expanded={localeOpen}
-          style={{
-            display: "flex", alignItems: "center", gap: 6,
-            padding: "7px 12px", borderRadius: 9999,
-            background: "rgba(250,250,250,0.85)",
-            border: "1px solid #F0F0F0",
-            fontFamily: "inherit", fontSize: 13, fontWeight: 600,
-            color: "#0A0A0A", cursor: "pointer",
-            backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-          }}
-        >
-          <GlobeIcon/>
-          <span style={{ whiteSpace: "nowrap" }}>
-            {LOCALES.find(l => l.v === loc)?.label ?? loc}
-          </span>
-          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"
-            style={{ transition: "transform 200ms", transform: localeOpen ? "rotate(180deg)" : "none" }}>
-            <path d="M1 1l4 4 4-4" stroke="#0A0A0A" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-        {localeOpen && (
-          <div role="listbox" style={{
-            position: "absolute", top: "calc(100% + 6px)", right: 0,
-            minWidth: 132, padding: 4,
-            background: "#fff", border: "1px solid #F0F0F0",
-            borderRadius: 12, boxShadow: "0 14px 30px -10px rgba(10,10,10,0.18)",
-            display: "flex", flexDirection: "column", gap: 2,
-          }}>
-            {LOCALES.map(o => {
-              const on = loc === o.v;
-              return (
-                <button key={o.v} type="button" onClick={() => selectLocale(o.v)}
-                  role="option" aria-selected={on}
-                  style={{
-                    display: "flex", alignItems: "center", justifyContent: "space-between",
-                    padding: "8px 12px", borderRadius: 8,
-                    background: on ? "#FAFAFA" : "transparent",
-                    border: "none", cursor: "pointer", fontFamily: "inherit",
-                    fontSize: 14, fontWeight: on ? 700 : 500,
-                    color: "#0A0A0A", textAlign: "left",
-                  }}>
-                  <span>{o.label}</span>
-                  {on && (
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M2.5 6.5L5 9l4.5-5.5" stroke="#0A0A0A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* Brand */}
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-        <div style={{
-          fontSize: 12, fontWeight: 700, textTransform: "uppercase",
-          color: "#6366F1", letterSpacing: "0.15em",
-        }}>{t("auth.brand_subtitle")}</div>
+      {/* Brand — logo only */}
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <Image
           src="/login-logo.png"
           alt="DOOOZ"
           width={400}
           height={400}
           priority
-          style={{ marginTop: 12, width: 200, height: 200, display: "block", objectFit: "contain" }}
+          className="block h-auto w-[140px] sm:w-[200px]"
+          style={{ objectFit: "contain" }}
         />
       </div>
 
@@ -263,14 +150,14 @@ export function LoginForm({
           position: "relative",
           display: "grid", gridTemplateColumns: "1fr 1fr",
           padding: 3, borderRadius: 10,
-          background: "#F5F5F5",
+          background: "var(--surface-sunken)",
           marginBottom: 4,
         }}>
           <span aria-hidden style={{
             position: "absolute", top: 3, bottom: 3,
             left: loginType === "family" ? 3 : "calc(50% + 0px)",
             width: "calc(50% - 3px)",
-            background: "#FFFFFF",
+            background: "var(--bg)",
             borderRadius: 8,
             boxShadow: "0 1px 2px rgba(10,10,10,0.06), 0 0 0 0.5px rgba(10,10,10,0.04)",
             transition: "left 240ms cubic-bezier(0.16,1,0.3,1)",
@@ -286,9 +173,9 @@ export function LoginForm({
                 style={{
                   position: "relative", zIndex: 1,
                   height: 36, border: "none", background: "transparent", cursor: "pointer",
-                  fontFamily: "inherit", fontSize: 13,
+                  fontSize: 13,
                   fontWeight: on ? 700 : 500,
-                  color: on ? "#0A0A0A" : "#6B7280",
+                  color: on ? "var(--ink)" : "var(--ink-muted)",
                   letterSpacing: "-0.01em",
                   transition: "color 160ms",
                   whiteSpace: "nowrap",
@@ -317,7 +204,7 @@ export function LoginForm({
                 const v = e.target.value.trim();
                 if (v) localStorage.setItem(FAMILY_STORAGE_KEY, v);
               }}
-              style={inputStyle}
+              className={inputCls}
             />
           </Field>
           <Field label={t("auth.my_name_label")}>
@@ -329,7 +216,7 @@ export function LoginForm({
               required
               onFocus={handleFocus}
               onBlur={handleBlur}
-              style={inputStyle}
+              className={inputCls}
             />
           </Field>
           <Field label={t("auth.password")}>
@@ -342,33 +229,32 @@ export function LoginForm({
                 required
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                style={{ ...inputStyle, paddingRight: 48 }}
+                className={inputCls} style={{ paddingRight: 48 }}
               />
               <button type="button" onClick={() => setShowPw(v => !v)}
                 aria-label={showPw ? t("auth.password") : t("auth.password")}
                 style={{
                   position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)",
                   display: "flex", height: 36, width: 36, alignItems: "center", justifyContent: "center",
-                  borderRadius: 6, background: "transparent", border: "none", color: "#9CA3AF", cursor: "pointer",
+                  borderRadius: 6, background: "transparent", border: "none", color: "var(--ink-subtle)", cursor: "pointer",
                 }}>
                 {showPw ? <EyeOffIcon/> : <EyeIcon/>}
               </button>
             </div>
           </Field>
           {defaultTab !== "email" && error && (
-            <p style={{ margin: 0, fontSize: 14, fontWeight: 500, color: "#EF4444" }}>{error}</p>
+            <p style={{ margin: 0, fontSize: 14, fontWeight: 500, color: "var(--error)" }}>{error}</p>
           )}
           <button type="submit"
             onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
             style={{
               marginTop: 6, height: 48, width: "100%", borderRadius: 10,
-              fontSize: 15, fontWeight: 600, color: "#fff",
-              background: "#0A0A0A", border: "none", cursor: "pointer",
+              fontSize: 15, fontWeight: 600, color: "var(--on-accent)",
+              background: "var(--ink)", border: "none", cursor: "pointer",
               letterSpacing: "-0.01em",
               boxShadow: "0 1px 2px rgba(10,10,10,0.04)",
               transition: "transform 200ms cubic-bezier(0.16,1,0.3,1)",
-              fontFamily: "inherit",
             }}>{t("auth.login_button")}</button>
         </form>
 
@@ -387,7 +273,7 @@ export function LoginForm({
               required
               onFocus={handleFocus}
               onBlur={handleBlur}
-              style={inputStyle}
+              className={inputCls}
             />
           </Field>
           <Field label={t("auth.password")}>
@@ -400,33 +286,32 @@ export function LoginForm({
                 required
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                style={{ ...inputStyle, paddingRight: 48 }}
+                className={inputCls} style={{ paddingRight: 48 }}
               />
               <button type="button" onClick={() => setShowPw(v => !v)}
                 aria-label={showPw ? t("auth.password") : t("auth.password")}
                 style={{
                   position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)",
                   display: "flex", height: 36, width: 36, alignItems: "center", justifyContent: "center",
-                  borderRadius: 6, background: "transparent", border: "none", color: "#9CA3AF", cursor: "pointer",
+                  borderRadius: 6, background: "transparent", border: "none", color: "var(--ink-subtle)", cursor: "pointer",
                 }}>
                 {showPw ? <EyeOffIcon/> : <EyeIcon/>}
               </button>
             </div>
           </Field>
           {defaultTab === "email" && error && (
-            <p style={{ margin: 0, fontSize: 14, fontWeight: 500, color: "#EF4444" }}>{error}</p>
+            <p style={{ margin: 0, fontSize: 14, fontWeight: 500, color: "var(--error)" }}>{error}</p>
           )}
           <button type="submit"
             onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
             style={{
               marginTop: 6, height: 48, width: "100%", borderRadius: 10,
-              fontSize: 15, fontWeight: 600, color: "#fff",
-              background: "#0A0A0A", border: "none", cursor: "pointer",
+              fontSize: 15, fontWeight: 600, color: "var(--on-accent)",
+              background: "var(--ink)", border: "none", cursor: "pointer",
               letterSpacing: "-0.01em",
               boxShadow: "0 1px 2px rgba(10,10,10,0.04)",
               transition: "transform 200ms cubic-bezier(0.16,1,0.3,1)",
-              fontFamily: "inherit",
             }}>{t("auth.login_button")}</button>
         </form>
       </div>
@@ -435,8 +320,8 @@ export function LoginForm({
       <div style={{ marginTop: 16, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <Link href="/login?forgot=1" style={{
           background: "transparent", border: "none",
-          fontFamily: "inherit", fontSize: 14, fontWeight: 500,
-          color: "#6366F1", padding: 0, whiteSpace: "nowrap",
+          fontSize: 14, fontWeight: 500,
+          color: "var(--accent)", padding: 0, whiteSpace: "nowrap",
           textDecoration: "none",
         }}>{t("auth.forgot_password")}</Link>
       </div>
@@ -449,11 +334,11 @@ export function LoginForm({
             display: "flex", alignItems: "center", justifyContent: "center",
             gap: 4, padding: "8px 12px",
             background: "transparent", border: "none", cursor: "pointer",
-            fontFamily: "inherit", fontSize: 14, fontWeight: 600,
-            color: "#6B7280",
+            fontSize: 14, fontWeight: 600,
+            color: "var(--ink-muted)",
           }}>
           <span style={{ whiteSpace: "nowrap" }}>{t("auth.first_time")}</span>
-          <span style={{ color: "#0A0A0A", textDecoration: "underline", textUnderlineOffset: 3, textDecorationThickness: 1, whiteSpace: "nowrap" }}>
+          <span style={{ color: "var(--ink)", textDecoration: "underline", textUnderlineOffset: 3, textDecorationThickness: 1, whiteSpace: "nowrap" }}>
             {t("auth.start_trigger")}
           </span>
         </button>
@@ -477,7 +362,7 @@ export function LoginForm({
       <div role="dialog" aria-modal="true" aria-label={t("auth.start_title")}
         style={{
           position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 51,
-          background: "#FFFFFF",
+          background: "var(--bg)",
           borderTopLeftRadius: 24, borderTopRightRadius: 24,
           boxShadow: "0 -20px 40px -12px rgba(10,10,10,0.18)",
           transform: onbOpen ? "translateY(0)" : "translateY(105%)",
@@ -492,19 +377,19 @@ export function LoginForm({
         }}>
         {/* Grabber */}
         <div style={{ display: "flex", justifyContent: "center", padding: "6px 0 10px" }}>
-          <span style={{ width: 40, height: 4, borderRadius: 9999, background: "#E5E5E5" }}/>
+          <span style={{ width: 40, height: 4, borderRadius: 9999, background: "var(--border)" }}/>
         </div>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14 }}>
-          <h2 style={{ margin: 0, fontSize: 19, fontWeight: 800, letterSpacing: "-0.02em", color: "#0A0A0A" }}>
+          <h2 style={{ margin: 0, fontSize: 19, fontWeight: 800, letterSpacing: "-0.02em", color: "var(--ink)" }}>
             {t("auth.start_title")}
           </h2>
           <button type="button" onClick={() => setOnbOpen(false)} aria-label={t("auth.start_close")}
             style={{
               background: "transparent", border: "none", cursor: "pointer",
-              fontFamily: "inherit", fontSize: 13, fontWeight: 600, color: "#9CA3AF", padding: "4px 6px",
+              fontSize: 13, fontWeight: 600, color: "var(--ink-subtle)", padding: "4px 6px",
             }}>{t("auth.start_close")}</button>
         </div>
-        <p style={{ margin: "0 0 16px", fontSize: 13.5, fontWeight: 500, color: "#6B7280", letterSpacing: "-0.01em", lineHeight: 1.5 }}>
+        <p style={{ margin: "0 0 16px", fontSize: 13.5, fontWeight: 500, color: "var(--ink-muted)", letterSpacing: "-0.01em", lineHeight: 1.5 }}>
           {t("auth.start_desc")}
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>

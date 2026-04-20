@@ -3,21 +3,21 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-spring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-[color:var(--primary-color)] disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-spring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-[color:var(--ink)] disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100",
   {
     variants: {
       variant: {
         default:
-          "bg-[color:var(--primary-color)] text-white hover:scale-[1.02] motion-reduce:hover:scale-100 shadow-sm [&:where([data-mode='kid']_*,[data-mode='kid'])]:shadow-cta",
+          "bg-[color:var(--ink)] text-white hover:scale-[1.02] motion-reduce:hover:scale-100 shadow-sm [&:where([data-role='kid']_*,[data-role='kid'])]:shadow-cta",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:scale-[1.02] motion-reduce:hover:scale-100",
         outline:
-          "border border-[color:var(--muted)]/30 bg-transparent text-[color:var(--ink)] hover:bg-[color:var(--card)]",
+          "border border-[color:var(--ink-subtle)]/30 bg-transparent text-[color:var(--ink)] hover:bg-[color:var(--surface-raised)]",
         secondary:
-          "bg-[color:var(--card)] text-[color:var(--ink)] hover:bg-[color:var(--card)]/80 border border-[color:var(--muted)]/20",
+          "bg-[color:var(--surface-raised)] text-[color:var(--ink)] hover:bg-[color:var(--surface-raised)]/80 border border-[color:var(--ink-subtle)]/20",
         ghost:
-          "text-[color:var(--ink)] hover:bg-[color:var(--card)]",
-        link: "text-[color:var(--primary-color)] underline-offset-4 hover:underline",
+          "text-[color:var(--ink)] hover:bg-[color:var(--surface-raised)]",
+        link: "text-[color:var(--ink)] underline-offset-4 hover:underline",
       },
       size: {
         default: "h-11 px-5 text-base rounded-pill",

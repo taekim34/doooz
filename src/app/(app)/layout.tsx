@@ -15,9 +15,33 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <LocaleProvider locale={locale}>
       <Suspense>
         <NavigationLoading>
-          <div data-mode={user.role === "child" ? "kid" : "parent"} className="flex min-h-screen flex-col md:flex-row">
+          <div
+            data-role={user.role === "child" ? "kid" : "parent"}
+            data-theme={user.tone}
+            className="flex min-h-screen flex-col bg-[var(--surface-raised)]"
+          >
             <AppNav role={user.role} userName={user.display_name} familyName={family.name} locale={locale} />
-            <main className="flex-1 p-4 pb-24 md:p-8 md:pb-8">{children}</main>
+
+            <main className="flex-1 overflow-x-hidden">
+              {/* Mobile: direct content with bottom-tab padding */}
+              <div className="p-4 pb-24 md:hidden">{children}</div>
+
+              {/* Desktop: PhoneCanvas card wrapper */}
+              <div
+                className="mx-auto hidden max-w-[960px] md:block"
+                style={{ padding: "clamp(16px, 2.5vw, 32px) clamp(12px, 3vw, 24px) 56px" }}
+              >
+                <div
+                  className="overflow-hidden rounded-3xl border border-white/80 bg-white"
+                  style={{
+                    boxShadow: "0 24px 48px -20px rgba(45,27,61,0.18), 0 2px 4px rgba(10,10,10,0.04)",
+                  }}
+                >
+                  <div className="p-6 lg:p-8">{children}</div>
+                </div>
+              </div>
+            </main>
+
             <PushSubscriber />
             <ForegroundRefresh />
           </div>

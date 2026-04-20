@@ -6,9 +6,9 @@ export const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
     <div
       ref={ref}
       className={cn(
-        "bg-[color:var(--card)] text-[color:var(--ink)] rounded-lg shadow-card",
+        "bg-[color:var(--surface-raised)] text-[color:var(--ink)] rounded-lg shadow-card",
         // Kid mode: add inner highlight for raised-from-surface feel
-        "[&:where([data-mode='kid']_*,[data-mode='kid'])]:shadow-[0_20px_40px_-16px_rgba(45,27,61,0.12),inset_0_1px_0_rgba(255,255,255,0.6)]",
+        "[&:where([data-role='kid']_*,[data-role='kid'])]:shadow-[0_20px_40px_-16px_rgba(45,27,61,0.12),inset_0_1px_0_rgba(255,255,255,0.6)]",
         className,
       )}
       {...props}

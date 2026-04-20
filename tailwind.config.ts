@@ -76,6 +76,8 @@ const config: Config = {
         cardOut: "cardOut 300ms cubic-bezier(0.4,0,1,1) both",
         bounce: "bounce 1.4s ease-in-out 300ms infinite",
         confettiFall: "confettiFall 1.5s cubic-bezier(0.3,0.1,0.6,1) both",
+        dzTlRise: "dzTlRise 520ms cubic-bezier(0.16,1,0.3,1) forwards",
+        gentleBounce: "gentleBounce 2s ease-in-out infinite",
       },
       keyframes: {
         fadeInUp: {
@@ -107,6 +109,14 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateY(-20px) rotate(var(--rot, 0deg))" },
           "10%": { opacity: "1" },
           "100%": { opacity: "0", transform: "translateY(800px) rotate(calc(var(--rot, 0deg) + 540deg))" },
+        },
+        dzTlRise: {
+          from: { opacity: "0", transform: "translateY(8px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        gentleBounce: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-4px)" },
         },
       },
     },

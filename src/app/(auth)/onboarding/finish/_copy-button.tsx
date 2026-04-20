@@ -28,8 +28,8 @@ export function CopyButton({
         width: 40,
         height: 40,
         borderRadius: 10,
-        background: "#FFFFFF",
-        border: "1px solid #E5E7EB",
+        background: "var(--surface)",
+        border: "1px solid var(--border)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -44,7 +44,7 @@ export function CopyButton({
           height="18"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="#10B981"
+          stroke="var(--success-strong)"
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -57,7 +57,7 @@ export function CopyButton({
           height="18"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="#6B7280"
+          stroke="var(--ink-muted)"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"

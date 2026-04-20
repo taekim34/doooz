@@ -545,6 +545,7 @@ export type Database = {
           level: number
           lifetime_earned: number
           role: string
+          tone: string
         }
         Insert: {
           birth_date?: string | null
@@ -557,6 +558,7 @@ export type Database = {
           level?: number
           lifetime_earned?: number
           role: string
+          tone?: string
         }
         Update: {
           birth_date?: string | null
@@ -569,6 +571,7 @@ export type Database = {
           level?: number
           lifetime_earned?: number
           role?: string
+          tone?: string
         }
         Relationships: [
           {

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { SectionLabel } from "@/components/atoms";
 import { FamilyNameInput } from "./_family-name-input";
 import { t } from "@/lib/i18n";
 import { getAuthLocale } from "@/lib/i18n/auth-locale";
@@ -93,20 +94,11 @@ async function joinAction(formData: FormData) {
   redirect("/onboarding/pick-character");
 }
 
-const inputStyle: React.CSSProperties = {
-  height: 48, width: "100%", borderRadius: 10,
-  padding: "0 16px", outline: "none",
-  background: "#FAFAFA", border: "1px solid #F0F0F0",
-  fontSize: 17, fontWeight: 500, color: "#0A0A0A",
-  fontFamily: "inherit",
-  transition: "border-color 150ms, background 150ms",
-  boxSizing: "border-box",
-};
+const inputCls =
+  "h-12 w-full rounded-[10px] bg-[color:var(--surface-raised)] border border-[color:var(--border-subtle)] px-4 text-[17px] font-medium text-[color:var(--ink)] outline-none transition-[border-color,background] duration-150";
 
-const labelStyle: React.CSSProperties = {
-  fontSize: 12, fontWeight: 700, textTransform: "uppercase",
-  color: "#9CA3AF", letterSpacing: "0.15em",
-};
+const selectCls =
+  `${inputCls} appearance-none pr-11 cursor-pointer bg-[length:12px_8px] bg-[position:right_16px_center] bg-no-repeat bg-[url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 1.5l4.5 5 4.5-5' stroke='%239CA3AF' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")]`;
 
 export default async function JoinPage({
   searchParams,
@@ -116,118 +108,151 @@ export default async function JoinPage({
   const sp = await searchParams;
   const locale = await getAuthLocale();
   return (
-    <>
-      <h1 style={{
-        marginTop: 0, fontSize: 24, fontWeight: 800,
-        color: "#0A0A0A", letterSpacing: "-0.02em", textAlign: "center",
-      }}>
-        {t("auth.join_family", locale)}
-      </h1>
-      <p style={{
-        marginTop: 8, fontSize: 14, fontWeight: 500,
-        color: "#6B7280", textAlign: "center",
-      }}>
-        {t("auth.join_family_sub", locale)}
-      </p>
+    <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+        <h1
+          style={{
+            margin: 0,
+            fontSize: 24,
+            fontWeight: 800,
+            color: "var(--ink)",
+            letterSpacing: "-0.02em",
+          }}
+        >
+          {t("auth.join_family", locale)}
+        </h1>
+        <p
+          style={{
+            margin: "8px 0 0",
+            fontSize: 14,
+            fontWeight: 500,
+            color: "var(--ink-muted)",
+            letterSpacing: "-0.01em",
+            lineHeight: 1.5,
+          }}
+        >
+          {t("auth.join_family_sub", locale)}
+        </p>
+      </div>
 
-      <form action={joinAction} style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 14 }}>
+      <form
+        action={joinAction}
+        style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 14 }}
+      >
         <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <span style={labelStyle}>{t("auth.family_name_label", locale)}</span>
+          <SectionLabel as="span">{t("auth.family_name_label", locale)}</SectionLabel>
           <FamilyNameInput defaultValue={sp.family_name} placeholder={t("auth.family_name_placeholder", locale)} />
         </label>
 
         <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <span style={labelStyle}>{t("auth.invite_code_label", locale)}</span>
+          <SectionLabel as="span">{t("auth.invite_code_label", locale)}</SectionLabel>
           <input
             name="invite_code"
+            autoCapitalize="characters"
+            autoCorrect="off"
+            spellCheck={false}
             placeholder={t("auth.invite_code_placeholder", locale)}
             required
             maxLength={20}
-            style={inputStyle}
+            className={`${inputCls} uppercase tracking-[0.12em]`}
+            style={{ fontFeatureSettings: '"tnum" 1' }}
           />
         </label>
 
         <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <span style={labelStyle}>{t("auth.my_name_label", locale)}</span>
+          <SectionLabel as="span">{t("auth.my_name_label", locale)}</SectionLabel>
           <input
             name="display_name"
+            autoComplete="name"
             placeholder={t("auth.my_name_placeholder", locale)}
             required
             maxLength={20}
-            style={inputStyle}
+            className={inputCls}
           />
         </label>
 
         <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <span style={labelStyle}>{t("auth.password", locale)}</span>
+          <SectionLabel as="span">{t("auth.password", locale)}</SectionLabel>
           <input
             type="password"
             name="pin"
+            autoComplete="new-password"
             placeholder={t("auth.password_min", locale)}
             minLength={6}
             required
-            style={inputStyle}
+            className={inputCls}
           />
         </label>
 
         <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <span style={labelStyle}>{t("auth.role_label", locale)}</span>
-          <select
-            name="role"
-            defaultValue="child"
-            style={{
-              height: 48, width: "100%", borderRadius: 10,
-              padding: "0 16px", outline: "none",
-              background: "#FAFAFA", border: "1px solid #F0F0F0",
-              fontSize: 17, fontWeight: 500, color: "#0A0A0A",
-              fontFamily: "inherit",
-              transition: "border-color 150ms, background 150ms",
-              boxSizing: "border-box" as const,
-              appearance: "none" as const,
-              WebkitAppearance: "none" as const,
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239CA3AF' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "right 16px center",
-              paddingRight: 40,
-            }}
-          >
+          <SectionLabel as="span">{t("auth.role_label", locale)}</SectionLabel>
+          <select name="role" defaultValue="child" className={selectCls}>
             <option value="child">{t("auth.role_child", locale)}</option>
             <option value="parent">{t("auth.role_parent", locale)}</option>
           </select>
         </label>
 
         {sp.error && (
-          <p style={{ margin: 0, fontSize: 13, fontWeight: 500, color: "#EF4444" }}>{sp.error}</p>
+          <div style={{ color: "var(--error)", fontSize: 14, textAlign: "center", marginTop: 4 }}>
+            {sp.error}
+          </div>
         )}
 
         <button
           type="submit"
           style={{
-            marginTop: 6, height: 48, width: "100%", borderRadius: 10,
-            fontSize: 15, fontWeight: 600, color: "#fff",
-            background: "#0A0A0A", border: "none", cursor: "pointer",
+            marginTop: 10,
+            height: 48,
+            width: "100%",
+            borderRadius: 10,
+            fontSize: 15,
+            fontWeight: 700,
+            color: "var(--on-accent)",
+            background: "var(--ink)",
+            border: "none",
+            cursor: "pointer",
             letterSpacing: "-0.01em",
-            boxShadow: "0 1px 2px rgba(10,10,10,0.04)",
-            fontFamily: "inherit",
+            boxShadow:
+              "0 1px 2px rgba(10,10,10,0.04), 0 12px 28px -16px rgba(10,10,10,0.4)",
           }}
         >
-          {t("auth.join_family", locale)}
+          {t("auth.join_submit", locale)}
         </button>
       </form>
 
-      <div style={{ marginTop: 16, textAlign: "center" }}>
-        <p style={{ margin: 0, fontSize: 14, fontWeight: 500, color: "#6B7280" }}>
-          {t("auth.first_time_create", locale)}{" "}
-          <Link href="/signup" style={{ fontSize: 14, fontWeight: 500, color: "#6366F1", textDecoration: "none" }}>
+      <div style={{ marginTop: 24, textAlign: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 6,
+          }}
+        >
+          <span style={{ fontSize: 13, fontWeight: 500, color: "var(--ink-subtle)" }}>
+            {t("auth.first_time_create", locale)}
+          </span>
+          <Link
+            href="/signup"
+            style={{
+              fontSize: 13,
+              fontWeight: 700,
+              color: "var(--accent)",
+              textDecoration: "none",
+            }}
+          >
             {t("auth.email_signup", locale)}
           </Link>
-        </p>
-        <p style={{ margin: "8px 0 0" }}>
-          <Link href="/privacy" style={{ fontSize: 13, fontWeight: 500, color: "#6B7280", textDecoration: "none" }}>
+        </div>
+        <p style={{ margin: "12px 0 0" }}>
+          <Link
+            href="/privacy"
+            style={{ fontSize: 13, fontWeight: 500, color: "var(--ink-muted)", textDecoration: "none" }}
+          >
             {t("privacy.link", locale)}
           </Link>
         </p>
       </div>
-    </>
+    </div>
   );
 }

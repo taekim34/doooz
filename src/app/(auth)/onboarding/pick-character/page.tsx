@@ -2,10 +2,9 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { t } from "@/lib/i18n";
 import { getAuthLocale } from "@/lib/i18n/auth-locale";
-import { FadeUp } from "@/components/ui/fade-up";
-import { CharacterAvatar } from "@/components/ui/character-avatar";
-import { EyebrowLabel } from "@/components/ui/eyebrow-label";
-import { LevelPill } from "@/components/ui/level-pill";
+import { FadeUp } from "@/components/molecules";
+import { CharacterAvatar } from "@/components/molecules/character-avatar";
+import { EyebrowLabel, LevelPill } from "@/components/atoms";
 
 async function pickAction(formData: FormData) {
   "use server";
@@ -57,12 +56,12 @@ export default async function PickCharacterPage() {
                   disabled={locked}
                   className="relative flex w-full flex-col items-center rounded-lg p-4 text-sm transition-spring hover:translate-y-[-2px] disabled:pointer-events-none disabled:opacity-40"
                   style={{
-                    background: "var(--card)",
+                    background: "var(--surface-raised)",
                     border: "1px solid var(--border, #f0f0f0)",
                     boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                   }}
                 >
-                  <CharacterAvatar characterId={c.id} stage={1} size="md" />
+                  <CharacterAvatar characterId={c.id} size="md" />
                   <span className="mt-2" style={{ color: "var(--ink)" }}>{c.name}</span>
                   {locked && (
                     <div className="absolute top-2 right-2">

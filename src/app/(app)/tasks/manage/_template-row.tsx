@@ -8,9 +8,7 @@
  * To change recurrence, parents delete and re-add.
  */
 
-import { useState, useTransition } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useState, useTransition, type CSSProperties, type FocusEvent } from "react";
 import { updateTaskTemplate } from "@/features/tasks/actions";
 import { useT } from "@/lib/i18n/useT";
 
@@ -34,6 +32,30 @@ type Props = {
   permanentDeleteAction?: (formData: FormData) => Promise<void>;
 };
 
+const inputStyle: CSSProperties = {
+  height: 40,
+  width: "100%",
+  borderRadius: 10,
+  padding: "0 14px",
+  outline: "none",
+  background: "var(--surface-raised)",
+  border: "1px solid var(--border-subtle)",
+  fontSize: 14,
+  fontWeight: 500,
+  color: "var(--ink)",
+  transition: "border-color 150ms, background 150ms",
+  boxSizing: "border-box",
+};
+
+function focusOn(e: FocusEvent<HTMLInputElement | HTMLSelectElement>) {
+  e.currentTarget.style.borderColor = "var(--ink)";
+  e.currentTarget.style.background = "var(--surface)";
+}
+function focusOff(e: FocusEvent<HTMLInputElement | HTMLSelectElement>) {
+  e.currentTarget.style.borderColor = "var(--border-subtle)";
+  e.currentTarget.style.background = "var(--surface-raised)";
+}
+
 export function TemplateRow({ template, assignees, deleteAction, permanentDeleteAction }: Props) {
   const t = useT();
   const [isEditing, setIsEditing] = useState(false);
@@ -42,29 +64,91 @@ export function TemplateRow({ template, assignees, deleteAction, permanentDelete
   const [assigneeId, setAssigneeId] = useState(template.assignee_id);
   const [isPending, startTransition] = useTransition();
 
-  const assigneeName =
-    assignees.find((a) => a.id === template.assignee_id)?.display_name ?? "—";
-
   if (!isEditing) {
     return (
-      <div className="flex items-center justify-between rounded border p-2 text-sm">
-        <div>
-          <div className="font-medium">{template.title}</div>
-          <div className="text-xs text-muted-foreground">
-            {assigneeName} · {template.recurrenceText} · {template.points}pt
-            {template.start_date ? ` · ${template.start_date}` : ""}
-            {template.end_date ? ` ~ ${template.end_date}` : ""}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          padding: "14px 16px",
+          borderRadius: 14,
+          background: "var(--surface-raised)",
+          border: "1px solid var(--border-subtle)",
+        }}
+      >
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div
+            style={{
+              fontSize: 15,
+              fontWeight: 600,
+              color: "var(--ink)",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              letterSpacing: "-0.01em",
+            }}
+          >
+            {template.title}
+          </div>
+          <div
+            style={{
+              marginTop: 3,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              flexWrap: "wrap",
+            }}
+          >
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 500,
+                color: "var(--ink-subtle)",
+                letterSpacing: "-0.01em",
+              }}
+            >
+              {template.recurrenceText}
+            </span>
+            <span
+              aria-hidden
+              style={{
+                width: 3,
+                height: 3,
+                borderRadius: 9999,
+                background: "var(--border)",
+              }}
+            />
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 700,
+                color: "var(--accent)",
+                fontFeatureSettings: '"tnum" 1',
+              }}
+            >
+              +{template.points} pt
+            </span>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button
+
+        <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
+          <button
             type="button"
-            size="sm"
-            variant="outline"
             onClick={() => setIsEditing(true)}
+            style={{
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              fontSize: 13,
+              fontWeight: 600,
+              color: "var(--ink-muted)",
+              padding: "6px 4px",
+              whiteSpace: "nowrap",
+            }}
           >
             {t("tasks.edit")}
-          </Button>
+          </button>
           {deleteAction && (
             <form
               action={(fd) => {
@@ -72,9 +156,23 @@ export function TemplateRow({ template, assignees, deleteAction, permanentDelete
               }}
             >
               <input type="hidden" name="id" value={template.id} />
-              <Button type="submit" variant="destructive" size="sm" disabled={isPending}>
+              <button
+                type="submit"
+                disabled={isPending}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  cursor: isPending ? "not-allowed" : "pointer",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: "var(--error-strong)",
+                  padding: "6px 4px",
+                  whiteSpace: "nowrap",
+                  opacity: isPending ? 0.6 : 1,
+                }}
+              >
                 {t("tasks.delete")}
-              </Button>
+              </button>
             </form>
           )}
           {permanentDeleteAction && (
@@ -85,9 +183,23 @@ export function TemplateRow({ template, assignees, deleteAction, permanentDelete
               }}
             >
               <input type="hidden" name="id" value={template.id} />
-              <Button type="submit" variant="destructive" size="sm" disabled={isPending}>
+              <button
+                type="submit"
+                disabled={isPending}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  cursor: isPending ? "not-allowed" : "pointer",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: "var(--error-strong)",
+                  padding: "6px 4px",
+                  whiteSpace: "nowrap",
+                  opacity: isPending ? 0.6 : 1,
+                }}
+              >
                 {t("tasks.permanent_delete")}
-              </Button>
+              </button>
             </form>
           )}
         </div>
@@ -103,25 +215,40 @@ export function TemplateRow({ template, assignees, deleteAction, permanentDelete
           setIsEditing(false);
         });
       }}
-      className="grid gap-2 rounded border p-2 sm:grid-cols-2"
+      style={{
+        display: "grid",
+        gap: 10,
+        padding: 14,
+        borderRadius: 14,
+        background: "var(--surface-raised)",
+        border: "1px solid var(--border-subtle)",
+        gridTemplateColumns: "1fr 1fr",
+      }}
     >
       <input type="hidden" name="id" value={template.id} />
 
-      <Input
+      <input
         name="title"
+        type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder={t("tasks.title_label")}
+        onFocus={focusOn}
+        onBlur={focusOff}
+        style={{ ...inputStyle, gridColumn: "1 / -1" }}
         required
       />
 
-      <Input
+      <input
         type="number"
         name="points"
         value={points}
         onChange={(e) => setPoints(Number(e.target.value))}
         min={1}
         max={10000}
+        onFocus={focusOn}
+        onBlur={focusOff}
+        style={inputStyle}
         required
       />
 
@@ -129,7 +256,14 @@ export function TemplateRow({ template, assignees, deleteAction, permanentDelete
         name="assignee_id"
         value={assigneeId}
         onChange={(e) => setAssigneeId(e.target.value)}
-        className="h-10 rounded-md border px-3 text-sm sm:col-span-2"
+        onFocus={focusOn}
+        onBlur={focusOff}
+        style={{
+          ...inputStyle,
+          appearance: "none",
+          WebkitAppearance: "none",
+          MozAppearance: "none",
+        }}
       >
         {assignees.map((a) => (
           <option key={a.id} value={a.id}>
@@ -138,20 +272,53 @@ export function TemplateRow({ template, assignees, deleteAction, permanentDelete
         ))}
       </select>
 
-      <div className="flex gap-2 sm:col-span-2">
-        <Button type="submit" size="sm" disabled={isPending}>
+      <div style={{ display: "flex", gap: 8, gridColumn: "1 / -1" }}>
+        <button
+          type="submit"
+          disabled={isPending}
+          style={{
+            height: 40,
+            padding: "0 18px",
+            borderRadius: 9999,
+            fontSize: 13,
+            fontWeight: 700,
+            color: "var(--on-accent)",
+            background: "var(--ink)",
+            border: "none",
+            cursor: isPending ? "not-allowed" : "pointer",
+            letterSpacing: "-0.01em",
+            opacity: isPending ? 0.6 : 1,
+          }}
+        >
           {t("tasks.save")}
-        </Button>
-        <Button
+        </button>
+        <button
           type="button"
-          size="sm"
-          variant="outline"
           onClick={() => setIsEditing(false)}
+          style={{
+            height: 40,
+            padding: "0 18px",
+            borderRadius: 9999,
+            fontSize: 13,
+            fontWeight: 700,
+            color: "var(--ink)",
+            background: "var(--surface-sunken)",
+            border: "none",
+            cursor: "pointer",
+            letterSpacing: "-0.01em",
+          }}
         >
           {t("tasks.cancel")}
-        </Button>
+        </button>
       </div>
-      <p className="text-xs text-muted-foreground sm:col-span-2">
+      <p
+        style={{
+          margin: 0,
+          fontSize: 11,
+          color: "var(--ink-subtle)",
+          gridColumn: "1 / -1",
+        }}
+      >
         {t("tasks.recurrence_hint")}
       </p>
     </form>

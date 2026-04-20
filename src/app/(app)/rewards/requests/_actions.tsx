@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useT } from "@/lib/i18n/useT";
+
 export function ApproveButton({ requestId }: { requestId: string }) {
   const router = useRouter();
   const t = useT();
@@ -35,9 +36,36 @@ export function ApproveButton({ requestId }: { requestId: string }) {
   }
 
   return (
-    <Button size="sm" disabled={busy} onClick={onClick}>
-      {t("rewards.approve_button")}
-    </Button>
+    <button
+      type="button"
+      aria-label={t("rewards.approve_button")}
+      disabled={busy}
+      onClick={onClick}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: 32,
+        width: 32,
+        borderRadius: 9999,
+        background: "var(--success)",
+        border: "none",
+        cursor: busy ? "not-allowed" : "pointer",
+        boxShadow: "0 6px 14px -8px rgba(34,197,94,0.5)",
+        opacity: busy ? 0.6 : 1,
+        flexShrink: 0,
+      }}
+    >
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <path
+          d="M3.5 8.5l3 3 6-7"
+          stroke="#FFFFFF"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </button>
   );
 }
 
@@ -69,9 +97,32 @@ export function RejectButton({ requestId }: { requestId: string }) {
 
   return (
     <>
-      <Button size="sm" variant="outline" onClick={() => setOpen(true)}>
-        {t("rewards.reject_button")}
-      </Button>
+      <button
+        type="button"
+        aria-label={t("rewards.reject_button")}
+        onClick={() => setOpen(true)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: 32,
+          width: 32,
+          borderRadius: 9999,
+          background: "var(--surface-sunken)",
+          border: "none",
+          cursor: "pointer",
+          flexShrink: 0,
+        }}
+      >
+        <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M4 4l8 8M12 4l-8 8"
+            stroke="var(--ink-muted)"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+      </button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>

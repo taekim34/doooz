@@ -31,9 +31,8 @@ export function FamilyNameInput({ defaultValue, placeholder }: { defaultValue?: 
       style={{
         height: 48, width: "100%", borderRadius: 10,
         padding: "0 16px", outline: "none",
-        background: "#FAFAFA", border: "1px solid #F0F0F0",
-        fontSize: 17, fontWeight: 500, color: "#0A0A0A",
-        fontFamily: "inherit",
+        background: "var(--surface-raised)", border: "1px solid var(--border-subtle)",
+        fontSize: 17, fontWeight: 500, color: "var(--ink)",
         transition: "border-color 150ms, background 150ms",
         boxSizing: "border-box",
       }}
