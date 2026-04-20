@@ -49,22 +49,21 @@ export function KidTaskList({ tasks, todayDone, todayTotal }: Props) {
         }}
       >
         <div className="flex items-baseline justify-between">
-          <h2 className="text-xl font-extrabold tracking-tight" style={{ letterSpacing: "-0.3px" }}>
+          <h2 className="text-xl font-extrabold tracking-[-0.3px]">
             {t("tasks.today")}
           </h2>
           <div className="flex items-center gap-1.5 whitespace-nowrap" style={{ fontFeatureSettings: '"tnum" 1' }}>
-            <span className="text-[13px] font-bold" style={{ color: "#FF6B9D" }}>
+            <span className="text-[13px] font-bold text-[#FF6B9D]">
               {todayDone}/{todayTotal}
             </span>
-            <span className="text-[13px] font-medium" style={{ color: "rgba(45,27,61,0.55)" }}>
+            <span className="text-[13px] font-medium text-[rgba(45,27,61,0.55)]">
               {t("tasks.completed")}
             </span>
           </div>
         </div>
 
         {/* Progress bar */}
-        <div className="mt-2.5 h-1 w-full overflow-hidden rounded-full"
-          style={{ background: "rgba(45,27,61,0.06)" }}
+        <div className="mt-2.5 h-1 w-full overflow-hidden rounded-full bg-[rgba(45,27,61,0.06)]"
         >
           <div
             className="h-full rounded-full transition-all duration-base ease-spring"
@@ -102,9 +101,9 @@ export function KidTaskList({ tasks, todayDone, todayTotal }: Props) {
       </div>
 
       {/* Task list */}
-      <ul className="flex flex-col gap-3 px-5 pb-32 pt-1" style={{ listStyle: "none", margin: 0 }}>
+      <ul className="flex flex-col gap-3 px-5 pb-32 pt-1 list-none m-0">
         {filtered.length === 0 && (
-          <li className="py-8 text-center text-sm" style={{ color: "rgba(45,27,61,0.4)" }}>
+          <li className="py-8 text-center text-sm text-[rgba(45,27,61,0.4)]">
             {t("tasks.no_today")}
           </li>
         )}

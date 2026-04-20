@@ -90,79 +90,27 @@ export default async function RewardRequestsPage() {
   const closedRows = (recentClosed ?? []) as Row[];
 
 
-  const rowStyle = {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-    padding: "12px 12px",
-    borderRadius: 14,
-    background: "var(--surface-raised)",
-  };
-
-  const emptyStyle = {
-    padding: "22px 16px",
-    borderRadius: 14,
-    background: "var(--surface-raised)",
-    textAlign: "center" as const,
-    color: "var(--ink-subtle)",
-    fontSize: 13,
-    fontWeight: 500,
-    letterSpacing: "-0.01em",
-  };
+  const rowClass = "flex items-center gap-2.5 p-3 rounded-[14px] bg-[color:var(--surface-raised)]";
+  const emptyClass = "px-4 py-5.5 rounded-[14px] bg-[color:var(--surface-raised)] text-center text-[color:var(--ink-subtle)] text-[13px] font-medium tracking-[-0.01em]";
 
   return (
-    <div
-      className="mx-auto max-w-3xl"
-      style={{        background: "var(--bg)",
-        color: "var(--ink)",
-        padding: "12px 20px 28px",
-      }}
-    >
-      <div
-        style={{
-          marginBottom: 4,
-          display: "flex",
-          alignItems: "center",
-          marginLeft: -8,
-        }}
-      >
+    <div className="mx-auto max-w-3xl bg-[color:var(--bg)] text-[color:var(--ink)] px-5 pt-3 pb-7">
+      <div className="mb-1 flex items-center -ml-2">
+
         <BackButton href="/rewards" />
       </div>
 
-      <h1
-        style={{
-          margin: "0 0 6px",
-          fontSize: 24,
-          fontWeight: 800,
-          letterSpacing: "-0.02em",
-          color: "var(--ink)",
-        }}
-      >
+      <h1 className="mb-1.5 text-2xl font-extrabold tracking-tight text-[color:var(--ink)]">
         {t("rewards.requests_title", locale)}
       </h1>
-      <p
-        style={{
-          margin: "0 0 24px",
-          fontSize: 14,
-          fontWeight: 500,
-          color: "var(--ink-subtle)",
-          letterSpacing: "-0.01em",
-          lineHeight: 1.45,
-        }}
-      >
+      <p className="mb-6 text-sm font-medium text-[color:var(--ink-subtle)] tracking-[-0.01em] leading-[1.45]">
         {t("rewards.pending", locale)}
       </p>
 
       {/* Pending */}
-      <section style={{ marginBottom: 28 }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            marginBottom: 10,
-          }}
-        >
+      <section className="mb-7">
+        <div className="flex items-center gap-2 mb-2.5">
+
           <SectionLabel as="span">{t("rewards.pending", locale)}</SectionLabel>
           {pendingRows.length > 0 && (
             <span
@@ -188,15 +136,15 @@ export default async function RewardRequestsPage() {
         </div>
 
         {pendingRows.length === 0 ? (
-          <div style={emptyStyle}>{t("rewards.pending_none", locale)}</div>
+          <div className={emptyClass}>{t("rewards.pending_none", locale)}</div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <div className="flex flex-col gap-2">
             {pendingRows.map((r) => {
               const kidName =
                 nameMap.get(r.requested_by) ??
                 t("rewards.child_fallback", locale);
               return (
-                <div key={r.id} style={rowStyle}>
+                <div key={r.id} className={rowClass}>
                   <span
                     aria-hidden
                     style={{ fontSize: 28, lineHeight: 1, flexShrink: 0 }}
@@ -294,17 +242,17 @@ export default async function RewardRequestsPage() {
       </section>
 
       {/* Approved today */}
-      <section style={{ marginBottom: 28 }}>
-        <div style={{ marginBottom: 10 }}>
+      <section className="mb-7">
+        <div className="mb-2.5">
           <SectionLabel as="span">
             {t("rewards.approved_today", locale)}
           </SectionLabel>
         </div>
 
         {approvedRows.length === 0 ? (
-          <div style={emptyStyle}>{t("rewards.approved_none", locale)}</div>
+          <div className={emptyClass}>{t("rewards.approved_none", locale)}</div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <div className="flex flex-col gap-2">
             {approvedRows.map((r) => {
               const kidName =
                 nameMap.get(r.requested_by) ??
@@ -332,14 +280,14 @@ export default async function RewardRequestsPage() {
 
       {/* Recent closed (rejected / cancelled) */}
       <section>
-        <div style={{ marginBottom: 10 }}>
+        <div className="mb-2.5">
           <SectionLabel as="span">{t("rewards.closed_title", locale)}</SectionLabel>
         </div>
 
         {closedRows.length === 0 ? (
-          <div style={emptyStyle}>{t("rewards.closed_none", locale)}</div>
+          <div className={emptyClass}>{t("rewards.closed_none", locale)}</div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <div className="flex flex-col gap-2">
             {closedRows.map((r) => {
               const kidName =
                 nameMap.get(r.requested_by) ??
@@ -397,19 +345,10 @@ function HistoryRow({
   fg: string;
 }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 10,
-        padding: "12px 12px",
-        borderRadius: 14,
-        background: "var(--surface-raised)",
-      }}
-    >
+    <div className="flex items-center gap-2.5 p-3 rounded-[14px] bg-[color:var(--surface-raised)]">
       <span
         aria-hidden
-        style={{ fontSize: 28, lineHeight: 1, flexShrink: 0 }}
+        className="text-[28px] leading-none shrink-0"
       >
         {kidEmoji}
       </span>

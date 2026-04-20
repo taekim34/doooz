@@ -21,11 +21,8 @@ function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      <span style={{
-        fontSize: 12, fontWeight: 700, textTransform: "uppercase",
-        color: "var(--ink-subtle)", letterSpacing: "0.15em",
-      }}>{label}</span>
+    <label className="flex flex-col gap-2">
+      <span className="text-xs font-bold uppercase text-[color:var(--ink-subtle)] tracking-[0.15em]">{label}</span>
       {children}
     </label>
   );
@@ -65,35 +62,30 @@ function OnboardCard({
   return (
     <Link
       href={href as Route}
+      className="flex w-full items-center gap-[14px] px-4 h-[60px] rounded-[14px] no-underline"
       style={{
-        display: "flex", width: "100%", alignItems: "center", gap: 14,
-        padding: "0 16px", height: 60, borderRadius: 14,
-        textDecoration: "none",
         background: isPrimary ? "#FF6B7A" : "var(--bg)",
         color: isPrimary ? "var(--on-accent)" : "var(--ink)",
         border: isPrimary ? "none" : "1px solid var(--border)",
         boxShadow: isPrimary
           ? "0 10px 22px -10px rgba(255,107,122,0.5)"
           : "0 1px 2px rgba(10,10,10,0.03)",
-        transition: "transform 200ms cubic-bezier(0.16,1,0.3,1)",
+        transition: "transform 200ms var(--ease-spring)",
       }}
       onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
       onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
     >
-      <span style={{
-        flexShrink: 0, display: "flex", height: 36, width: 36,
-        alignItems: "center", justifyContent: "center", borderRadius: 10,
-        background: isPrimary ? "rgba(255,255,255,0.18)" : "var(--surface-raised)",
-        border: isPrimary ? "none" : "1px solid var(--border-subtle)",
-      }}>{icon}</span>
-      <span style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", lineHeight: 1.15 }}>
-        <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.01em" }}>{title}</span>
-        <span style={{
-          marginTop: 3, fontSize: 12.5, fontWeight: 500,
-          color: isPrimary ? "rgba(255,255,255,0.75)" : "var(--ink-subtle)",
-        }}>{subtitle}</span>
+      <span className="shrink-0 flex h-9 w-9 items-center justify-center rounded-[10px]"
+        style={{
+          background: isPrimary ? "rgba(255,255,255,0.18)" : "var(--surface-raised)",
+          border: isPrimary ? "none" : "1px solid var(--border-subtle)",
+        }}>{icon}</span>
+      <span className="flex-1 min-w-0 flex flex-col leading-[1.15]">
+        <span className="text-[15px] font-bold tracking-[-0.01em]">{title}</span>
+        <span className="mt-[3px] text-[12.5px] font-medium"
+          style={{ color: isPrimary ? "rgba(255,255,255,0.75)" : "var(--ink-subtle)" }}>{subtitle}</span>
       </span>
-      <svg width="8" height="14" viewBox="0 0 8 14" fill="none" style={{ flexShrink: 0 }}>
+      <svg width="8" height="14" viewBox="0 0 8 14" fill="none" className="shrink-0">
         <path d="M1.5 1.5l5 5.5-5 5.5" stroke={isPrimary ? "rgba(255,255,255,0.85)" : "var(--ink-subtle)"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     </Link>
@@ -131,37 +123,27 @@ export function LoginForm({
   return (
     <>
       {/* Brand — logo only */}
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div className="flex justify-center">
         <Image
           src="/login-logo.png"
           alt="DOOOZ"
           width={400}
           height={400}
           priority
-          className="block h-auto w-[140px] sm:w-[200px]"
-          style={{ objectFit: "contain" }}
+          className="block h-auto w-[140px] sm:w-[200px] object-contain"
         />
       </div>
 
       {/* Form */}
-      <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 14 }}>
+      <div className="mt-5 flex flex-col gap-[14px]">
         {/* Login type segmented control */}
-        <div role="tablist" aria-label={t("auth.login_button")} style={{
-          position: "relative",
-          display: "grid", gridTemplateColumns: "1fr 1fr",
-          padding: 3, borderRadius: 10,
-          background: "var(--surface-sunken)",
-          marginBottom: 4,
-        }}>
-          <span aria-hidden style={{
-            position: "absolute", top: 3, bottom: 3,
-            left: loginType === "family" ? 3 : "calc(50% + 0px)",
-            width: "calc(50% - 3px)",
-            background: "var(--bg)",
-            borderRadius: 8,
-            boxShadow: "0 1px 2px rgba(10,10,10,0.06), 0 0 0 0.5px rgba(10,10,10,0.04)",
-            transition: "left 240ms cubic-bezier(0.16,1,0.3,1)",
-          }}/>
+        <div role="tablist" aria-label={t("auth.login_button")} className="relative grid grid-cols-2 p-[3px] rounded-[10px] bg-[color:var(--surface-sunken)] mb-1">
+          <span aria-hidden className="absolute top-[3px] bottom-[3px] w-[calc(50%-3px)] rounded-lg bg-[color:var(--bg)]"
+            style={{
+              left: loginType === "family" ? 3 : "calc(50% + 0px)",
+              boxShadow: "0 1px 2px rgba(10,10,10,0.06), 0 0 0 0.5px rgba(10,10,10,0.04)",
+              transition: "left 240ms var(--ease-spring)",
+            }}/>
           {([
             { v: "family" as const, label: t("auth.family_tab") },
             { v: "email" as const, label: t("auth.email_tab") },
@@ -170,15 +152,10 @@ export function LoginForm({
             return (
               <button key={tab.v} type="button" role="tab" aria-selected={on}
                 onClick={() => setLoginType(tab.v)}
+                className="relative z-[1] h-9 border-none bg-transparent cursor-pointer text-[13px] tracking-[-0.01em] transition-colors duration-[160ms] whitespace-nowrap"
                 style={{
-                  position: "relative", zIndex: 1,
-                  height: 36, border: "none", background: "transparent", cursor: "pointer",
-                  fontSize: 13,
                   fontWeight: on ? 700 : 500,
                   color: on ? "var(--ink)" : "var(--ink-muted)",
-                  letterSpacing: "-0.01em",
-                  transition: "color 160ms",
-                  whiteSpace: "nowrap",
                 }}>{tab.label}</button>
             );
           })}
@@ -187,7 +164,8 @@ export function LoginForm({
         {/* Family login form */}
         <form
           action={familyLoginAction}
-          style={{ display: loginType === "family" ? "flex" : "none", flexDirection: "column", gap: 14 }}
+          className="flex-col gap-[14px]"
+          style={{ display: loginType === "family" ? "flex" : "none" }}
         >
           <Field label={t("auth.family_name_label")}>
             <input
@@ -220,7 +198,7 @@ export function LoginForm({
             />
           </Field>
           <Field label={t("auth.password")}>
-            <div style={{ position: "relative" }}>
+            <div className="relative">
               <input
                 type={showPw ? "text" : "password"}
                 name="password"
@@ -233,35 +211,29 @@ export function LoginForm({
               />
               <button type="button" onClick={() => setShowPw(v => !v)}
                 aria-label={showPw ? t("auth.password") : t("auth.password")}
-                style={{
-                  position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)",
-                  display: "flex", height: 36, width: 36, alignItems: "center", justifyContent: "center",
-                  borderRadius: 6, background: "transparent", border: "none", color: "var(--ink-subtle)", cursor: "pointer",
-                }}>
+                className="absolute right-2 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-md bg-transparent border-none text-[color:var(--ink-subtle)] cursor-pointer">
                 {showPw ? <EyeOffIcon/> : <EyeIcon/>}
               </button>
             </div>
           </Field>
           {defaultTab !== "email" && error && (
-            <p style={{ margin: 0, fontSize: 14, fontWeight: 500, color: "var(--error)" }}>{error}</p>
+            <p className="m-0 text-sm font-medium text-[color:var(--error)]">{error}</p>
           )}
           <button type="submit"
             onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
+            className="mt-[6px] h-12 w-full rounded-[10px] text-[15px] font-semibold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em]"
             style={{
-              marginTop: 6, height: 48, width: "100%", borderRadius: 10,
-              fontSize: 15, fontWeight: 600, color: "var(--on-accent)",
-              background: "var(--ink)", border: "none", cursor: "pointer",
-              letterSpacing: "-0.01em",
-              boxShadow: "0 1px 2px rgba(10,10,10,0.04)",
-              transition: "transform 200ms cubic-bezier(0.16,1,0.3,1)",
+              boxShadow: "var(--shadow-card-parent)",
+              transition: "transform 200ms var(--ease-spring)",
             }}>{t("auth.login_button")}</button>
         </form>
 
         {/* Email login form */}
         <form
           action={emailLoginAction}
-          style={{ display: loginType === "email" ? "flex" : "none", flexDirection: "column", gap: 14 }}
+          className="flex-col gap-[14px]"
+          style={{ display: loginType === "email" ? "flex" : "none" }}
         >
           <Field label={t("auth.email_label")}>
             <input
@@ -277,7 +249,7 @@ export function LoginForm({
             />
           </Field>
           <Field label={t("auth.password")}>
-            <div style={{ position: "relative" }}>
+            <div className="relative">
               <input
                 type={showPw ? "text" : "password"}
                 name="password"
@@ -290,109 +262,82 @@ export function LoginForm({
               />
               <button type="button" onClick={() => setShowPw(v => !v)}
                 aria-label={showPw ? t("auth.password") : t("auth.password")}
-                style={{
-                  position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)",
-                  display: "flex", height: 36, width: 36, alignItems: "center", justifyContent: "center",
-                  borderRadius: 6, background: "transparent", border: "none", color: "var(--ink-subtle)", cursor: "pointer",
-                }}>
+                className="absolute right-2 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-md bg-transparent border-none text-[color:var(--ink-subtle)] cursor-pointer">
                 {showPw ? <EyeOffIcon/> : <EyeIcon/>}
               </button>
             </div>
           </Field>
           {defaultTab === "email" && error && (
-            <p style={{ margin: 0, fontSize: 14, fontWeight: 500, color: "var(--error)" }}>{error}</p>
+            <p className="m-0 text-sm font-medium text-[color:var(--error)]">{error}</p>
           )}
           <button type="submit"
             onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
+            className="mt-[6px] h-12 w-full rounded-[10px] text-[15px] font-semibold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em]"
             style={{
-              marginTop: 6, height: 48, width: "100%", borderRadius: 10,
-              fontSize: 15, fontWeight: 600, color: "var(--on-accent)",
-              background: "var(--ink)", border: "none", cursor: "pointer",
-              letterSpacing: "-0.01em",
-              boxShadow: "0 1px 2px rgba(10,10,10,0.04)",
-              transition: "transform 200ms cubic-bezier(0.16,1,0.3,1)",
+              boxShadow: "var(--shadow-card-parent)",
+              transition: "transform 200ms var(--ease-spring)",
             }}>{t("auth.login_button")}</button>
         </form>
       </div>
 
       {/* Forgot password */}
-      <div style={{ marginTop: 16, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <Link href="/login?forgot=1" style={{
-          background: "transparent", border: "none",
-          fontSize: 14, fontWeight: 500,
-          color: "var(--accent)", padding: 0, whiteSpace: "nowrap",
-          textDecoration: "none",
-        }}>{t("auth.forgot_password")}</Link>
+      <div className="mt-4 flex items-center justify-center">
+        <Link href="/login?forgot=1" className="bg-transparent border-none text-sm font-medium text-[color:var(--accent)] p-0 whitespace-nowrap no-underline">{t("auth.forgot_password")}</Link>
       </div>
 
       {/* Onboarding trigger */}
-      <div style={{ marginTop: 12, display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div className="mt-3 flex flex-col items-center">
         <button type="button" onClick={() => setOnbOpen(true)}
           aria-expanded={onbOpen} aria-haspopup="dialog"
-          style={{
-            display: "flex", alignItems: "center", justifyContent: "center",
-            gap: 4, padding: "8px 12px",
-            background: "transparent", border: "none", cursor: "pointer",
-            fontSize: 14, fontWeight: 600,
-            color: "var(--ink-muted)",
-          }}>
-          <span style={{ whiteSpace: "nowrap" }}>{t("auth.first_time")}</span>
-          <span style={{ color: "var(--ink)", textDecoration: "underline", textUnderlineOffset: 3, textDecorationThickness: 1, whiteSpace: "nowrap" }}>
+          className="flex items-center justify-center gap-1 py-2 px-3 bg-transparent border-none cursor-pointer text-sm font-semibold text-[color:var(--ink-muted)]">
+          <span className="whitespace-nowrap">{t("auth.first_time")}</span>
+          <span className="whitespace-nowrap" style={{ color: "var(--ink)", textDecoration: "underline", textUnderlineOffset: 3, textDecorationThickness: 1 }}>
             {t("auth.start_trigger")}
           </span>
         </button>
       </div>
 
-      <div style={{ flex: 1 }}/>
+      <div className="flex-1"/>
 
       {/* Bottom sheet backdrop */}
       <div
         aria-hidden={!onbOpen}
         onClick={() => setOnbOpen(false)}
+        className="fixed inset-0 z-50"
         style={{
-          position: "fixed", inset: 0, zIndex: 50,
           background: onbOpen ? "rgba(10,10,10,0.32)" : "rgba(10,10,10,0)",
           pointerEvents: onbOpen ? "auto" : "none",
-          transition: "background 240ms cubic-bezier(0.16,1,0.3,1)",
+          transition: "background 240ms var(--ease-spring)",
         }}
       />
 
       {/* Bottom sheet */}
       <div role="dialog" aria-modal="true" aria-label={t("auth.start_title")}
+        className="fixed left-0 right-0 bottom-0 z-[51] rounded-t-3xl bg-[color:var(--bg)] px-5 pt-[10px] pb-7 max-w-[480px] mx-auto"
         style={{
-          position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 51,
-          background: "var(--bg)",
-          borderTopLeftRadius: 24, borderTopRightRadius: 24,
           boxShadow: "0 -20px 40px -12px rgba(10,10,10,0.18)",
           transform: onbOpen ? "translateY(0)" : "translateY(105%)",
           visibility: onbOpen ? "visible" : "hidden",
           transition: onbOpen
             ? "transform 360ms cubic-bezier(0.22,1,0.36,1), visibility 0ms"
             : "transform 360ms cubic-bezier(0.22,1,0.36,1), visibility 0ms 360ms",
-          padding: "10px 20px 28px",
-          maxWidth: 480,
-          marginLeft: "auto",
-          marginRight: "auto",
         }}>
         {/* Grabber */}
-        <div style={{ display: "flex", justifyContent: "center", padding: "6px 0 10px" }}>
-          <span style={{ width: 40, height: 4, borderRadius: 9999, background: "var(--border)" }}/>
+        <div className="flex justify-center py-[6px] pb-[10px]">
+          <span className="w-10 h-1 rounded-full bg-[color:var(--border)]"/>
         </div>
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14 }}>
-          <h2 style={{ margin: 0, fontSize: 19, fontWeight: 800, letterSpacing: "-0.02em", color: "var(--ink)" }}>
+        <div className="flex items-baseline justify-between mb-[14px]">
+          <h2 className="m-0 text-[19px] font-extrabold tracking-[-0.02em] text-[color:var(--ink)]">
             {t("auth.start_title")}
           </h2>
           <button type="button" onClick={() => setOnbOpen(false)} aria-label={t("auth.start_close")}
-            style={{
-              background: "transparent", border: "none", cursor: "pointer",
-              fontSize: 13, fontWeight: 600, color: "var(--ink-subtle)", padding: "4px 6px",
-            }}>{t("auth.start_close")}</button>
+            className="bg-transparent border-none cursor-pointer text-[13px] font-semibold text-[color:var(--ink-subtle)] py-1 px-[6px]">{t("auth.start_close")}</button>
         </div>
-        <p style={{ margin: "0 0 16px", fontSize: 13.5, fontWeight: 500, color: "var(--ink-muted)", letterSpacing: "-0.01em", lineHeight: 1.5 }}>
+        <p className="m-0 mb-4 text-[13.5px] font-medium text-[color:var(--ink-muted)] tracking-[-0.01em] leading-[1.5]">
           {t("auth.start_desc")}
         </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div className="flex flex-col gap-[10px]">
           <OnboardCard primary
             href="/join"
             icon={

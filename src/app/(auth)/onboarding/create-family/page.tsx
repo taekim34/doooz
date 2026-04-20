@@ -67,12 +67,7 @@ async function createFamilyAction(formData: FormData) {
 const inputCls =
   "h-12 w-full rounded-[10px] bg-[color:var(--surface-raised)] border border-[color:var(--border-subtle)] px-4 text-[17px] font-medium text-[color:var(--ink)] outline-none transition-[border-color,background] duration-150";
 
-const hintStyle: React.CSSProperties = {
-  fontSize: 11,
-  fontWeight: 500,
-  color: "var(--ink-placeholder)",
-  letterSpacing: "0.02em",
-};
+const hintCls = "text-[11px] font-medium text-[color:var(--ink-placeholder)] tracking-[0.02em]";
 
 const selectCls =
   `${inputCls} appearance-none pr-11 cursor-pointer bg-[length:12px_8px] bg-[position:right_16px_center] bg-no-repeat bg-[url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 1.5l4.5 5 4.5-5' stroke='%239CA3AF' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")]`;
@@ -93,30 +88,13 @@ export default async function CreateFamilyPage({
   const tzKey = tzLabelKey[locale] ?? "label";
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+    <div className="flex flex-col w-full">
       {/* Heading */}
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-        <h1
-          style={{
-            margin: 0,
-            fontSize: 24,
-            fontWeight: 800,
-            letterSpacing: "-0.02em",
-            color: "var(--ink)",
-          }}
-        >
+      <div className="flex flex-col items-center text-center">
+        <h1 className="m-0 text-2xl font-extrabold tracking-[-0.02em] text-[color:var(--ink)]">
           {t("auth.create_family", locale)}
         </h1>
-        <p
-          style={{
-            margin: "8px 0 0",
-            fontSize: 14,
-            fontWeight: 500,
-            color: "var(--ink-muted)",
-            letterSpacing: "-0.01em",
-            lineHeight: 1.5,
-          }}
-        >
+        <p className="mt-2 mb-0 text-sm font-medium text-[color:var(--ink-muted)] tracking-[-0.01em] leading-[1.5]">
           {t("auth.create_family_sub", locale)}
         </p>
       </div>
@@ -124,9 +102,9 @@ export default async function CreateFamilyPage({
       {/* Form */}
       <form
         action={createFamilyAction}
-        style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 14 }}
+        className="mt-7 flex flex-col gap-[14px]"
       >
-        <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <label className="flex flex-col gap-2">
           <SectionLabel as="span">{t("auth.family_name_label", locale)}</SectionLabel>
           <input
             type="text"
@@ -139,7 +117,7 @@ export default async function CreateFamilyPage({
           />
         </label>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <label className="flex flex-col gap-2">
           <SectionLabel as="span">{t("auth.my_name_label", locale)}</SectionLabel>
           <input
             type="text"
@@ -152,10 +130,10 @@ export default async function CreateFamilyPage({
           />
         </label>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <span style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+        <label className="flex flex-col gap-2">
+          <span className="flex items-baseline gap-2">
             <SectionLabel as="span">{t("auth.invite_code_label", locale)}</SectionLabel>
-            <span style={hintStyle}>{t("auth.invite_code_optional", locale)}</span>
+            <span className={hintCls}>{t("auth.invite_code_optional", locale)}</span>
           </span>
           <input
             type="text"
@@ -170,7 +148,7 @@ export default async function CreateFamilyPage({
           />
         </label>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <label className="flex flex-col gap-2">
           <SectionLabel as="span">{t("auth.timezone_label", locale)}</SectionLabel>
           <select name="timezone" defaultValue="Asia/Seoul" className={selectCls}>
             {TIMEZONES.map((tz) => (
@@ -181,7 +159,7 @@ export default async function CreateFamilyPage({
           </select>
         </label>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <label className="flex flex-col gap-2">
           <SectionLabel as="span">{t("settings.language", locale)}</SectionLabel>
           <select name="locale" defaultValue={locale} className={selectCls}>
             <option value="ko">한국어</option>
@@ -191,53 +169,27 @@ export default async function CreateFamilyPage({
         </label>
 
         {sp.error && (
-          <div style={{ color: "var(--error)", fontSize: 14, textAlign: "center", marginTop: 4 }}>
+          <div className="text-[color:var(--error)] text-sm text-center mt-1">
             {sp.error}
           </div>
         )}
 
         <button
           type="submit"
-          style={{
-            marginTop: 10,
-            height: 48,
-            width: "100%",
-            borderRadius: 10,
-            fontSize: 15,
-            fontWeight: 700,
-            color: "var(--on-accent)",
-            background: "var(--ink)",
-            border: "none",
-            cursor: "pointer",
-            letterSpacing: "-0.01em",
-            boxShadow:
-              "0 1px 2px rgba(10,10,10,0.04), 0 12px 28px -16px rgba(10,10,10,0.4)",
-          }}
+          className="mt-[10px] h-12 w-full rounded-[10px] text-[15px] font-bold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em]"
+          style={{ boxShadow: "0 1px 2px rgba(10,10,10,0.04), 0 12px 28px -16px rgba(10,10,10,0.4)" }}
         >
           {t("auth.create_family", locale)}
         </button>
       </form>
 
-      <div
-        style={{
-          marginTop: 24,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 6,
-        }}
-      >
-        <span style={{ fontSize: 13, fontWeight: 500, color: "var(--ink-subtle)" }}>
+      <div className="mt-6 flex items-center justify-center gap-[6px]">
+        <span className="text-[13px] font-medium text-[color:var(--ink-subtle)]">
           {t("auth.already_have_account", locale)}
         </span>
         <Link
           href="/login"
-          style={{
-            fontSize: 13,
-            fontWeight: 700,
-            color: "var(--accent)",
-            textDecoration: "none",
-          }}
+          className="text-[13px] font-bold text-[color:var(--accent)] no-underline"
         >
           {t("auth.login_title", locale)}
         </Link>

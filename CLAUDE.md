@@ -2,6 +2,17 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Operations
+
+```
+/backup-db                       프로덕션 DB 수동 백업
+/run-local                       dev 서버 실행 (--db local|remote / --load-backup / stop)
+npx vercel --prod                프로덕션 배포 (push 후 수동 실행)
+npx supabase db push             마이그레이션 → 프로덕션 적용 (backup 먼저!)
+ops/count-families.sql           가족 수 조회
+ops/delete-test-family.sql       테스트 가족 삭제
+```
+
 ## Commands
 
 ```bash

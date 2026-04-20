@@ -47,43 +47,28 @@ export function CelebrationOverlay({
 
   return (
     <div
-      className="dz-co-root"
+      className="dz-co-root fixed inset-0 z-[60] flex items-center justify-center p-6 text-[color:var(--ink)]"
       data-leaving={leaving || undefined}
       onClick={dismiss}
       role="dialog"
       aria-live="polite"
       aria-label="Task complete celebration"
       style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 60,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 24,
         background: "rgba(45, 27, 61, 0.55)",
         backdropFilter: "blur(6px)",
         WebkitBackdropFilter: "blur(6px)",
         fontFamily:
           'Pretendard, "Pretendard Variable", -apple-system, system-ui, sans-serif',
-        color: "var(--ink)",
       }}
     >
       <Confetti duration={duration} />
 
       <div
-        className="dz-co-card"
+        className="dz-co-card relative w-full max-w-[340px] overflow-hidden rounded-3xl bg-[var(--surface)] px-7 pb-[22px] pt-7"
         onClick={(e) => e.stopPropagation()}
         style={{
-          position: "relative",
-          width: "100%",
-          maxWidth: 340,
-          background: "var(--surface)",
-          borderRadius: 24,
-          padding: "28px 28px 22px",
           boxShadow:
             "0 40px 80px -30px rgba(45,27,61,0.35), inset 0 1px 0 rgba(255,255,255,0.6)",
-          overflow: "hidden",
         }}
       >
         {/* Ambient glow */}
@@ -106,14 +91,7 @@ export function CelebrationOverlay({
         />
 
         {/* Character or celebration emoji */}
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "center",
-            paddingTop: 4,
-          }}
-        >
+        <div className="relative flex justify-center pt-1">
           <div
             className="dz-co-avatar"
             style={{ transformOrigin: "center bottom" }}
@@ -122,7 +100,7 @@ export function CelebrationOverlay({
               <CharacterAvatar characterId={characterId} size="xl" />
             ) : (
               <span
-                style={{ fontSize: 64, lineHeight: 1 }}
+                className="text-[64px] leading-none"
                 role="img"
                 aria-label="celebration"
               >
@@ -133,35 +111,12 @@ export function CelebrationOverlay({
         </div>
 
         {/* Task title */}
-        <div
-          style={{
-            position: "relative",
-            marginTop: 12,
-            textAlign: "center",
-            fontSize: 22,
-            fontWeight: 600,
-            color: "var(--ink)",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
+        <div className="relative mt-3 truncate text-center text-[22px] font-semibold text-[color:var(--ink)]">
           {taskTitle}
         </div>
 
         {/* Animated points */}
-        <div
-          style={{
-            position: "relative",
-            marginTop: 14,
-            textAlign: "center",
-            fontSize: 48,
-            fontWeight: 800,
-            letterSpacing: "-0.02em",
-            lineHeight: 1,
-            fontFeatureSettings: '"tnum" 1',
-          }}
-        >
+        <div className="relative mt-3.5 text-center text-[48px] font-extrabold leading-none tracking-[-0.02em] tabular-nums">
           <span
             style={{
               background: "linear-gradient(90deg,#FF6B9D,#FFA07A 60%,#FFD7A8)",
@@ -178,90 +133,41 @@ export function CelebrationOverlay({
         {/* Level-up banner */}
         {levelUp && (
           <div
-            className="dz-co-levelup"
+            className="dz-co-levelup mt-[18px] flex h-8 items-center justify-center gap-1.5 rounded-full px-3.5"
             style={{
-              marginTop: 18,
-              height: 32,
-              borderRadius: 9999,
               background: "linear-gradient(90deg,#FF6B9D,#FFA07A,#FFD7A8)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 6,
               boxShadow:
                 "0 8px 20px -6px rgba(255,107,157,0.5), inset 0 1px 0 rgba(255,255,255,0.5)",
-              padding: "0 14px",
             }}
           >
-            <span
-              style={{
-                fontSize: 13,
-                fontWeight: 700,
-                color: "#fff",
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                whiteSpace: "nowrap",
-              }}
-            >
+            <span className="whitespace-nowrap text-[13px] font-bold uppercase tracking-[0.12em] text-white">
               LEVEL UP
             </span>
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 4,
-              }}
-            >
+            <span className="inline-flex items-center gap-1">
               <LevelPill level={levelUp.from} size="sm" variant="outline" className="border-white/60 text-white" />
-              <span style={{ color: "#fff", fontSize: 13, fontWeight: 700 }}>→</span>
+              <span className="text-[13px] font-bold text-white">→</span>
               <LevelPill level={levelUp.to} size="sm" variant="outline" className="border-white/60 text-white" />
             </span>
           </div>
         )}
 
         {/* Dismiss button */}
-        <div
-          style={{
-            marginTop: 22,
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
+        <div className="mt-[22px] flex justify-center">
           <button
             onClick={dismiss}
             type="button"
+            className="flex h-12 cursor-pointer items-center gap-2 rounded-full border-none bg-[#1A0F26] pl-[22px] pr-1.5 text-[15px] font-bold tracking-[-0.01em] text-white font-[inherit]"
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              height: 48,
-              paddingLeft: 22,
-              paddingRight: 6,
-              borderRadius: 9999,
-              border: "none",
-              cursor: "pointer",
-              color: "#fff",
-              background: "#1A0F26",
-              fontSize: 15,
-              fontWeight: 700,
-              letterSpacing: "-0.01em",
-              fontFamily: "inherit",
               boxShadow:
                 "0 14px 28px -10px rgba(26,15,38,0.5), inset 0 1px 0 rgba(255,255,255,0.08)",
             }}
           >
-            <span style={{ whiteSpace: "nowrap" }}>OK</span>
+            <span className="whitespace-nowrap">OK</span>
             <span
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
               style={{
-                display: "flex",
-                height: 36,
-                width: 36,
-                flexShrink: 0,
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 9999,
-                background: "linear-gradient(135deg,#FF6B9D,#FFA07A)",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.4)",
+                background: "var(--accent-gradient)",
+                boxShadow: "var(--shadow-inset-white)",
               }}
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -278,15 +184,7 @@ export function CelebrationOverlay({
         </div>
 
         {/* Hint */}
-        <div
-          style={{
-            marginTop: 10,
-            textAlign: "center",
-            fontSize: 12,
-            fontWeight: 500,
-            color: "var(--ink-subtle)",
-          }}
-        >
+        <div className="mt-2.5 text-center text-xs font-medium text-[color:var(--ink-subtle)]">
           tap to close
         </div>
       </div>
@@ -311,7 +209,7 @@ export function CelebrationOverlay({
         .dz-co-card {
           opacity: 0;
           transform: scale(0.8);
-          animation: dzCoCardIn 400ms cubic-bezier(0.16,1,0.3,1) 100ms forwards;
+          animation: dzCoCardIn 400ms var(--ease-spring) 100ms forwards;
         }
         .dz-co-root[data-leaving] .dz-co-card {
           animation: dzCoCardOut 300ms cubic-bezier(0.4,0,1,1) forwards;
@@ -336,7 +234,7 @@ export function CelebrationOverlay({
         .dz-co-levelup {
           opacity: 0;
           transform: translateY(14px);
-          animation: dzCoBanner 300ms cubic-bezier(0.16,1,0.3,1) 900ms forwards;
+          animation: dzCoBanner 300ms var(--ease-spring) 900ms forwards;
         }
         @keyframes dzCoBanner {
           to { opacity: 1; transform: translateY(0); }

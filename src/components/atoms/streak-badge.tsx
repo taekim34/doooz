@@ -43,14 +43,13 @@ const StreakBadge = React.forwardRef<HTMLDivElement, StreakBadgeProps>(
     return (
       <div
         ref={ref}
-        className={cn(streakBadgeVariants({ size }), className)}
+        className={cn(streakBadgeVariants({ size }), "text-[color:var(--ink)] tracking-[-0.2px]", className)}
         style={{
           background: "linear-gradient(90deg, #FFF3E0, #FFE4E9)",
           boxShadow:
             "0 8px 20px -10px rgba(255,107,157,0.35), inset 0 1px 0 rgba(255,255,255,0.8)",
-          color: "var(--ink)",
-          letterSpacing: "-0.2px",
         }}
+        data-nums=""
         {...props}
       >
         <span style={{ fontSize: emojiSize[resolvedSize] ?? 15, lineHeight: 1 }}>

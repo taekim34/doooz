@@ -28,8 +28,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
       <NavigationLoading>
         <main
           data-role="parent" data-theme="warm"
-          className="relative flex min-h-[100dvh] items-center justify-center overflow-auto lg:grid lg:min-h-[100dvh] lg:grid-cols-2"
-          style={{ background: "var(--surface)" }}
+          className="relative flex min-h-[100dvh] items-center justify-center overflow-auto bg-[color:var(--surface)] lg:grid lg:min-h-[100dvh] lg:grid-cols-2"
         >
           {/* ── Hero column (desktop only) ── */}
           <div
@@ -62,34 +61,19 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
             {/* Hero content */}
             <div className="relative z-10 w-full max-w-[440px]">
               <p
-                className="font-extrabold uppercase"
-                style={{
-                  fontSize: "12px",
-                  color: "var(--accent)",
-                  letterSpacing: "0.18em",
-                }}
+                className="text-xs font-extrabold uppercase text-[color:var(--accent)] tracking-[0.18em]"
               >
                 {t("auth.hero_eyebrow", locale)}
               </p>
 
               <h1
-                className="mt-4 font-extrabold whitespace-pre-line"
-                style={{
-                  fontSize: "clamp(32px, 3.4vw, 44px)",
-                  lineHeight: 1.15,
-                  letterSpacing: "-0.025em",
-                }}
+                className="mt-4 font-extrabold whitespace-pre-line text-[clamp(32px,3.4vw,44px)] leading-[1.15] tracking-[-0.025em]"
               >
                 {t("auth.hero_title", locale)}
               </h1>
 
               <p
-                className="mt-4 whitespace-pre-line"
-                style={{
-                  fontSize: "16px",
-                  lineHeight: 1.55,
-                  color: "rgba(45, 27, 61, 0.68)",
-                }}
+                className="mt-4 whitespace-pre-line text-base leading-[1.55] text-[rgba(45,27,61,0.68)]"
               >
                 {t("auth.hero_desc", locale)}
               </p>
@@ -98,14 +82,8 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
                 {HERO_PILL_KEYS.map((key) => (
                   <span
                     key={key}
-                    className="font-bold"
+                    className="font-bold px-[14px] py-2 rounded-full bg-[rgba(255,255,255,0.7)] border border-[rgba(255,255,255,0.8)] text-[13px] text-[color:var(--ink)]"
                     style={{
-                      padding: "8px 14px",
-                      borderRadius: "9999px",
-                      background: "rgba(255, 255, 255, 0.7)",
-                      border: "1px solid rgba(255, 255, 255, 0.8)",
-                      fontSize: "13px",
-                      color: "var(--ink)",
                       backdropFilter: "blur(6px)",
                       WebkitBackdropFilter: "blur(6px)",
                     }}
@@ -119,10 +97,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
 
           {/* ── Form column ── */}
           <div
-            className="relative z-10 flex min-h-[100dvh] w-full flex-col items-center lg:overflow-y-auto lg:max-h-[100dvh]"
-            style={{
-              padding: "20px 28px 32px",
-            }}
+            className="relative z-10 flex min-h-[100dvh] w-full flex-col items-center px-7 pt-5 pb-8 lg:overflow-y-auto lg:max-h-[100dvh]"
           >
             {/* Mobile-only decorative blob */}
             <div

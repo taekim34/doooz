@@ -68,7 +68,7 @@ export function FadeUp({
           ? {
               animationDuration: `${duration}ms`,
               animationDelay: `${delay}ms`,
-              animationTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+              animationTimingFunction: "var(--ease-spring)",
               animationFillMode: "both",
               "--fade-up-translate": "16px",
             } as React.CSSProperties

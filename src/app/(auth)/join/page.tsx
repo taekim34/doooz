@@ -108,43 +108,26 @@ export default async function JoinPage({
   const sp = await searchParams;
   const locale = await getAuthLocale();
   return (
-    <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-        <h1
-          style={{
-            margin: 0,
-            fontSize: 24,
-            fontWeight: 800,
-            color: "var(--ink)",
-            letterSpacing: "-0.02em",
-          }}
-        >
+    <div className="flex flex-col w-full">
+      <div className="flex flex-col items-center text-center">
+        <h1 className="m-0 text-2xl font-extrabold text-[color:var(--ink)] tracking-[-0.02em]">
           {t("auth.join_family", locale)}
         </h1>
-        <p
-          style={{
-            margin: "8px 0 0",
-            fontSize: 14,
-            fontWeight: 500,
-            color: "var(--ink-muted)",
-            letterSpacing: "-0.01em",
-            lineHeight: 1.5,
-          }}
-        >
+        <p className="mt-2 mb-0 text-sm font-medium text-[color:var(--ink-muted)] tracking-[-0.01em] leading-[1.5]">
           {t("auth.join_family_sub", locale)}
         </p>
       </div>
 
       <form
         action={joinAction}
-        style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 14 }}
+        className="mt-7 flex flex-col gap-[14px]"
       >
-        <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <label className="flex flex-col gap-2">
           <SectionLabel as="span">{t("auth.family_name_label", locale)}</SectionLabel>
           <FamilyNameInput defaultValue={sp.family_name} placeholder={t("auth.family_name_placeholder", locale)} />
         </label>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <label className="flex flex-col gap-2">
           <SectionLabel as="span">{t("auth.invite_code_label", locale)}</SectionLabel>
           <input
             name="invite_code"
@@ -159,7 +142,7 @@ export default async function JoinPage({
           />
         </label>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <label className="flex flex-col gap-2">
           <SectionLabel as="span">{t("auth.my_name_label", locale)}</SectionLabel>
           <input
             name="display_name"
@@ -171,7 +154,7 @@ export default async function JoinPage({
           />
         </label>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <label className="flex flex-col gap-2">
           <SectionLabel as="span">{t("auth.password", locale)}</SectionLabel>
           <input
             type="password"
@@ -184,7 +167,7 @@ export default async function JoinPage({
           />
         </label>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <label className="flex flex-col gap-2">
           <SectionLabel as="span">{t("auth.role_label", locale)}</SectionLabel>
           <select name="role" defaultValue="child" className={selectCls}>
             <option value="child">{t("auth.role_child", locale)}</option>
@@ -193,61 +176,36 @@ export default async function JoinPage({
         </label>
 
         {sp.error && (
-          <div style={{ color: "var(--error)", fontSize: 14, textAlign: "center", marginTop: 4 }}>
+          <div className="text-[color:var(--error)] text-sm text-center mt-1">
             {sp.error}
           </div>
         )}
 
         <button
           type="submit"
-          style={{
-            marginTop: 10,
-            height: 48,
-            width: "100%",
-            borderRadius: 10,
-            fontSize: 15,
-            fontWeight: 700,
-            color: "var(--on-accent)",
-            background: "var(--ink)",
-            border: "none",
-            cursor: "pointer",
-            letterSpacing: "-0.01em",
-            boxShadow:
-              "0 1px 2px rgba(10,10,10,0.04), 0 12px 28px -16px rgba(10,10,10,0.4)",
-          }}
+          className="mt-[10px] h-12 w-full rounded-[10px] text-[15px] font-bold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em]"
+          style={{ boxShadow: "0 1px 2px rgba(10,10,10,0.04), 0 12px 28px -16px rgba(10,10,10,0.4)" }}
         >
           {t("auth.join_submit", locale)}
         </button>
       </form>
 
-      <div style={{ marginTop: 24, textAlign: "center" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 6,
-          }}
-        >
-          <span style={{ fontSize: 13, fontWeight: 500, color: "var(--ink-subtle)" }}>
+      <div className="mt-6 text-center">
+        <div className="flex items-center justify-center gap-[6px]">
+          <span className="text-[13px] font-medium text-[color:var(--ink-subtle)]">
             {t("auth.first_time_create", locale)}
           </span>
           <Link
             href="/signup"
-            style={{
-              fontSize: 13,
-              fontWeight: 700,
-              color: "var(--accent)",
-              textDecoration: "none",
-            }}
+            className="text-[13px] font-bold text-[color:var(--accent)] no-underline"
           >
             {t("auth.email_signup", locale)}
           </Link>
         </div>
-        <p style={{ margin: "12px 0 0" }}>
+        <p className="mt-3 mb-0">
           <Link
             href="/privacy"
-            style={{ fontSize: 13, fontWeight: 500, color: "var(--ink-muted)", textDecoration: "none" }}
+            className="text-[13px] font-medium text-[color:var(--ink-muted)] no-underline"
           >
             {t("privacy.link", locale)}
           </Link>

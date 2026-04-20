@@ -32,41 +32,22 @@ export function HistoryControls({
     [router, searchParams],
   );
 
+  const chipBase = "flex items-center gap-1.5 h-8 px-3.5 rounded-full cursor-pointer text-[13px] font-bold tracking-[-0.01em] border-none transition-colors whitespace-nowrap shrink-0";
   const chipStyle = (on: boolean): CSSProperties => ({
-    display: "flex",
-    alignItems: "center",
-    gap: 6,
-    height: 32,
-    padding: "0 14px",
-    borderRadius: 9999,
-    cursor: "pointer",
-    fontSize: 13,
-    fontWeight: 700,
-    letterSpacing: "-0.01em",
     color: on ? "var(--on-accent)" : "var(--ink-muted)",
     background: on ? "var(--ink)" : "var(--surface-sunken)",
-    border: "none",
-    transition: "background 160ms, color 160ms",
-    whiteSpace: "nowrap",
-    flexShrink: 0,
   });
 
   return (
-    <div
-      style={{
-        marginTop: 12,
-        display: "flex",
-        flexWrap: "wrap",
-        alignItems: "center",
-        gap: 8,
-      }}
-    >
+    <div className="mt-3 flex flex-wrap items-center gap-2">
+
       {/* Child filter chips (parent only) */}
       {isParent && childList.length > 0 && (
         <>
           <button
             type="button"
             onClick={() => push({ child: null })}
+            className={chipBase}
             style={chipStyle(!currentChildId)}
           >
             {t("tasks.filter_all")}
@@ -76,6 +57,7 @@ export function HistoryControls({
               key={c.id}
               type="button"
               onClick={() => push({ child: c.id })}
+              className={chipBase}
               style={chipStyle(currentChildId === c.id)}
             >
               {c.display_name}
@@ -86,33 +68,14 @@ export function HistoryControls({
 
       {/* Calendar date picker — native input with mockup pill styling */}
       <label
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          height: 32,
-          padding: "0 12px",
-          borderRadius: 9999,
-          background: "var(--surface-raised)",
-          border: "1px solid var(--border-subtle)",
-          cursor: "pointer",
-          flexShrink: 0,
-        }}
+        className="inline-flex items-center h-8 px-3 rounded-full bg-[color:var(--surface-raised)] border border-[color:var(--border-subtle)] cursor-pointer shrink-0"
       >
         <input
           type="date"
           value={currentDate}
           onChange={(e) => push({ date: e.target.value })}
-          style={{
-            border: "none",
-            outline: "none",
-            background: "transparent",
-            fontSize: 12,
-            fontWeight: 600,
-            color: "var(--ink)",
-            cursor: "pointer",
-            padding: 0,
-            fontFeatureSettings: '"tnum" 1',
-          }}
+          className="border-none outline-none bg-transparent text-[12px] font-semibold text-[color:var(--ink)] cursor-pointer p-0"
+          style={{ fontFeatureSettings: '"tnum" 1' }}
         />
       </label>
     </div>

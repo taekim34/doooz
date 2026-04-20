@@ -124,46 +124,20 @@ export default async function PointsHistoryPage({
   }
 
   return (
-    <div
-      className="mx-auto max-w-2xl"
-      style={{        color: "var(--ink)",
-      }}
-    >
+    <div className="mx-auto max-w-2xl text-[color:var(--ink)]">
       {/* Header */}
-      <div className="mb-4" style={{ padding: "8px 0 0" }}>
+      <div className="mb-4 pt-2">
         {/* Top bar: back + role eyebrow */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "6px 0 14px",
-          }}
-        >
+        <div className="flex items-center justify-between py-1.5 pb-3.5">
           <BackButton href="/points" />
           <SectionLabel as="span">{user.role === "parent" ? "PARENT" : "KID"}</SectionLabel>
-          <span style={{ width: 36, height: 36 }} />
+          <span className="w-9 h-9" />
         </div>
 
-        <h1
-          style={{
-            margin: "0 0 4px",
-            fontSize: 24,
-            fontWeight: 800,
-            letterSpacing: "-0.02em",
-          }}
-        >
+        <h1 className="mb-1 text-2xl font-extrabold tracking-tight">
           {t("points.title", locale)}
         </h1>
-        <p
-          style={{
-            margin: 0,
-            fontSize: 13,
-            fontWeight: 500,
-            color: "var(--ink-subtle)",
-            letterSpacing: "-0.01em",
-          }}
-        >
+        <p className="m-0 text-[13px] font-medium text-[color:var(--ink-subtle)] tracking-[-0.01em]">
           {t("points.history_subtitle", locale)}
         </p>
 
@@ -177,26 +151,12 @@ export default async function PointsHistoryPage({
 
       {/* Transaction list */}
       {rows.length === 0 ? (
-        <div
-          style={{
-            padding: "40px 20px",
-            textAlign: "center",
-            fontSize: 13,
-            fontWeight: 500,
-            color: "var(--ink-subtle)",
-          }}
-        >
+        <div className="px-5 py-10 text-center text-[13px] font-medium text-[color:var(--ink-subtle)]">
           {t("points.no_history_full", locale)}
         </div>
       ) : (
-        <div
-          style={{
-            padding: "4px 14px",
-            background: "var(--bg)",
-            borderRadius: 16,
-            border: "1px solid var(--border)",
-          }}
-        >
+        <div className="px-3.5 py-1 bg-[color:var(--bg)] rounded-2xl border border-[color:var(--border)]">
+
           {rows.map((tx, i) => (
             <HistoryRow
               key={tx.id}
@@ -216,24 +176,10 @@ export default async function PointsHistoryPage({
       )}
 
       {rows.length === PAGE_SIZE && last && (
-        <div style={{ marginTop: 14 }}>
+        <div className="mt-3.5">
           <Link
             href={buildMore(last.created_at)}
-            style={{
-              display: "block",
-              height: 40,
-              lineHeight: "40px",
-              width: "100%",
-              borderRadius: 10,
-              background: "var(--surface)",
-              border: "1px solid var(--border)",
-              fontSize: 13,
-              fontWeight: 700,
-              color: "var(--ink)",
-              letterSpacing: "-0.01em",
-              textAlign: "center",
-              textDecoration: "none",
-            }}
+            className="block h-10 leading-10 w-full rounded-[10px] bg-[color:var(--surface)] border border-[color:var(--border)] text-[13px] font-bold text-[color:var(--ink)] tracking-[-0.01em] text-center no-underline"
           >
             {t("points.more", locale)}
           </Link>

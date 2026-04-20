@@ -11,7 +11,7 @@
  * - On submit emits a JSON `recurrence` field matching the jsonb shape.
  */
 
-import { useMemo, useState, useTransition, type CSSProperties, type FocusEvent } from "react";
+import { useMemo, useState, useTransition, type FocusEvent } from "react";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n/useT";
 
@@ -25,28 +25,9 @@ type Props = {
 
 const QUICK_POINTS: ReadonlyArray<number> = [50, 100, 150];
 
-const inputStyle: CSSProperties = {
-  height: 48,
-  width: "100%",
-  borderRadius: 10,
-  padding: "0 16px",
-  outline: "none",
-  background: "var(--surface-raised)",
-  border: "1px solid var(--border-subtle)",
-  fontSize: 16,
-  fontWeight: 500,
-  color: "var(--ink)",
-  transition: "border-color 150ms, background 150ms",
-  boxSizing: "border-box",
-};
+const inputClass = "h-12 w-full rounded-[10px] px-4 outline-none bg-[color:var(--surface-raised)] border border-[color:var(--border-subtle)] text-base font-medium text-[color:var(--ink)] transition-[border-color,background] duration-150 box-border";
 
-const fieldLabelStyle: CSSProperties = {
-  fontSize: 12,
-  fontWeight: 700,
-  textTransform: "uppercase",
-  color: "var(--ink-subtle)",
-  letterSpacing: "0.15em",
-};
+const fieldLabelClass = "text-[12px] font-bold uppercase text-[color:var(--ink-subtle)] tracking-[0.15em]";
 
 function focusOn(e: FocusEvent<HTMLInputElement | HTMLSelectElement>) {
   e.currentTarget.style.borderColor = "var(--ink)";
@@ -146,11 +127,11 @@ export function CreateTaskForm({ childrenList, todayLocal, createAction }: Props
   return (
     <form
       action={onSubmit}
-      style={{ display: "flex", flexDirection: "column", gap: 12 }}
+      className="flex flex-col gap-3"
     >
       {/* Title */}
-      <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        <span style={fieldLabelStyle}>{t("tasks.title_label")}</span>
+      <label className="flex flex-col gap-2">
+        <span className={fieldLabelClass}>{t("tasks.title_label")}</span>
         <input
           type="text"
           value={title}
@@ -158,21 +139,15 @@ export function CreateTaskForm({ childrenList, todayLocal, createAction }: Props
           placeholder={t("tasks.title_placeholder")}
           onFocus={focusOn}
           onBlur={focusOff}
-          style={inputStyle}
+          className={inputClass}
         />
       </label>
 
       {/* Points + Assignee side by side */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 10,
-        }}
-      >
-        <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <span style={fieldLabelStyle}>{t("tasks.points_label")}</span>
-          <div style={{ position: "relative" }}>
+      <div className="grid grid-cols-2 gap-2.5">
+        <label className="flex flex-col gap-2">
+          <span className={fieldLabelClass}>{t("tasks.points_label")}</span>
+          <div className="relative">
             <input
               type="number"
               inputMode="numeric"
@@ -187,29 +162,15 @@ export function CreateTaskForm({ childrenList, todayLocal, createAction }: Props
               }}
               onFocus={focusOn}
               onBlur={focusOff}
-              style={{
-                ...inputStyle,
-                paddingRight: 40,
-                fontFeatureSettings: '"tnum" 1',
-              }}
+              className={`${inputClass} pr-10`}
+              style={{ fontFeatureSettings: '"tnum" 1' }}
             />
-            <span
-              style={{
-                position: "absolute",
-                right: 14,
-                top: "50%",
-                transform: "translateY(-50%)",
-                fontSize: 13,
-                fontWeight: 700,
-                color: "var(--ink-subtle)",
-                pointerEvents: "none",
-              }}
-            >
+            <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[13px] font-bold text-[color:var(--ink-subtle)] pointer-events-none">
               pt
             </span>
           </div>
           {/* Quick points chips */}
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          <div className="flex gap-1.5 flex-wrap">
             {QUICK_POINTS.map((p) => {
               const on = quickPoints === p;
               return (
@@ -238,23 +199,16 @@ export function CreateTaskForm({ childrenList, todayLocal, createAction }: Props
           </div>
         </label>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <span style={fieldLabelStyle}>{t("tasks.assignee_label")}</span>
-          <div style={{ position: "relative" }}>
+        <label className="flex flex-col gap-2">
+          <span className={fieldLabelClass}>{t("tasks.assignee_label")}</span>
+          <div className="relative">
             {hasChildren ? (
               <select
                 value={assigneeId}
                 onChange={(e) => setAssigneeId(e.target.value)}
                 onFocus={focusOn}
                 onBlur={focusOff}
-                style={{
-                  ...inputStyle,
-                  appearance: "none",
-                  WebkitAppearance: "none",
-                  MozAppearance: "none",
-                  paddingRight: 40,
-                  cursor: "pointer",
-                }}
+                className={`${inputClass} appearance-none pr-10 cursor-pointer`}
                 required
               >
                 {childrenList.map((k) => (
@@ -266,14 +220,7 @@ export function CreateTaskForm({ childrenList, todayLocal, createAction }: Props
             ) : (
               <select
                 disabled
-                style={{
-                  ...inputStyle,
-                  color: "var(--ink-subtle)",
-                  paddingRight: 40,
-                  appearance: "none",
-                  WebkitAppearance: "none",
-                  MozAppearance: "none",
-                }}
+                className={`${inputClass} appearance-none pr-10 text-[color:var(--ink-subtle)]`}
               >
                 <option>{t("tasks.no_children")}</option>
               </select>
@@ -284,13 +231,7 @@ export function CreateTaskForm({ childrenList, todayLocal, createAction }: Props
               viewBox="0 0 12 8"
               fill="none"
               aria-hidden
-              style={{
-                position: "absolute",
-                right: 14,
-                top: "50%",
-                transform: "translateY(-50%)",
-                pointerEvents: "none",
-              }}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
             >
               <path
                 d="M1.5 1.5l4.5 5 4.5-5"
@@ -305,16 +246,10 @@ export function CreateTaskForm({ childrenList, todayLocal, createAction }: Props
       </div>
 
       {/* Recurrence */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        <span style={fieldLabelStyle}>{t("tasks.recurrence_label")}</span>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            flexWrap: "wrap",
-          }}
-        >
+      <div className="flex flex-col gap-2">
+        <span className={fieldLabelClass}>{t("tasks.recurrence_label")}</span>
+        <div className="flex items-center gap-2 flex-wrap">
+
           {DISPLAY_ORDER.map((v) => {
             const on = mode === "weekly" && days.includes(v);
             const weekend = v === 0 || v === 6;
@@ -346,7 +281,7 @@ export function CreateTaskForm({ childrenList, todayLocal, createAction }: Props
               </button>
             );
           })}
-          <span style={{ flex: 1 }} />
+          <span className="flex-1" />
           <button
             type="button"
             onClick={() => {
@@ -380,15 +315,8 @@ export function CreateTaskForm({ childrenList, todayLocal, createAction }: Props
 
         {/* Inline date fields — compact */}
         {mode === "once" ? (
-          <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                color: "var(--ink-subtle)",
-                letterSpacing: "-0.01em",
-              }}
-            >
+          <label className="flex flex-col gap-1.5">
+            <span className="text-[11px] font-semibold text-[color:var(--ink-subtle)] tracking-[-0.01em]">
               {t("tasks.deadline_label")}
             </span>
             <input
@@ -398,27 +326,14 @@ export function CreateTaskForm({ childrenList, todayLocal, createAction }: Props
               min={todayLocal}
               onFocus={focusOn}
               onBlur={focusOff}
-              style={inputStyle}
+              className={inputClass}
               required
             />
           </label>
         ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 10,
-            }}
-          >
-            <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <span
-                style={{
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: "var(--ink-subtle)",
-                  letterSpacing: "-0.01em",
-                }}
-              >
+          <div className="grid grid-cols-2 gap-2.5">
+            <label className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-semibold text-[color:var(--ink-subtle)] tracking-[-0.01em]">
                 {t("tasks.start_date")}
               </span>
               <input
@@ -427,19 +342,12 @@ export function CreateTaskForm({ childrenList, todayLocal, createAction }: Props
                 onChange={(e) => setStartDate(e.target.value)}
                 onFocus={focusOn}
                 onBlur={focusOff}
-                style={inputStyle}
+                className={inputClass}
                 required
               />
             </label>
-            <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <span
-                style={{
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: "var(--ink-subtle)",
-                  letterSpacing: "-0.01em",
-                }}
-              >
+            <label className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-semibold text-[color:var(--ink-subtle)] tracking-[-0.01em]">
                 {t("tasks.end_date")}
               </span>
               <input
@@ -448,7 +356,7 @@ export function CreateTaskForm({ childrenList, todayLocal, createAction }: Props
                 onChange={(e) => setEndDate(e.target.value)}
                 onFocus={focusOn}
                 onBlur={focusOff}
-                style={inputStyle}
+                className={inputClass}
               />
             </label>
           </div>
@@ -472,7 +380,7 @@ export function CreateTaskForm({ childrenList, todayLocal, createAction }: Props
           letterSpacing: "-0.01em",
           boxShadow:
             "0 1px 2px rgba(10,10,10,0.04), 0 12px 28px -16px rgba(10,10,10,0.4)",
-          transition: "transform 200ms cubic-bezier(0.16,1,0.3,1), opacity 200ms",
+          transition: "transform 200ms var(--ease-spring), opacity 200ms",
           opacity: isPending || !hasChildren ? 0.6 : 1,
         }}
       >

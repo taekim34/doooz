@@ -36,37 +36,11 @@ type Approval = {
 
 function EmptyStatCard({ label, value }: { label: string; value: string }) {
   return (
-    <div
-      style={{
-        padding: 12,
-        borderRadius: 14,
-        background: "var(--surface-raised)",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 4,
-      }}
-    >
-      <div
-        style={{
-          fontSize: 22,
-          fontWeight: 800,
-          color: "var(--ink-subtle)",
-          letterSpacing: "-0.02em",
-          fontFeatureSettings: '"tnum" 1',
-        }}
-      >
+    <div className="flex flex-col items-center gap-1 rounded-[14px] bg-[color:var(--surface-raised)] p-3">
+      <div className="text-[22px] font-extrabold tracking-[-0.02em] text-[color:var(--ink-subtle)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
         {value}
       </div>
-      <div
-        style={{
-          fontSize: 11,
-          fontWeight: 600,
-          color: "var(--ink-subtle)",
-          letterSpacing: "-0.01em",
-          whiteSpace: "nowrap",
-        }}
-      >
+      <div className="text-[11px] font-semibold tracking-[-0.01em] text-[color:var(--ink-subtle)] whitespace-nowrap">
         {label}
       </div>
     </div>
@@ -101,118 +75,45 @@ export function ParentHome({
     );
     return (
       <div
-        className="relative -mx-4 -mt-4 md:-mx-8 md:-mt-8 pb-8"
-        style={{
-          minHeight: "calc(100vh - 4rem)",
-          background: "var(--bg)",
-          color: "var(--ink)",
-          display: "flex",
-          flexDirection: "column",
-        }}
+        className="relative -mx-4 -mt-4 flex min-h-[calc(100vh-4rem)] flex-col bg-[color:var(--bg)] pb-8 text-[color:var(--ink)] md:-mx-8 md:-mt-8"
       >
         {/* Header */}
-        <div style={{ padding: "16px 20px 8px" }}>
-          <div
-            style={{
-              fontSize: 12,
-              fontWeight: 700,
-              color: "var(--ink-subtle)",
-              textTransform: "uppercase",
-              letterSpacing: "0.15em",
-              whiteSpace: "nowrap",
-            }}
-          >
+        <div className="px-5 pt-4 pb-2">
+          <div className="text-xs font-bold uppercase tracking-[0.15em] text-[color:var(--ink-subtle)] whitespace-nowrap">
             {todayLabel}
           </div>
-          <h1
-            style={{
-              margin: "4px 0 0",
-              fontSize: 24,
-              fontWeight: 800,
-              letterSpacing: "-0.02em",
-              color: "var(--ink)",
-            }}
-          >
+          <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.02em] text-[color:var(--ink)]">
             {familyName}
           </h1>
         </div>
 
         {/* Stats — all zeros in gray */}
-        <div
-          style={{
-            padding: "12px 20px 0",
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: 8,
-          }}
-        >
+        <div className="grid grid-cols-3 gap-2 px-5 pt-3">
           <EmptyStatCard label={t("home.pending_approvals", locale)} value="0" />
           <EmptyStatCard label={t("home.today_done", locale)} value="0" />
           <EmptyStatCard label={t("home.weekly_points", locale)} value="0" />
         </div>
 
         {/* Empty state — centered */}
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-            padding: "20px 28px",
-          }}
-        >
-          <div aria-hidden style={{ fontSize: 48, lineHeight: 1, marginBottom: 12 }}>
+        <div className="flex flex-1 flex-col items-center justify-center px-7 py-5 text-center">
+          <div aria-hidden className="mb-3 text-[48px] leading-none">
             👨‍👩‍👧‍👦
           </div>
-          <div
-            style={{
-              fontSize: 16,
-              fontWeight: 600,
-              color: "var(--ink)",
-              letterSpacing: "-0.01em",
-              marginBottom: 6,
-            }}
-          >
+          <div className="mb-1.5 text-base font-semibold tracking-[-0.01em] text-[color:var(--ink)]">
             {t("home.no_children_title", locale)}
           </div>
-          <div
-            style={{
-              fontSize: 14,
-              fontWeight: 400,
-              color: "var(--ink-subtle)",
-              letterSpacing: "-0.01em",
-              lineHeight: 1.5,
-            }}
-          >
+          <div className="text-sm font-normal leading-normal tracking-[-0.01em] text-[color:var(--ink-subtle)]">
             {t("home.no_children_desc", locale)}
           </div>
         </div>
 
         {/* CTAs pinned to bottom */}
-        <div
-          style={{
-            padding: "8px 20px 24px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 8,
-          }}
-        >
+        <div className="flex flex-col gap-2 px-5 pt-2 pb-6">
           <Link
             href="/family/invite"
+            className="flex h-12 w-full items-center justify-center rounded-[10px] text-[15px] font-bold tracking-[-0.01em] text-[color:var(--on-accent)]"
             style={{
-              width: "100%",
-              height: 48,
-              borderRadius: 10,
               background: "#FF6B6B",
-              color: "var(--on-accent)",
-              fontSize: 15,
-              fontWeight: 700,
-              letterSpacing: "-0.01em",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               boxShadow: "0 10px 24px -14px rgba(255,107,107,0.45)",
             }}
           >
@@ -220,20 +121,7 @@ export function ParentHome({
           </Link>
           <Link
             href={"/signup" as Route}
-            style={{
-              width: "100%",
-              height: 48,
-              borderRadius: 10,
-              background: "var(--surface)",
-              border: "1px solid var(--border)",
-              color: "var(--ink)",
-              fontSize: 15,
-              fontWeight: 600,
-              letterSpacing: "-0.01em",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+            className="flex h-12 w-full items-center justify-center rounded-[10px] border border-[color:var(--border)] bg-[color:var(--surface)] text-[15px] font-semibold tracking-[-0.01em] text-[color:var(--ink)]"
           >
             {t("home.create_child_account", locale)}
           </Link>
@@ -260,13 +148,7 @@ export function ParentHome({
               { month: "long", day: "numeric", weekday: "short" },
             )}
           </EyebrowLabel>
-          <h1
-            className="mt-1 text-[32px] font-extrabold leading-[1.2]"
-            style={{
-              color: "var(--ink)",
-              letterSpacing: "-0.02em",
-            }}
-          >
+          <h1 className="mt-1 text-[32px] font-extrabold leading-[1.2] tracking-[-0.02em] text-[color:var(--ink)]">
             {familyName}
           </h1>
         </div>
@@ -329,28 +211,10 @@ export function ParentHome({
             <FadeUp delay={200}>
               <div className="px-6">
                 <div className="flex items-center gap-2 py-3">
-                  <span
-                    className="text-[12px] font-bold uppercase tracking-[0.15em]"
-                    style={{ color: "var(--ink-subtle)" }}
-                  >
+                  <span className="text-[12px] font-bold uppercase tracking-[0.15em] text-[color:var(--ink-subtle)]">
                     {t("home.section_approvals", locale)}
                   </span>
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      height: 18,
-                      minWidth: 18,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderRadius: 9999,
-                      padding: "0 6px",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: "#fff",
-                      background: "var(--accent)",
-                      fontFeatureSettings: '"tnum" 1',
-                    }}
-                  >
+                  <span className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[color:var(--accent)] px-1.5 text-[11px] font-bold text-white" style={{ fontFeatureSettings: '"tnum" 1' }}>
                     {approvals.length}
                   </span>
                 </div>
@@ -364,22 +228,16 @@ export function ParentHome({
             <div className="mt-6 grid grid-cols-2 gap-2 px-6">
               <Link
                 href={"/tasks/manage" as Route}
-                className="flex h-12 items-center justify-center rounded-[10px] text-[15px] font-bold text-white"
+                className="flex h-12 items-center justify-center rounded-[10px] bg-[color:var(--ink)] text-[15px] font-bold text-white"
                 style={{
-                  backgroundColor: "var(--ink)",
-                  boxShadow: "0 1px 2px rgba(10,10,10,0.04)",
+                  boxShadow: "var(--shadow-card-parent)",
                 }}
               >
                 {t("home.new_task", locale)}
               </Link>
               <Link
                 href={"/points" as Route}
-                className="flex h-12 items-center justify-center rounded-[10px] text-[15px] font-bold"
-                style={{
-                  backgroundColor: "var(--surface)",
-                  border: "1px solid var(--border)",
-                  color: "var(--ink)",
-                }}
+                className="flex h-12 items-center justify-center rounded-[10px] border border-[color:var(--border)] bg-[color:var(--surface)] text-[15px] font-bold text-[color:var(--ink)]"
               >
                 {t("home.report", locale)}
               </Link>

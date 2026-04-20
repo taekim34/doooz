@@ -38,8 +38,7 @@ export function ResetPasswordButton({ userId, memberName }: { userId: string; me
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="text-sm font-medium"
-        style={{ color: "var(--accent)" }}
+        className="text-sm font-medium text-[color:var(--accent)]"
       >
         비밀번호 초기화
       </button>
@@ -47,8 +46,8 @@ export function ResetPasswordButton({ userId, memberName }: { userId: string; me
   }
 
   return (
-    <div className="flex flex-col gap-2 rounded-[10px] p-3" style={{ background: "var(--surface-raised)", border: "1px solid var(--border-subtle)" }}>
-      <label className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--ink-subtle)" }}>
+    <div className="flex flex-col gap-2 rounded-[10px] border border-[color:var(--border-subtle)] bg-[color:var(--surface-raised)] p-3">
+      <label className="text-xs font-semibold uppercase tracking-wider text-[color:var(--ink-subtle)]">
         {memberName}의 새 비밀번호
       </label>
       <div className="flex gap-2">
@@ -57,15 +56,13 @@ export function ResetPasswordButton({ userId, memberName }: { userId: string; me
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="새 비밀번호 (4자 이상)"
-          className="h-10 flex-1 rounded-lg px-3 text-sm outline-none"
-          style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+          className="h-10 flex-1 rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 text-sm outline-none"
         />
         <button
           type="button"
           onClick={handleReset}
           disabled={pending}
-          className="h-10 shrink-0 rounded-lg px-4 text-sm font-semibold text-white disabled:opacity-50"
-          style={{ background: "var(--ink)" }}
+          className="h-10 shrink-0 rounded-lg bg-[color:var(--ink)] px-4 text-sm font-semibold text-white disabled:opacity-50"
         >
           {pending ? "..." : "변경"}
         </button>
@@ -73,7 +70,7 @@ export function ResetPasswordButton({ userId, memberName }: { userId: string; me
       <button
         type="button"
         onClick={() => { setOpen(false); setPassword(""); }}
-        className="text-xs" style={{ color: "var(--ink-subtle)" }}
+        className="text-xs text-[color:var(--ink-subtle)]"
       >
         취소
       </button>

@@ -61,30 +61,18 @@ export default async function RewardsPage() {
 
   return (
     <div
-      className="relative mx-auto max-w-3xl"
-      style={{        background:
+      className="relative mx-auto max-w-3xl rounded-3xl px-5 pt-5 pb-7 text-[color:var(--ink)]"
+      style={{
+        background:
           "linear-gradient(180deg, #FFF5EC 0%, #FFE4E9 40%, #E5EFFF 100%)",
-        borderRadius: 24,
-        padding: "20px 20px 28px",
-        color: "var(--ink)",
       }}
     >
       {/* Header */}
       <div className="flex items-center justify-between gap-2.5">
-        <div
-          className="flex items-center"
-          style={{ gap: 8, minWidth: 0 }}
-        >
+        <div className="flex items-center gap-2 min-w-0">
           <BackButton href="/" variant="glass" />
-          <h1
-            className="m-0"
-            style={{
-              fontSize: 20,
-              fontWeight: 800,
-              letterSpacing: "-0.02em",
-              whiteSpace: "nowrap",
-            }}
-          >
+          <h1 className="m-0 text-xl font-extrabold tracking-tight whitespace-nowrap">
+
             {t("rewards.title", locale)}
           </h1>
         </div>
@@ -108,7 +96,7 @@ export default async function RewardsPage() {
               width: 18,
               height: 18,
               borderRadius: 9999,
-              background: "linear-gradient(135deg, #FF6B9D 0%, #FFA07A 100%)",
+              background: "var(--accent-gradient)",
               fontSize: 10,
               color: "#fff",
               fontWeight: 800,
@@ -131,10 +119,8 @@ export default async function RewardsPage() {
       </div>
 
       {/* Rewards grid */}
-      <div
-        className="mt-4 grid"
-        style={{ gridTemplateColumns: "1fr 1fr", gap: 12 }}
-      >
+      <div className="mt-4 grid grid-cols-2 gap-3">
+
         {list.map((r, index) => {
           const afford = user.current_balance >= r.cost;
           return (

@@ -47,12 +47,11 @@ export function AppNav({
     <>
       {/* ── Mobile top header (<md) ── */}
       <header
-        className="sticky top-0 z-40 flex items-center justify-between px-4 py-2 md:hidden"
+        className="sticky top-0 z-40 flex items-center justify-between border-b border-[rgba(10,10,10,0.06)] px-4 py-2 md:hidden"
         style={{
           background: "rgba(255,255,255,0.92)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
-          borderBottom: "1px solid rgba(10,10,10,0.06)",
         }}
       >
         <div className="flex items-center gap-2">
@@ -66,12 +65,11 @@ export function AppNav({
 
       {/* ── Desktop top nav (md+) ── */}
       <nav
-        className="sticky top-0 z-40 hidden md:block"
+        className="sticky top-0 z-40 hidden border-b border-[rgba(10,10,10,0.06)] md:block"
         style={{
           background: "rgba(255,255,255,0.85)",
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
-          borderBottom: "1px solid rgba(10,10,10,0.06)",
         }}
       >
         <div
@@ -143,12 +141,11 @@ export function AppNav({
 
       {/* ── Mobile bottom tabs (<md) ── */}
       <nav
-        className="fixed bottom-0 left-0 right-0 z-40 grid grid-cols-6 pb-[env(safe-area-inset-bottom)] md:hidden"
+        className="fixed bottom-0 left-0 right-0 z-40 grid grid-cols-6 border-t border-[rgba(10,10,10,0.06)] pb-[env(safe-area-inset-bottom)] md:hidden"
         style={{
           background: "rgba(255,255,255,0.92)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
-          borderTop: "1px solid rgba(10,10,10,0.06)",
         }}
       >
         {items.map((it) => {

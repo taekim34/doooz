@@ -43,7 +43,7 @@ export function ProgressTrack({ value, size = "md", className }: ProgressTrackPr
         )}
         style={{
           width: `${clamped}%`,
-          transition: "width 900ms cubic-bezier(0.16,1,0.3,1)",
+          transition: "width 900ms var(--ease-spring)",
           boxShadow:
             "0 0 12px color-mix(in srgb, var(--accent) 60%, transparent), inset 0 1px 0 rgba(255,255,255,0.5)",
         }}

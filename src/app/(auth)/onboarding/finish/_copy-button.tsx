@@ -24,19 +24,7 @@ export function CopyButton({
       type="button"
       onClick={onCopy}
       aria-label={copied ? copiedLabel : copyLabel}
-      style={{
-        width: 40,
-        height: 40,
-        borderRadius: 10,
-        background: "var(--surface)",
-        border: "1px solid var(--border)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        cursor: "pointer",
-        flexShrink: 0,
-        padding: 0,
-      }}
+      className="w-10 h-10 rounded-[10px] bg-[color:var(--surface)] border border-[color:var(--border)] flex items-center justify-center cursor-pointer shrink-0 p-0"
     >
       {copied ? (
         <svg

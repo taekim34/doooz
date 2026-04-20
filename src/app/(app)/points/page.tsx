@@ -84,23 +84,17 @@ export default async function PointsPage() {
     <div
       id="points-root"
       data-view={defaultMode}
-      className="relative mx-auto max-w-2xl lg:max-w-5xl points-root"
-      style={{        color: "var(--ink)",
-        // The gradient only shows in kid mode. We flip this via the
-        // data-view attribute on the root. Default server paint matches
-        // defaultMode so first paint is correct for kids.
-        padding: "8px 0 0",
-      }}
+      className="relative mx-auto max-w-2xl lg:max-w-5xl points-root text-[color:var(--ink)] pt-2"
     >
       {/* Mode-dependent background. Set on a fixed pseudo-layer via <style>. */}
       <style>{`
         .points-root[data-view="kid"] {
           background: linear-gradient(180deg, #FFF5EC 0%, #FFE4E9 38%, #E5EFFF 100%);
-          transition: background 320ms cubic-bezier(0.16,1,0.3,1);
+          transition: background 320ms var(--ease-spring);
         }
         .points-root[data-view="parent"] {
           background: var(--surface);
-          transition: background 320ms cubic-bezier(0.16,1,0.3,1);
+          transition: background 320ms var(--ease-spring);
         }
         .points-root[data-view="kid"] .points-kid { display: block; }
         .points-root[data-view="kid"] .points-parent { display: none; }
@@ -120,16 +114,10 @@ export default async function PointsPage() {
         .points-root[data-view="parent"] .points-subtitle-parent { display: inline; }
       `}</style>
 
-      <div style={{ padding: "0 20px" }}>
+      <div className="px-5">
         {/* Top bar: back + view toggle */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "6px 0 14px",
-          }}
-        >
+        <div className="flex items-center justify-between py-1.5 pb-3.5">
+
           <BackButton href="/" className="points-back-btn" />
 
           {/* Parents get a segmented toggle. Kids see nothing in the center. */}
@@ -143,30 +131,16 @@ export default async function PointsPage() {
             />
           )}
 
-          <span style={{ width: 36, height: 36 }} />
+          <span className="w-9 h-9" />
         </div>
 
         {/* Page title + subtitle */}
         <div className="mb-4">
-          <h1
-            style={{
-              margin: "0 0 4px",
-              fontSize: 24,
-              fontWeight: 800,
-              letterSpacing: "-0.02em",
-            }}
-          >
+          <h1 className="mb-1 text-2xl font-extrabold tracking-tight">
             {t("nav.points", locale)}
           </h1>
-          <p
-            style={{
-              margin: 0,
-              fontSize: 13,
-              fontWeight: 500,
-              color: "var(--ink-subtle)",
-              letterSpacing: "-0.01em",
-            }}
-          >
+          <p className="m-0 text-[13px] font-medium text-[color:var(--ink-subtle)] tracking-[-0.01em]">
+
             {/* Both subtitles render; CSS hides the inactive one. */}
             <span className="points-subtitle-kid">
               {t("points.subtitle_kid", locale)}
@@ -180,7 +154,7 @@ export default async function PointsPage() {
         </div>
       </div>
 
-      <div style={{ padding: "0 20px 28px" }}>
+      <div className="px-5 pb-7">
         {/* KID VIEW — always rendered; CSS shows/hides based on mode. */}
         <section className="points-kid lg:grid lg:grid-cols-2 lg:gap-6">
           {/* Left column: Hero balance card — kid */}
@@ -239,7 +213,7 @@ export default async function PointsPage() {
                       lineHeight: 1,
                       fontFeatureSettings: '"tnum" 1',
                       background:
-                        "linear-gradient(135deg, #FF6B9D 0%, #FFA07A 100%)",
+                        "var(--accent-gradient)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
                       backgroundClip: "text",
@@ -308,30 +282,11 @@ export default async function PointsPage() {
 
           {/* Right column: Recent transactions — kid */}
           <div>
-            <div
-              style={{
-                marginTop: 22,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 12,
-              }}
-              className="lg:!mt-0"
-            >
+            <div className="mt-5.5 flex items-center justify-between gap-3 lg:!mt-0">
               <SectionLabel>{t("points.recent", locale)}</SectionLabel>
               <Link
                 href="/points/history"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  fontSize: 12.5,
-                  fontWeight: 700,
-                  color: "var(--accent)",
-                  padding: "4px 0",
-                  whiteSpace: "nowrap",
-                  flexShrink: 0,
-                  textDecoration: "none",
-                }}
+                className="bg-transparent border-none text-[12.5px] font-bold text-[color:var(--accent)] py-1 whitespace-nowrap shrink-0 no-underline"
               >
                 {t("points.all", locale)} →
               </Link>
@@ -384,7 +339,7 @@ export default async function PointsPage() {
           <section className="points-parent lg:grid lg:grid-cols-2 lg:gap-6">
             {/* Left column: Per-kid balance cards + family totals */}
             <div className="lg:sticky lg:top-20 lg:self-start">
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div className="flex flex-col gap-2.5">
                 {kidList.map((kid) => (
                   <KidCard key={kid.id} kid={kid} />
                 ))}
@@ -408,7 +363,7 @@ export default async function PointsPage() {
 
               {/* Family totals */}
               {kidList.length > 0 && (
-                <div style={{ marginTop: 18 }}>
+                <div className="mt-4.5">
                   <SectionLabel>{t("points.family_balance", locale)}</SectionLabel>
                   <div
                     style={{
@@ -479,43 +434,17 @@ export default async function PointsPage() {
 
             {/* Right column: Recent transactions — parent */}
             <div>
-              <div
-                style={{
-                  marginTop: 22,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: 12,
-                }}
-                className="lg:!mt-0"
-              >
+              <div className="mt-5.5 flex items-center justify-between gap-3 lg:!mt-0">
                 <SectionLabel>{t("points.recent", locale)}</SectionLabel>
                 <Link
                   href="/points/history"
-                  style={{
-                    background: "transparent",
-                    border: "none",
-                    fontSize: 12.5,
-                    fontWeight: 700,
-                    color: "var(--accent)",
-                    padding: "4px 0",
-                    whiteSpace: "nowrap",
-                    flexShrink: 0,
-                    textDecoration: "none",
-                  }}
+                  className="bg-transparent border-none text-[12.5px] font-bold text-[color:var(--accent)] py-1 whitespace-nowrap shrink-0 no-underline"
                 >
                   {t("points.all", locale)} →
                 </Link>
               </div>
-              <div
-                style={{
-                  marginTop: 10,
-                  padding: "4px 14px",
-                  background: "var(--bg)",
-                  borderRadius: 16,
-                  border: "1px solid var(--border)",
-                }}
-              >
+              <div className="mt-2.5 px-3.5 py-1 bg-[color:var(--bg)] rounded-2xl border border-[color:var(--border)]">
+
                 {recentForList.length === 0 ? (
                   <div
                     style={{

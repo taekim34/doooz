@@ -52,18 +52,11 @@ export function AuthLocaleSwitcher() {
         onClick={() => setOpen(v => !v)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        style={{
-          display: "flex", alignItems: "center", gap: 6,
-          padding: "7px 12px", borderRadius: 9999,
-          background: "rgba(250,250,250,0.85)",
-          border: "1px solid var(--border-subtle)",
-          fontSize: 13, fontWeight: 600,
-          color: "var(--ink)", cursor: "pointer",
-          backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-        }}
+        className="flex items-center gap-[6px] py-[7px] px-3 rounded-full bg-[rgba(250,250,250,0.85)] border border-[color:var(--border-subtle)] text-[13px] font-semibold text-[color:var(--ink)] cursor-pointer"
+        style={{ backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}
       >
         <GlobeIcon/>
-        <span style={{ whiteSpace: "nowrap" }}>
+        <span className="whitespace-nowrap">
           {LOCALES.find(l => l.v === loc)?.label ?? loc}
         </span>
         <svg width="10" height="6" viewBox="0 0 10 6" fill="none"
@@ -72,24 +65,17 @@ export function AuthLocaleSwitcher() {
         </svg>
       </button>
       {open && (
-        <div role="listbox" style={{
-          position: "absolute", top: "calc(100% + 6px)", right: 0,
-          minWidth: 132, padding: 4,
-          background: "var(--bg)", border: "1px solid var(--border-subtle)",
-          borderRadius: 12, boxShadow: "0 14px 30px -10px rgba(10,10,10,0.18)",
-          display: "flex", flexDirection: "column", gap: 2,
-        }}>
+        <div role="listbox" className="absolute top-[calc(100%+6px)] right-0 min-w-[132px] p-1 bg-[color:var(--bg)] border border-[color:var(--border-subtle)] rounded-xl flex flex-col gap-[2px]"
+          style={{ boxShadow: "0 14px 30px -10px rgba(10,10,10,0.18)" }}>
           {LOCALES.map(o => {
             const on = loc === o.v;
             return (
               <button key={o.v} type="button" onClick={() => selectLocale(o.v)}
                 role="option" aria-selected={on}
+                className="flex items-center justify-between py-2 px-3 rounded-lg text-sm text-[color:var(--ink)] text-left border-none cursor-pointer"
                 style={{
-                  display: "flex", alignItems: "center", justifyContent: "space-between",
-                  padding: "8px 12px", borderRadius: 8,
                   background: on ? "var(--surface-raised)" : "transparent",
-                  fontSize: 14, fontWeight: on ? 700 : 500,
-                  color: "var(--ink)", textAlign: "left",
+                  fontWeight: on ? 700 : 500,
                 }}>
                 <span>{o.label}</span>
                 {on && (

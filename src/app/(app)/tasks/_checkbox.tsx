@@ -489,7 +489,7 @@ function KidCardVariant({
       return (
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
           style={{
-            background: "linear-gradient(135deg,#FF6B9D,#FFA07A)",
+            background: "var(--accent-gradient)",
             boxShadow: "0 8px 16px -6px rgba(255,107,157,0.5), inset 0 1px 0 rgba(255,255,255,0.45)",
           }}
         >
@@ -502,7 +502,7 @@ function KidCardVariant({
     if (isPardoned) {
       return (
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xl"
-          style={{ background: "linear-gradient(135deg,#FEF3C7,#FDE68A)", boxShadow: "none" }}
+          style={{ background: "var(--gradient-warning)", boxShadow: "none" }}
         >
           🫶
         </span>
@@ -520,7 +520,7 @@ function KidCardVariant({
     if (isOverdue) {
       return (
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xl"
-          style={{ background: "linear-gradient(135deg,#FEE2E2,#FFF5EC)", boxShadow: "none" }}
+          style={{ background: "var(--gradient-error)", boxShadow: "none" }}
         >
           ⏰
         </span>
@@ -606,7 +606,7 @@ function KidCardVariant({
             </span>
           )}
           {trailing && (
-            <span className="whitespace-nowrap text-[12px] font-medium" style={{ color: "rgba(45,27,61,0.45)" }}>
+            <span className="whitespace-nowrap text-[12px] font-medium text-[rgba(45,27,61,0.45)]">
               {trailing}
             </span>
           )}

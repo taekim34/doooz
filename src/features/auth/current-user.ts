@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 export type Tone = "warm" | "cool";
+export type Mode = "light" | "dark";
 
 export interface CurrentUser {
   id: string;
@@ -14,6 +15,7 @@ export interface CurrentUser {
   lifetime_earned: number;
   level: number;
   tone: Tone;
+  mode: Mode;
 }
 
 export interface CurrentFamily {
@@ -42,13 +44,17 @@ export async function requireUser(): Promise<{
   // so that the user can read their own row via RLS.
   const { data: row } = await supabase
     .from("users")
-    .select("id, family_id, role, display_name, character_id, current_balance, lifetime_earned, level, tone")
+    .select("id, family_id, role, display_name, character_id, current_balance, lifetime_earned, level, tone, mode")
     .eq("id", authUser.id)
     .maybeSingle();
 
   if (!row) redirect("/onboarding/create-family");
 
-  const r = { ...row, tone: (row.tone === "cool" ? "cool" : "warm") } as Omit<CurrentUser, "email">;
+  const r = {
+    ...row,
+    tone: (row.tone === "cool" ? "cool" : "warm"),
+    mode: (row.mode === "dark" ? "dark" : "light"),
+  } as Omit<CurrentUser, "email">;
 
   // Everyone must pick a character.
   if (!r.character_id) redirect("/onboarding/pick-character");

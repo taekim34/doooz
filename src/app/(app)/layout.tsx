@@ -18,6 +18,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <div
             data-role={user.role === "child" ? "kid" : "parent"}
             data-theme={user.tone}
+            data-mode={user.mode}
             className="flex min-h-screen flex-col bg-[var(--surface-raised)]"
           >
             <AppNav role={user.role} userName={user.display_name} familyName={family.name} locale={locale} />
@@ -28,8 +29,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
               {/* Desktop: PhoneCanvas card wrapper */}
               <div
-                className="mx-auto hidden max-w-[960px] md:block"
-                style={{ padding: "clamp(16px, 2.5vw, 32px) clamp(12px, 3vw, 24px) 56px" }}
+                className="mx-auto hidden max-w-[960px] p-[clamp(16px,2.5vw,32px)] px-[clamp(12px,3vw,24px)] pb-14 md:block"
               >
                 <div
                   className="overflow-hidden rounded-3xl border border-white/80 bg-white"

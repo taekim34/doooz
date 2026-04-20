@@ -41,19 +41,9 @@ export function ApproveButton({ requestId }: { requestId: string }) {
       aria-label={t("rewards.approve_button")}
       disabled={busy}
       onClick={onClick}
+      className="flex items-center justify-center h-8 w-8 rounded-full bg-[color:var(--success)] border-none cursor-pointer shrink-0 disabled:opacity-60 disabled:cursor-not-allowed"
       style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: 32,
-        width: 32,
-        borderRadius: 9999,
-        background: "var(--success)",
-        border: "none",
-        cursor: busy ? "not-allowed" : "pointer",
         boxShadow: "0 6px 14px -8px rgba(34,197,94,0.5)",
-        opacity: busy ? 0.6 : 1,
-        flexShrink: 0,
       }}
     >
       <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
@@ -101,18 +91,7 @@ export function RejectButton({ requestId }: { requestId: string }) {
         type="button"
         aria-label={t("rewards.reject_button")}
         onClick={() => setOpen(true)}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: 32,
-          width: 32,
-          borderRadius: 9999,
-          background: "var(--surface-sunken)",
-          border: "none",
-          cursor: "pointer",
-          flexShrink: 0,
-        }}
+        className="flex items-center justify-center h-8 w-8 rounded-full bg-[color:var(--surface-sunken)] border-none cursor-pointer shrink-0"
       >
         <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
           <path

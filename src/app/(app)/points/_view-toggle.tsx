@@ -58,16 +58,10 @@ export function PointsViewToggle({
   return (
     <div
       role="tablist"
+      className="relative grid grid-cols-2 p-[3px] rounded-full w-[180px] h-[34px]"
       style={{
-        position: "relative",
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        padding: 3,
-        borderRadius: 9999,
         background:
           mode === "kid" ? "rgba(255,255,255,0.65)" : "#F5F5F5",
-        width: 180,
-        height: 34,
         boxShadow:
           mode === "kid" ? "inset 0 0 0 1px rgba(255,255,255,0.6)" : "none",
         backdropFilter: "blur(6px)",
@@ -83,7 +77,7 @@ export function PointsViewToggle({
           width: "calc(50% - 3px)",
           background: "var(--ink)",
           borderRadius: 9999,
-          transition: "left 240ms cubic-bezier(0.16,1,0.3,1)",
+          transition: "left 240ms var(--ease-spring)",
         }}
       />
       {tabs.map((tb) => {

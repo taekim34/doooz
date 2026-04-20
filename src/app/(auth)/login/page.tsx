@@ -90,23 +90,15 @@ export default async function LoginPage({
 
   if (sp.need_confirm) {
     return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-        <div style={{ fontSize: 48 }}>&#x1F4E7;</div>
-        <div style={{ textAlign: "center" }}>
-          <h2 style={{
-            margin: 0, fontSize: 24, fontWeight: 800,
-            color: "var(--ink)", letterSpacing: "-0.02em",
-          }}>{t("auth.email_not_confirmed_title", locale)}</h2>
-          <p style={{
-            marginTop: 8, fontSize: 14, fontWeight: 500,
-            color: "var(--ink-muted)", whiteSpace: "pre-line",
-          }}>
+      <div className="flex flex-col items-center gap-4">
+        <div className="text-[48px]">&#x1F4E7;</div>
+        <div className="text-center">
+          <h2 className="m-0 text-2xl font-extrabold text-[color:var(--ink)] tracking-[-0.02em]">{t("auth.email_not_confirmed_title", locale)}</h2>
+          <p className="mt-2 text-sm font-medium text-[color:var(--ink-muted)] whitespace-pre-line">
             {t("auth.email_not_confirmed_desc", locale)}
           </p>
         </div>
-        <Link href="/login" style={{
-          fontSize: 14, fontWeight: 500, color: "var(--accent)", textDecoration: "none",
-        }}>
+        <Link href="/login" className="text-sm font-medium text-[color:var(--accent)] no-underline">
           {t("auth.login_button", locale)}
         </Link>
       </div>
@@ -117,51 +109,33 @@ export default async function LoginPage({
     if (sp.sent) {
       /* Forgot password success screen with dzRise stagger animation */
       return (
-        <div style={{
-          display: "flex", flexDirection: "column", alignItems: "center",
-          gap: 24, textAlign: "center",
-        }}>
+        <div className="flex flex-col items-center gap-6 text-center">
           {/* Green check icon */}
-          <div style={{
-            fontSize: 64, lineHeight: 1, color: "var(--success)",
-            opacity: 0, animation: "dzRise 640ms cubic-bezier(0.16,1,0.3,1) 40ms both",
-          }}>&#x2705;</div>
+          <div className="text-[64px] leading-none text-[color:var(--success)]"
+            style={{ opacity: 0, animation: "dzRise 640ms var(--ease-spring) 40ms both" }}>&#x2705;</div>
 
           {/* Title */}
-          <h2 style={{
-            margin: 0, fontSize: 24, fontWeight: 800,
-            color: "var(--ink)", letterSpacing: "-0.02em",
-            opacity: 0, animation: "dzRise 640ms cubic-bezier(0.16,1,0.3,1) 80ms both",
-          }}>{t("auth.forgot_sent_title", locale)}</h2>
+          <h2 className="m-0 text-2xl font-extrabold text-[color:var(--ink)] tracking-[-0.02em]"
+            style={{ opacity: 0, animation: "dzRise 640ms var(--ease-spring) 80ms both" }}>{t("auth.forgot_sent_title", locale)}</h2>
 
           {/* Description */}
-          <p style={{
-            margin: 0, fontSize: 14, fontWeight: 400,
-            color: "var(--ink-muted)", lineHeight: 1.6,
-            opacity: 0, animation: "dzRise 640ms cubic-bezier(0.16,1,0.3,1) 120ms both",
-          }}>
+          <p className="m-0 text-sm font-normal text-[color:var(--ink-muted)] leading-[1.6]"
+            style={{ opacity: 0, animation: "dzRise 640ms var(--ease-spring) 120ms both" }}>
             {t("auth.forgot_sent_desc", locale)}
           </p>
 
           {/* CTA - back to login */}
-          <Link href="/login" style={{
-            display: "flex", alignItems: "center", justifyContent: "center",
-            height: 48, width: "100%", borderRadius: 10,
-            fontSize: 15, fontWeight: 600, color: "var(--on-accent)",
-            background: "var(--ink)", textDecoration: "none",
-            letterSpacing: "-0.01em",
-            boxShadow: "0 1px 2px rgba(10,10,10,0.04)",
-            opacity: 0, animation: "dzRise 640ms cubic-bezier(0.16,1,0.3,1) 160ms both",
-          }}>
+          <Link href="/login" className="flex items-center justify-center h-12 w-full rounded-[10px] text-[15px] font-semibold text-[color:var(--on-accent)] bg-[color:var(--ink)] no-underline tracking-[-0.01em]"
+            style={{
+              boxShadow: "var(--shadow-card-parent)",
+              opacity: 0, animation: "dzRise 640ms var(--ease-spring) 160ms both",
+            }}>
             {t("auth.forgot_return_login", locale)}
           </Link>
 
           {/* Resend link */}
-          <Link href="/login?forgot=1" style={{
-            fontSize: 14, fontWeight: 500, color: "var(--accent)",
-            textDecoration: "none",
-            opacity: 0, animation: "dzRise 640ms cubic-bezier(0.16,1,0.3,1) 200ms both",
-          }}>
+          <Link href="/login?forgot=1" className="text-sm font-medium text-[color:var(--accent)] no-underline"
+            style={{ opacity: 0, animation: "dzRise 640ms var(--ease-spring) 200ms both" }}>
             {t("auth.forgot_resend", locale)}
           </Link>
         </div>
@@ -170,78 +144,49 @@ export default async function LoginPage({
 
     /* Forgot password form */
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      <div className="flex flex-col gap-6">
         {/* Back link */}
-        <Link href="/login" style={{
-          fontSize: 14, fontWeight: 500, color: "var(--accent)",
-          textDecoration: "none", alignSelf: "flex-start",
-        }}>
+        <Link href="/login" className="text-sm font-medium text-[color:var(--accent)] no-underline self-start">
           {t("common.back", locale)}
         </Link>
 
         {/* Eyebrow */}
-        <div style={{
-          fontSize: 12, fontWeight: 700, textTransform: "uppercase",
-          color: "var(--accent)", letterSpacing: "0.15em", textAlign: "center",
-        }}>
+        <div className="text-xs font-bold uppercase text-[color:var(--accent)] tracking-[0.15em] text-center">
           {t("auth.brand_subtitle", locale)}
         </div>
 
         {/* Icon + Title + Description */}
-        <div style={{
-          display: "flex", flexDirection: "column", alignItems: "center",
-          textAlign: "center", gap: 12,
-        }}>
-          <div style={{ fontSize: 64, lineHeight: 1 }}>&#x1F510;</div>
-          <h2 style={{
-            margin: 0, fontSize: 24, fontWeight: 800,
-            color: "var(--ink)", letterSpacing: "-0.02em",
-          }}>{t("auth.forgot_title", locale)}</h2>
-          <p style={{
-            margin: 0, fontSize: 14, fontWeight: 400, color: "var(--ink-muted)",
-            lineHeight: 1.6,
-          }}>
+        <div className="flex flex-col items-center text-center gap-3">
+          <div className="text-[64px] leading-none">&#x1F510;</div>
+          <h2 className="m-0 text-2xl font-extrabold text-[color:var(--ink)] tracking-[-0.02em]">{t("auth.forgot_title", locale)}</h2>
+          <p className="m-0 text-sm font-normal text-[color:var(--ink-muted)] leading-[1.6]">
             {t("auth.forgot_desc", locale)}
           </p>
         </div>
 
         {/* Form */}
-        <form action={resetPasswordAction} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <form action={resetPasswordAction} className="flex flex-col gap-4">
           <input
             type="email"
             name="email"
             placeholder="you@family.com"
             required
-            style={{
-              height: 48, width: "100%", borderRadius: 10,
-              padding: "0 16px", outline: "none",
-              background: "var(--surface-raised)", border: "1px solid var(--border-subtle)",
-              fontSize: 17, fontWeight: 500, color: "var(--ink)",
-              transition: "border-color 150ms, background 150ms",
-              boxSizing: "border-box" as const,
-            }}
+            className="h-12 w-full rounded-[10px] px-4 outline-none bg-[color:var(--surface-raised)] border border-[color:var(--border-subtle)] text-[17px] font-medium text-[color:var(--ink)] transition-[border-color,background] duration-150 box-border"
           />
           {sp.error && (
-            <p style={{ margin: 0, fontSize: 13, fontWeight: 500, color: "var(--error)" }}>
+            <p className="m-0 text-[13px] font-medium text-[color:var(--error)]">
               {sp.error === "email_required" ? t("auth.email_required", locale) : sp.error}
             </p>
           )}
           <button
             type="submit"
-            style={{
-              height: 48, width: "100%", borderRadius: 10,
-              fontSize: 15, fontWeight: 600, color: "var(--on-accent)",
-              background: "var(--ink)", border: "none", cursor: "pointer",
-              letterSpacing: "-0.01em",
-              boxShadow: "0 1px 2px rgba(10,10,10,0.04)",
-            }}
+            className="h-12 w-full rounded-[10px] text-[15px] font-semibold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em]"
+            style={{ boxShadow: "var(--shadow-card-parent)" }}
           >
             {t("auth.forgot_submit", locale)}
           </button>
-          <div style={{ textAlign: "center" }}>
-            <Link href="/login" style={{
-              fontSize: 14, fontWeight: 500, color: "var(--accent)", textDecoration: "none",
-            }}>
+          <div className="text-center">
+            <Link href="/login" className="text-sm font-medium text-[color:var(--accent)] no-underline">
               {t("auth.forgot_return_login", locale)}
             </Link>
           </div>

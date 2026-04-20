@@ -10,9 +10,6 @@ import { t, type Locale } from "@/lib/i18n";
 import { DeleteAccount } from "./_delete-account";
 import { DeleteFamily } from "./_delete-family";
 
-const ACCENT = "var(--accent)";
-const INK = "var(--ink)";
-
 async function updateNameAction(formData: FormData) {
   "use server";
   const supabase = await createClient();
@@ -113,6 +110,18 @@ async function updateToneAction(formData: FormData) {
   redirect("/settings");
 }
 
+async function updateModeAction(formData: FormData) {
+  "use server";
+  const supabase = await createClient();
+  const {
+    data: { user: authUser },
+  } = await supabase.auth.getUser();
+  if (!authUser) redirect("/login");
+  const mode = formData.get("mode") === "dark" ? "dark" : "light";
+  await supabase.from("users").update({ mode }).eq("id", authUser.id);
+  redirect("/settings");
+}
+
 async function logoutAction() {
   "use server";
   const supabase = await createClient();
@@ -120,41 +129,11 @@ async function logoutAction() {
   redirect("/login");
 }
 
-const inputStyle: React.CSSProperties = {
-  height: 48,
-  padding: "0 14px",
-  borderRadius: 10,
-  background: "var(--surface-raised)",
-  border: "1px solid var(--border)",
-  outline: "none",
-  width: "100%",
-  boxSizing: "border-box",
-  fontSize: 17,
-  fontWeight: 500,
-  color: INK,
-  letterSpacing: "-0.01em",
-};
-
+const inputCls = "h-12 w-full rounded-[10px] border border-[color:var(--border)] bg-[color:var(--surface-raised)] px-3.5 text-[17px] font-medium tracking-[-0.01em] text-[color:var(--ink)] outline-none";
 
 const dividerStyle = "h-px bg-[var(--border)] my-6";
 
-const savePillStyle: React.CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  height: 32,
-  padding: "0 14px",
-  borderRadius: 9999,
-  background: ACCENT,
-  color: "var(--on-accent)",
-  border: "none",
-  cursor: "pointer",
-  fontSize: 13,
-  fontWeight: 600,
-  letterSpacing: "-0.01em",
-  whiteSpace: "nowrap",
-  flexShrink: 0,
-};
+const savePillCls = "inline-flex h-8 shrink-0 cursor-pointer items-center justify-center whitespace-nowrap rounded-full border-none bg-[color:var(--accent)] px-3.5 text-[13px] font-semibold tracking-[-0.01em] text-[color:var(--on-accent)]";
 
 export default async function SettingsPage({
   searchParams,
@@ -182,53 +161,33 @@ export default async function SettingsPage({
   const isAdmin = earliestParent?.id === user.id;
 
   return (
-    <div
-      className="relative min-h-screen"
-      style={{
-        background: "var(--surface)",
-        color: INK,
-      }}
-    >
+    <div className="relative min-h-screen bg-[color:var(--surface)] text-[color:var(--ink)]">
       {/* Back */}
-      <div
-        style={{
-          padding: "12px 20px 8px",
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
+      <div className="flex items-center px-5 pt-3 pb-2">
         <BackButton href="/" />
       </div>
 
-      <div className="mx-auto max-w-md" style={{ padding: "4px 20px 28px" }}>
-        <h1
-          style={{
-            margin: "0 0 22px",
-            fontSize: 24,
-            fontWeight: 800,
-            letterSpacing: "-0.02em",
-            color: INK,
-          }}
-        >
+      <div className="mx-auto max-w-md px-5 pt-1 pb-7">
+        <h1 className="mb-[22px] text-2xl font-extrabold tracking-[-0.02em] text-[color:var(--ink)]">
           {t("settings.title", locale)}
         </h1>
 
         {/* My info */}
         <div>
-          <div style={{ marginBottom: 10 }}>
+          <div className="mb-2.5">
             <SectionLabel as="span">{t("settings.change_name", locale)}</SectionLabel>
           </div>
           <form
             action={updateNameAction}
-            style={{ display: "flex", gap: 8, alignItems: "center" }}
+            className="flex items-center gap-2"
           >
             <input
               name="display_name"
               defaultValue={user.display_name}
               required
-              style={{ ...inputStyle, flex: 1, minWidth: 0 }}
+              className={`${inputCls} min-w-0 flex-1`}
             />
-            <button type="submit" style={savePillStyle}>
+            <button type="submit" className={savePillCls}>
               {t("settings.save", locale)}
             </button>
           </form>
@@ -238,52 +197,23 @@ export default async function SettingsPage({
 
         {/* Character */}
         <div>
-          <div style={{ marginBottom: 10 }}>
+          <div className="mb-2.5">
             <SectionLabel as="span">{t("settings.character", locale)}</SectionLabel>
           </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              padding: "10px 2px",
-            }}
-          >
+          <div className="flex items-center gap-3 px-0.5 py-2.5">
             <span
               aria-hidden
-              style={{ fontSize: 32, lineHeight: 1, flexShrink: 0 }}
+              className="shrink-0 text-[32px] leading-none"
             >
               {characterEmoji(user.character_id, getStage(user.level))}
             </span>
-            <div
-              style={{
-                flex: 1,
-                minWidth: 0,
-                fontSize: 14,
-                fontWeight: 500,
-                color: INK,
-                letterSpacing: "-0.01em",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
+            <div className="min-w-0 flex-1 truncate text-sm font-medium tracking-[-0.01em] text-[color:var(--ink)]">
               {user.display_name}
             </div>
             {user.role === "child" && (
               <Link
                 href={"/characters/gallery" as never}
-                style={{
-
-                  fontSize: 14,
-                  fontWeight: 600,
-                  color: "var(--accent)",
-                  letterSpacing: "-0.01em",
-                  whiteSpace: "nowrap",
-                  flexShrink: 0,
-                  padding: "4px 0",
-                  textDecoration: "none",
-                }}
+                className="shrink-0 whitespace-nowrap py-1 text-sm font-semibold tracking-[-0.01em] text-[color:var(--accent)] no-underline"
               >
                 {t("settings.change_link", locale)} →
               </Link>
@@ -296,19 +226,11 @@ export default async function SettingsPage({
           <>
             <div className={dividerStyle} />
             <div>
-              <div style={{ marginBottom: 10 }}>
+              <div className="mb-2.5">
                 <SectionLabel as="span">배경 톤</SectionLabel>
               </div>
               <form action={updateToneAction}>
-                <div
-                  style={{
-                    display: "inline-flex",
-                    background: "var(--border)",
-                    borderRadius: 9999,
-                    padding: 3,
-                    gap: 2,
-                  }}
-                >
+                <div className="inline-flex gap-0.5 rounded-full bg-[color:var(--border)] p-[3px]">
                   {(["warm", "cool"] as const).map((v) => {
                     const on = user.tone === v;
                     return (
@@ -317,20 +239,8 @@ export default async function SettingsPage({
                         type="submit"
                         name="tone"
                         value={v}
-                        style={{
-                          padding: "8px 20px",
-                          borderRadius: 9999,
-                          border: "none",
-                          cursor: "pointer",
-        
-                          fontSize: 13,
-                          fontWeight: on ? 700 : 500,
-                          letterSpacing: "-0.01em",
-                          background: on ? "var(--surface)" : "transparent",
-                          color: on ? INK : "var(--ink-subtle)",
-                          boxShadow: on ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
-                          transition: "all 200ms",
-                        }}
+                        className={`cursor-pointer rounded-full border-none px-5 py-2 text-[13px] tracking-[-0.01em] transition-all ${on ? "font-bold bg-[color:var(--surface)] text-[color:var(--ink)]" : "font-medium bg-transparent text-[color:var(--ink-subtle)]"}`}
+                        style={{ boxShadow: on ? "0 1px 3px rgba(0,0,0,0.08)" : "none" }}
                       >
                         {v === "warm" ? "🌅 Warm" : "🌊 Cool"}
                       </button>
@@ -342,31 +252,42 @@ export default async function SettingsPage({
           </>
         )}
 
+        {/* Dark mode toggle (all roles) */}
+        <div className={dividerStyle} />
+        <div>
+          <div className="mb-2.5">
+            <SectionLabel as="span">{locale === "ko" ? "화면 모드" : locale === "ja" ? "表示モード" : "Display Mode"}</SectionLabel>
+          </div>
+          <form action={updateModeAction}>
+            <div className="inline-flex gap-0.5 rounded-full bg-[color:var(--border)] p-[3px]">
+              {(["light", "dark"] as const).map((v) => {
+                const on = user.mode === v;
+                return (
+                  <button
+                    key={v}
+                    type="submit"
+                    name="mode"
+                    value={v}
+                    className={`cursor-pointer rounded-full border-none px-5 py-2 text-[13px] tracking-[-0.01em] transition-all ${on ? "font-bold bg-[color:var(--surface)] text-[color:var(--ink)]" : "font-medium bg-transparent text-[color:var(--ink-subtle)]"}`}
+                    style={{ boxShadow: on ? "0 1px 3px rgba(0,0,0,0.08)" : "none" }}
+                  >
+                    {v === "light" ? "☀️ Light" : "🌙 Dark"}
+                  </button>
+                );
+              })}
+            </div>
+          </form>
+        </div>
+
         {/* Family settings (parent only) */}
         {user.role === "parent" && (
           <>
             <div className={dividerStyle} />
             <div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "baseline",
-                  gap: 8,
-                  marginBottom: 10,
-                }}
-              >
+              <div className="mb-2.5 flex items-baseline gap-2">
                 <SectionLabel as="span">{t("settings.family", locale)}</SectionLabel>
                 {isAdmin && (
-                  <span
-                    style={{
-                      fontSize: 10.5,
-                      fontWeight: 700,
-                      color: "var(--ink-subtle)",
-                      letterSpacing: "0.1em",
-                      textTransform: "uppercase",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
+                  <span className="whitespace-nowrap text-[10.5px] font-bold uppercase tracking-[0.1em] text-[color:var(--ink-subtle)]">
                     ·{" "}
                     {locale === "ko"
                       ? "관리자"
@@ -378,7 +299,7 @@ export default async function SettingsPage({
               </div>
               <form
                 action={updateFamilyAction}
-                style={{ display: "flex", flexDirection: "column", gap: 8 }}
+                className="flex flex-col gap-2"
               >
                 <input
                   name="family_name"
@@ -386,7 +307,7 @@ export default async function SettingsPage({
                   required
                   maxLength={40}
                   placeholder={t("settings.family_name", locale)}
-                  style={inputStyle}
+                  className={inputCls}
                 />
                 <TimezoneSelect
                   name="timezone"
@@ -395,11 +316,8 @@ export default async function SettingsPage({
                 <select
                   name="locale"
                   defaultValue={family.locale || "ko"}
+                  className={`${inputCls} cursor-pointer appearance-none pr-10`}
                   style={{
-                    ...inputStyle,
-                    appearance: "none",
-                    paddingRight: 40,
-                    cursor: "pointer",
                     backgroundImage:
                       'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="%236B7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>\')',
                     backgroundRepeat: "no-repeat",
@@ -411,24 +329,12 @@ export default async function SettingsPage({
                   <option value="en">English</option>
                 </select>
                 {sp.error && (
-                  <p
-                    style={{
-                      fontSize: 13,
-                      color: "var(--error)",
-                      margin: 0,
-                    }}
-                  >
+                  <p className="m-0 text-[13px] text-[color:var(--error)]">
                     {sp.error}
                   </p>
                 )}
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: 2,
-                  }}
-                >
-                  <button type="submit" style={savePillStyle}>
+                <div className="mt-0.5 flex justify-end">
+                  <button type="submit" className={savePillCls}>
                     {t("settings.save", locale)}
                   </button>
                 </div>
@@ -441,19 +347,19 @@ export default async function SettingsPage({
 
         {/* Password */}
         <div>
-          <div style={{ marginBottom: 10 }}>
+          <div className="mb-2.5">
             <SectionLabel as="span">{t("settings.password", locale)}</SectionLabel>
           </div>
           <form
             action={changePasswordAction}
-            style={{ display: "flex", flexDirection: "column", gap: 8 }}
+            className="flex flex-col gap-2"
           >
             <input
               type="password"
               name="current_password"
               placeholder={t("settings.current_password", locale)}
               required
-              style={inputStyle}
+              className={inputCls}
             />
             <input
               type="password"
@@ -461,7 +367,7 @@ export default async function SettingsPage({
               placeholder={t("settings.new_password", locale)}
               minLength={6}
               required
-              style={inputStyle}
+              className={inputCls}
             />
             <input
               type="password"
@@ -469,35 +375,21 @@ export default async function SettingsPage({
               placeholder={t("settings.confirm_password", locale)}
               minLength={6}
               required
-              style={inputStyle}
+              className={inputCls}
             />
             {sp.pw_error && (
-              <p style={{ fontSize: 13, color: "var(--error)", margin: 0 }}>
+              <p className="m-0 text-[13px] text-[color:var(--error)]">
                 {sp.pw_error}
               </p>
             )}
             {sp.pw_ok && (
-              <p style={{ fontSize: 13, color: "var(--success)", margin: 0 }}>
+              <p className="m-0 text-[13px] text-[color:var(--success)]">
                 {sp.pw_ok}
               </p>
             )}
             <button
               type="submit"
-              style={{
-                alignSelf: "flex-end",
-                height: 40,
-                padding: "0 18px",
-                borderRadius: 10,
-                border: "none",
-                background: INK,
-                color: "var(--on-accent)",
-
-                fontSize: 14,
-                fontWeight: 700,
-                letterSpacing: "-0.01em",
-                cursor: "pointer",
-                marginTop: 2,
-              }}
+              className="mt-0.5 h-10 cursor-pointer self-end rounded-[10px] border-none bg-[color:var(--ink)] px-[18px] text-sm font-bold tracking-[-0.01em] text-[color:var(--on-accent)]"
             >
               {t("settings.change_button", locale)}
             </button>
@@ -508,7 +400,7 @@ export default async function SettingsPage({
 
         {/* Account */}
         <div>
-          <div style={{ marginBottom: 10 }}>
+          <div className="mb-2.5">
             <SectionLabel as="span">
               {locale === "ko" ? "계정" : locale === "ja" ? "アカウント" : "Account"}
             </SectionLabel>
@@ -516,20 +408,7 @@ export default async function SettingsPage({
           <form action={logoutAction}>
             <button
               type="submit"
-              style={{
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-
-                fontSize: 14,
-                fontWeight: 600,
-                color: INK,
-                letterSpacing: "-0.01em",
-                padding: "10px 0",
-                textAlign: "left",
-                display: "block",
-                width: "100%",
-              }}
+              className="block w-full cursor-pointer border-none bg-transparent py-2.5 text-left text-sm font-semibold tracking-[-0.01em] text-[color:var(--ink)]"
             >
               {t("settings.logout", locale)}
             </button>

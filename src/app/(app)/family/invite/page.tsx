@@ -11,62 +11,19 @@ export default async function InvitePage() {
   if (user.role !== "parent") redirect("/family");
 
   return (
-    <div
-      className="relative min-h-screen"
-      style={{
-        background: "var(--bg)",
-        color: "var(--ink)",        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <div className="relative flex min-h-screen flex-col bg-[color:var(--bg)] text-[color:var(--ink)]">
       {/* Top bar */}
-      <div
-        style={{
-          padding: "12px 20px 8px",
-          display: "grid",
-          gridTemplateColumns: "36px 1fr 36px",
-          alignItems: "center",
-        }}
-      >
+      <div className="grid grid-cols-[36px_1fr_36px] items-center px-5 pt-3 pb-2">
         <BackButton href="/family" />
-        <div
-          style={{
-            textAlign: "center",
-            fontSize: 12,
-            fontWeight: 700,
-            color: "var(--ink-subtle)",
-            textTransform: "uppercase",
-            letterSpacing: "0.15em",
-            whiteSpace: "nowrap",
-          }}
-        >
+        <div className="whitespace-nowrap text-center text-xs font-bold uppercase tracking-[0.15em] text-[color:var(--ink-subtle)]">
           {t("family.invite_title", locale)}
         </div>
         <div />
       </div>
 
       {/* Body */}
-      <div
-        className="mx-auto w-full max-w-md"
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          padding: "20px 20px 24px",
-          gap: 18,
-        }}
-      >
-        <div
-          style={{
-            textAlign: "center",
-            fontSize: 14,
-            fontWeight: 500,
-            color: "var(--ink-subtle)",
-            letterSpacing: "-0.01em",
-            lineHeight: 1.5,
-            margin: "4px 0 4px",
-          }}
-        >
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col gap-[18px] px-5 pt-5 pb-6">
+        <div className="mx-0 my-1 text-center text-sm font-medium leading-normal tracking-[-0.01em] text-[color:var(--ink-subtle)]">
           {t("family.invite_desc", locale)}
         </div>
 
@@ -77,30 +34,14 @@ export default async function InvitePage() {
           copiedLabel={t("family.copied", locale)}
         />
 
-        <div style={{ flex: 1 }} />
+        <div className="flex-1" />
 
         {/* Kakao CTA */}
         <a
           href={`https://sharer.kakao.com/talk/friends/picker/shorturl?url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_APP_URL ?? ""}/join?code=${family.invite_code}`)}`}
           target="_blank"
           rel="noopener noreferrer"
-          style={{
-            width: "100%",
-            height: 56,
-            borderRadius: 10,
-            background: "var(--ink)",
-            border: "none",
-            color: "var(--on-accent)",
-            fontSize: 16,
-            fontWeight: 700,
-            letterSpacing: "-0.01em",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
-            textDecoration: "none",
-            cursor: "pointer",
-          }}
+          className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-[10px] border-none bg-[color:var(--ink)] text-base font-bold tracking-[-0.01em] text-[color:var(--on-accent)] no-underline"
         >
           <span aria-hidden>💬</span>
           {t("family.invite_kakao", locale)}
@@ -109,16 +50,7 @@ export default async function InvitePage() {
         {/* Back link */}
         <Link
           href={"/family" as never}
-          style={{
-            textAlign: "center",
-            background: "transparent",
-            fontSize: 14,
-            fontWeight: 500,
-            color: "var(--accent)",
-            letterSpacing: "-0.01em",
-            padding: "4px 0",
-            textDecoration: "none",
-          }}
+          className="py-1 text-center text-sm font-medium tracking-[-0.01em] text-[color:var(--accent)] no-underline"
         >
           {t("common.back", locale)}
         </Link>

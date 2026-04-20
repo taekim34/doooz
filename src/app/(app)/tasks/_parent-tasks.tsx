@@ -42,40 +42,33 @@ export function ParentTasks({
   grouped,
 }: Props) {
   return (
-    <div className="-m-4 md:-m-8" style={{ minHeight: "100%", background: "var(--bg)", color: "var(--ink)" }}>
+    <div className="-m-4 md:-m-8 min-h-full bg-[color:var(--bg)] text-[color:var(--ink)]">
       {/* Header */}
       <header className="px-6 pt-6">
-        <h1 className="text-2xl font-extrabold" style={{ letterSpacing: "-0.02em", color: "var(--ink)" }}>
+        <h1 className="text-2xl font-extrabold tracking-tight text-[color:var(--ink)]">
           {t("tasks.title", locale)}
         </h1>
-        <div className="mt-1 text-[13px] font-semibold" style={{ color: "var(--ink-subtle)", fontFeatureSettings: '"tnum" 1' }}>
+        <div className="mt-1 text-[13px] font-semibold text-[color:var(--ink-subtle)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
           {t("tasks.tab_today", locale)} · {humanToday}
         </div>
       </header>
 
       {/* Navigation tabs */}
-      <div className="mt-5 flex gap-6 border-b px-6" style={{ borderColor: "var(--border)" }}>
+      <div className="mt-5 flex gap-6 border-b border-[color:var(--border)] px-6">
         <span
-          className="cursor-default pb-2.5 text-[15px] font-semibold"
-          style={{
-            color: "var(--ink)",
-            borderBottom: "2px solid var(--accent)",
-            marginBottom: -1,
-          }}
+          className="cursor-default pb-2.5 text-[15px] font-semibold text-[color:var(--ink)] -mb-px border-b-2 border-[color:var(--accent)]"
         >
           {t("tasks.tab_today", locale)}
         </span>
         <Link
           href="/tasks/history"
-          className="pb-2.5 text-[15px] font-semibold no-underline"
-          style={{ color: "var(--ink-subtle)", borderBottom: "2px solid transparent", marginBottom: -1 }}
+          className="pb-2.5 text-[15px] font-semibold no-underline text-[color:var(--ink-subtle)] -mb-px border-b-2 border-transparent"
         >
           {t("tasks.tab_weekly", locale)}
         </Link>
         <Link
           href="/tasks/manage"
-          className="pb-2.5 text-[15px] font-semibold no-underline"
-          style={{ color: "var(--ink-subtle)", borderBottom: "2px solid transparent", marginBottom: -1 }}
+          className="pb-2.5 text-[15px] font-semibold no-underline text-[color:var(--ink-subtle)] -mb-px border-b-2 border-transparent"
         >
           {t("tasks.tab_template", locale)}
         </Link>
@@ -83,10 +76,10 @@ export function ParentTasks({
 
       {/* Summary bar */}
       <div className="flex items-center gap-2 px-6 py-4">
-        <span className="text-[13px] font-bold" style={{ color: "var(--accent)", fontFeatureSettings: '"tnum" 1' }}>
+        <span className="text-[13px] font-bold text-[color:var(--accent)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
           {doneCount}/{totalToday}
         </span>
-        <span className="text-[13px] font-medium" style={{ color: "var(--ink-subtle)" }}>
+        <span className="text-[13px] font-medium text-[color:var(--ink-subtle)]">
           {t("tasks.completed", locale)}
         </span>
       </div>
@@ -94,16 +87,16 @@ export function ParentTasks({
       {/* Beg requests */}
       {requested.length > 0 && (
         <div className="px-6 pb-4">
-          <div className="rounded-xl border p-4" style={{ borderColor: "#FDE68A", background: "#FFFBEB" }}>
-            <h3 className="mb-3 text-[14px] font-bold" style={{ color: "#D97706" }}>
+          <div className="rounded-xl border border-[#FDE68A] bg-[#FFFBEB] p-4">
+            <h3 className="mb-3 text-[14px] font-bold text-[#D97706]">
               {t("tasks.beg_requests", locale)} ({requested.length})
             </h3>
             <div className="flex flex-col gap-3">
               {requested.map((c) => (
                 <div key={c.id} className="flex items-center justify-between gap-2">
                   <div className="min-w-0">
-                    <span className="block text-[12px] font-medium" style={{ color: "var(--ink-subtle)" }}>{nameMap.get(c.assignee_id)}</span>
-                    <span className="block truncate text-[14px] font-semibold" style={{ color: "var(--ink)" }}>{c.title}</span>
+                    <span className="block text-[12px] font-medium text-[color:var(--ink-subtle)]">{nameMap.get(c.assignee_id)}</span>
+                    <span className="block truncate text-[14px] font-semibold text-[color:var(--ink)]">{c.title}</span>
                   </div>
                   <BegActions id={c.id} />
                 </div>
@@ -137,7 +130,7 @@ export function ParentTasks({
                 >
                   {avatar}
                 </span>
-                <span className="text-[14px] font-bold" style={{ color: "var(--ink)" }}>
+                <span className="text-[14px] font-bold text-[color:var(--ink)]">
                   {member.display_name}
                 </span>
                 <span
@@ -154,9 +147,9 @@ export function ParentTasks({
               </div>
 
               {/* Task rows */}
-              <ul className="mt-2" style={{ listStyle: "none", margin: "8px 0 0", padding: 0 }}>
+              <ul className="mt-2 list-none p-0">
                 {todayList.length === 0 && overdue.length === 0 && doneToday.length === 0 && (
-                  <li className="py-4 text-center text-[13px]" style={{ color: "var(--ink-subtle)" }}>
+                  <li className="py-4 text-center text-[13px] text-[color:var(--ink-subtle)]">
                     {t("tasks.none", locale)}
                   </li>
                 )}

@@ -33,10 +33,7 @@ export function InviteCodeCard({ code, className }: InviteCodeCardProps) {
       }}
     >
       {/* Code display */}
-      <span
-        className="select-all font-mono text-[28px] font-extrabold tracking-[0.1em]"
-        style={{ color: "var(--accent)" }}
-      >
+      <span className="select-all font-mono text-[28px] font-extrabold tracking-[0.1em] text-[color:var(--accent)]">
         {code}
       </span>
 

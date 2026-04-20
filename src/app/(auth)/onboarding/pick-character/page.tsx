@@ -38,8 +38,7 @@ export default async function PickCharacterPage() {
       <FadeUp>
         <EyebrowLabel className="text-center">STEP 3 of 3</EyebrowLabel>
         <h2
-          className="mb-6 text-center text-3xl font-extrabold"
-          style={{ color: "var(--ink)" }}
+          className="mb-6 text-center text-3xl font-extrabold text-[color:var(--ink)]"
         >
           {t("auth.pick_character", locale)}
         </h2>
@@ -62,7 +61,7 @@ export default async function PickCharacterPage() {
                   }}
                 >
                   <CharacterAvatar characterId={c.id} size="md" />
-                  <span className="mt-2" style={{ color: "var(--ink)" }}>{c.name}</span>
+                  <span className="mt-2 text-[color:var(--ink)]">{c.name}</span>
                   {locked && (
                     <div className="absolute top-2 right-2">
                       <LevelPill level={c.unlock_level} />

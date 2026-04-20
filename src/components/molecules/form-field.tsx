@@ -20,10 +20,7 @@ export function FormField({
 }: FormFieldProps) {
   return (
     <label className={cn("block", className)}>
-      <span
-        className="mb-1.5 block text-sm font-medium"
-        style={{ color: "var(--ink)" }}
-      >
+      <span className="mb-1.5 block text-sm font-medium text-[color:var(--ink)]">
         {label}
         {required && (
           <span className="ml-0.5 text-red-500" aria-hidden>
@@ -41,7 +38,7 @@ export function FormField({
       )}
 
       {!error && hint && (
-        <p className="mt-1 text-xs" style={{ color: "var(--ink-subtle)" }}>
+        <p className="mt-1 text-xs text-[color:var(--ink-subtle)]">
           {hint}
         </p>
       )}

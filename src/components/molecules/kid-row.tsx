@@ -47,8 +47,7 @@ const Chevron = () => (
     height="16"
     viewBox="0 0 16 16"
     fill="none"
-    className="shrink-0"
-    style={{ color: "var(--ink-subtle)" }}
+    className="shrink-0 text-[color:var(--ink-subtle)]"
   >
     <path
       d="M6 4l4 4-4 4"
@@ -80,13 +79,10 @@ const KidRow = React.forwardRef<HTMLDivElement, KidRowProps>(
 
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2">
-            <span
-              className="truncate text-sm font-semibold"
-              style={{ color: "var(--ink)" }}
-            >
+            <span className="truncate text-sm font-semibold text-[color:var(--ink)]">
               {name}
             </span>
-            <span className="text-xs" style={{ color: "var(--ink-subtle)" }}>
+            <span className="text-xs text-[color:var(--ink-subtle)]">
               Lv.{level}
             </span>
           </div>
@@ -97,10 +93,7 @@ const KidRow = React.forwardRef<HTMLDivElement, KidRowProps>(
         </div>
 
         <div className="shrink-0 text-right">
-          <span
-            className="text-lg font-bold"
-            style={{ color: "var(--ink)" }}
-          >
+          <span className="text-lg font-bold text-[color:var(--ink)]">
             {completedCount}/{totalCount}
           </span>
         </div>

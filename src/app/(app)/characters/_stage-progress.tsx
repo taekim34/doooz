@@ -2,7 +2,7 @@ import type { CharacterStage } from "@/lib/level";
 import { t, type Locale } from "@/lib/i18n";
 
 const ACCENT = "#FF6B9D";
-const ACCENT_GRAD = "linear-gradient(135deg, #FF6B9D 0%, #FFA07A 100%)";
+const ACCENT_GRAD = "var(--accent-gradient)";
 const ACCENT_SHADOW = "rgba(255,107,157,0.35)";
 
 const STAGES: {
@@ -27,41 +27,25 @@ export function StageProgress({
   const currentIdx = STAGES.findIndex((s) => s.stage === currentStage);
 
   return (
-    <div style={{ position: "relative", padding: "4px 4px 0" }}>
+    <div className="relative px-1 pt-1">
       {/* Base track */}
       <div
-        style={{
-          position: "absolute",
-          top: 20,
-          left: 22,
-          right: 22,
-          height: 2,
-          background: "var(--border)",
-          borderRadius: 9999,
-          zIndex: 0,
-        }}
+        className="absolute left-[22px] right-[22px] top-5 z-0 h-0.5 rounded-full bg-[color:var(--border)]"
       />
       {/* Progressed line */}
       <div
+        className="absolute left-[22px] top-5 z-0 h-0.5 rounded-full"
         style={{
-          position: "absolute",
-          top: 20,
-          left: 22,
           width: `calc(${(currentIdx / (STAGES.length - 1)) * 100}% * (1 - 44px / 100%))`,
-          height: 2,
           background: ACCENT,
-          borderRadius: 9999,
-          zIndex: 0,
         }}
       />
 
       <div
+        className="relative z-[1]"
         style={{
-          position: "relative",
-          zIndex: 1,
           display: "grid",
           gridTemplateColumns: `repeat(${STAGES.length}, 1fr)`,
-          gap: 0,
         }}
       >
         {STAGES.map((s, i) => {
@@ -79,28 +63,17 @@ export function StageProgress({
           return (
             <div
               key={s.stage}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 6,
-              }}
+              className="flex flex-col items-center gap-1.5"
             >
               <div
+                className="relative flex h-10 w-10 items-center justify-center rounded-full"
                 style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 9999,
                   background: circleBg,
                   border: circleBorder,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                   boxShadow:
                     state === "current"
                       ? `0 8px 18px -8px ${ACCENT_SHADOW}`
                       : "none",
-                  position: "relative",
                   boxSizing: "border-box",
                 }}
               >
@@ -117,10 +90,10 @@ export function StageProgress({
                 ) : (
                   <span
                     aria-hidden
+                    className="leading-none"
                     style={{
                       fontSize: state === "current" ? 18 : 16,
                       opacity: iconOpacity,
-                      lineHeight: 1,
                     }}
                   >
                     {s.icon}
@@ -128,12 +101,10 @@ export function StageProgress({
                 )}
               </div>
               <div
+                className="whitespace-nowrap text-[11px] tracking-[-0.01em]"
                 style={{
-                  fontSize: 11,
                   fontWeight: state === "current" ? 800 : 600,
                   color: labelColor,
-                  letterSpacing: "-0.01em",
-                  whiteSpace: "nowrap",
                 }}
               >
                 {t(s.nameKey, locale)}

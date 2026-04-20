@@ -44,19 +44,7 @@ export function DeleteAccount({ locale }: { locale: Locale }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        style={{
-          background: "transparent",
-          border: "none",
-          cursor: "pointer",
-          fontSize: 14,
-          fontWeight: 600,
-          color: "var(--error)",
-          letterSpacing: "-0.01em",
-          padding: "10px 0",
-          textAlign: "left",
-          display: "block",
-          width: "100%",
-        }}
+        className="block w-full cursor-pointer border-none bg-transparent py-2.5 text-left text-sm font-semibold tracking-[-0.01em] text-[color:var(--error)]"
       >
         {t("settings.delete_account", locale)}
       </button>

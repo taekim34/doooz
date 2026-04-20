@@ -2,8 +2,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
-const ACCENT = "#FF6B9D";
-
 export function CopyButton({
   code,
   copyLabel,
@@ -25,48 +23,15 @@ export function CopyButton({
   }
 
   return (
-    <div
-      style={{
-        padding: 20,
-        borderRadius: 14,
-        background: "var(--surface-raised)",
-        border: "1.5px dashed var(--border)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 12,
-      }}
-    >
-      <span
-        style={{
-          fontSize: 24,
-          fontWeight: 800,
-          color: ACCENT,
-          letterSpacing: "0.08em",
-          fontFeatureSettings: '"tnum" 1',
-          whiteSpace: "nowrap",
-        }}
-      >
+    <div className="flex items-center justify-center gap-3 rounded-[14px] border-[1.5px] border-dashed border-[color:var(--border)] bg-[color:var(--surface-raised)] p-5">
+      <span className="whitespace-nowrap text-2xl font-extrabold tracking-[0.08em] text-[#FF6B9D]" style={{ fontFeatureSettings: '"tnum" 1' }}>
         {code}
       </span>
       <button
         type="button"
         onClick={handleCopy}
         aria-label={copyLabel}
-        style={{
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: 40,
-          width: 40,
-          borderRadius: 10,
-          background: "var(--surface)",
-          border: "1px solid var(--border)",
-          cursor: "pointer",
-          flexShrink: 0,
-          transition: "background 150ms ease",
-        }}
+        className="relative flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-[color:var(--border)] bg-[color:var(--surface)] transition-[background] duration-150"
       >
         {copied ? (
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">

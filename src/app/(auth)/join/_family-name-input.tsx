@@ -28,14 +28,7 @@ export function FamilyNameInput({ defaultValue, placeholder }: { defaultValue?: 
         const v = e.target.value.trim();
         if (v) localStorage.setItem(STORAGE_KEY, v);
       }}
-      style={{
-        height: 48, width: "100%", borderRadius: 10,
-        padding: "0 16px", outline: "none",
-        background: "var(--surface-raised)", border: "1px solid var(--border-subtle)",
-        fontSize: 17, fontWeight: 500, color: "var(--ink)",
-        transition: "border-color 150ms, background 150ms",
-        boxSizing: "border-box",
-      }}
+      className="h-12 w-full rounded-[10px] px-4 outline-none bg-[color:var(--surface-raised)] border border-[color:var(--border-subtle)] text-[17px] font-medium text-[color:var(--ink)] transition-[border-color,background] duration-150 box-border"
     />
   );
 }

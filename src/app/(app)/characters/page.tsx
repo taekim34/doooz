@@ -50,10 +50,8 @@ export default async function CharactersPage() {
 
   return (
     <div
-      className="relative min-h-screen"
-      style={{
-        background: BG,
-        color: "var(--ink)",      }}
+      className="relative min-h-screen text-[color:var(--ink)]"
+      style={{ background: BG }}
     >
       <style>{`
         @keyframes chBounce {
@@ -61,7 +59,7 @@ export default async function CharactersPage() {
           50%      { transform: translateY(-4px); }
         }
         @keyframes chTlRise { to { opacity: 1; transform: none; } }
-        .ch-tl-rise { opacity: 0; transform: translateY(8px); animation: chTlRise 520ms cubic-bezier(0.16,1,0.3,1) forwards; }
+        .ch-tl-rise { opacity: 0; transform: translateY(8px); animation: chTlRise 520ms var(--ease-spring) forwards; }
         @media (prefers-reduced-motion: reduce) {
           .ch-tl-rise { animation: none; opacity: 1; transform: none; }
           [data-ch-avatar] { animation: none !important; }
@@ -69,75 +67,32 @@ export default async function CharactersPage() {
       `}</style>
 
       {/* Top bar */}
-      <div
-        style={{
-          padding: "10px 20px 0",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+      <div className="flex items-center justify-between px-5 pt-2.5">
         <BackButton href="/" variant="glass" />
         <SectionLabel as="span">{t("characters.my_character", locale)}</SectionLabel>
-        <div style={{ width: 36 }} />
+        <div className="w-9" />
       </div>
 
-      <div className="mx-auto max-w-md" style={{ padding: "4px 20px 28px" }}>
+      <div className="mx-auto max-w-md px-5 pt-1 pb-7">
         {/* Hero */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            paddingTop: 10,
-            paddingBottom: 4,
-          }}
-        >
+        <div className="flex flex-col items-center pt-2.5 pb-1">
           <div
             aria-hidden
             data-ch-avatar
+            className="text-[96px] leading-none"
             style={{
-              fontSize: 96,
-              lineHeight: 1,
               animation: "chBounce 2000ms ease-in-out infinite",
               filter: "drop-shadow(0 10px 18px rgba(10,10,10,0.14))",
             }}
           >
             {characterEmoji(user.character_id, stage)}
           </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              marginTop: 10,
-              whiteSpace: "nowrap",
-            }}
-          >
-            <span
-              style={{
-                fontSize: 24,
-                fontWeight: 800,
-                letterSpacing: "-0.02em",
-                color: "var(--ink)",
-              }}
-            >
+          <div className="mt-2.5 flex items-center gap-2 whitespace-nowrap">
+            <span className="text-2xl font-extrabold tracking-[-0.02em] text-[color:var(--ink)]">
               {user.display_name}
             </span>
             <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                height: 24,
-                padding: "0 10px",
-                borderRadius: 9999,
-                background: "var(--surface)",
-                color: ACCENT,
-                fontSize: 11.5,
-                fontWeight: 800,
-                letterSpacing: "-0.01em",
-                border: "1px solid rgba(255,107,157,0.25)",
-              }}
+              className="inline-flex h-6 items-center rounded-full border border-[rgba(255,107,157,0.25)] bg-[color:var(--surface)] px-2.5 text-[11.5px] font-extrabold tracking-[-0.01em] text-[color:var(--accent)]"
             >
               {stageName}
             </span>
@@ -146,54 +101,21 @@ export default async function CharactersPage() {
 
         {/* Progress */}
         <div
+          className="mt-[18px] rounded-[18px] border border-[rgba(255,255,255,0.8)] bg-[color:var(--surface)] p-3.5"
           style={{
-            marginTop: 18,
-            padding: 14,
-            borderRadius: 18,
-            background: "var(--surface)",
-            border: "1px solid rgba(255,255,255,0.8)",
             boxShadow:
               "0 14px 32px -22px rgba(10,10,10,0.18), 0 2px 4px rgba(10,10,10,0.04)",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 8,
-            }}
-          >
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                height: 24,
-                padding: "0 10px",
-                borderRadius: 9999,
-                background: "var(--ink)",
-                color: "var(--on-accent)",
-                fontSize: 11.5,
-                fontWeight: 800,
-                letterSpacing: "-0.01em",
-                fontFeatureSettings: '"tnum" 1',
-              }}
-            >
+          <div className="flex items-center justify-between gap-2">
+            <span className="inline-flex h-6 items-center rounded-full bg-[color:var(--ink)] px-2.5 text-[11.5px] font-extrabold tracking-[-0.01em] text-[color:var(--on-accent)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
               Lv.{user.level}
             </span>
-            <span
-              style={{
-                fontSize: 12.5,
-                fontWeight: 500,
-                color: "var(--ink-subtle)",
-                letterSpacing: "-0.01em",
-                fontFeatureSettings: '"tnum" 1',
-              }}
-            >
+            <span className="text-[12.5px] font-medium tracking-[-0.01em] text-[color:var(--ink-subtle)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
               {progress.nextThreshold ? (
                 <>
                   Lv.{user.level + 1}{" "}
-                  <span style={{ color: "var(--ink)", fontWeight: 700 }}>
+                  <span className="font-bold text-[color:var(--ink)]">
                     {pointsToNext.toLocaleString()}pt
                   </span>
                 </>
@@ -202,32 +124,21 @@ export default async function CharactersPage() {
               )}
             </span>
           </div>
-          <div
-            style={{
-              position: "relative",
-              marginTop: 10,
-              height: 10,
-              borderRadius: 9999,
-              background: "var(--surface-sunken)",
-              overflow: "hidden",
-            }}
-          >
+          <div className="relative mt-2.5 h-2.5 overflow-hidden rounded-full bg-[color:var(--surface-sunken)]">
             <div
+              className="absolute inset-0 rounded-full"
               style={{
-                position: "absolute",
-                inset: 0,
                 width: `${progressPct}%`,
                 background: ACCENT_GRAD,
-                borderRadius: 9999,
                 transition:
-                  "width 900ms cubic-bezier(0.16,1,0.3,1), background 320ms ease",
+                  "width 900ms var(--ease-spring), background 320ms ease",
               }}
             />
           </div>
         </div>
 
         {/* Stage road */}
-        <div style={{ marginTop: 22 }}>
+        <div className="mt-[22px]">
           <SectionLabel as="span">
             {t("characters.stages", locale) !== "characters.stages"
               ? t("characters.stages", locale)
@@ -239,12 +150,8 @@ export default async function CharactersPage() {
           </SectionLabel>
         </div>
         <div
+          className="mt-2.5 rounded-[18px] border border-[rgba(255,255,255,0.8)] bg-[color:var(--surface)] px-3 pt-4 pb-3.5"
           style={{
-            marginTop: 10,
-            padding: "16px 12px 14px",
-            borderRadius: 18,
-            background: "var(--surface)",
-            border: "1px solid rgba(255,255,255,0.8)",
             boxShadow:
               "0 12px 28px -22px rgba(10,10,10,0.16), 0 2px 4px rgba(10,10,10,0.04)",
           }}
@@ -253,45 +160,16 @@ export default async function CharactersPage() {
         </div>
 
         {/* Badges */}
-        <div
-          style={{
-            marginTop: 22,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 8,
-          }}
-        >
+        <div className="mt-[22px] flex items-center justify-between gap-2">
           <SectionLabel as="span">{t("characters.badges", locale)}</SectionLabel>
-          <span
-            style={{
-              fontSize: 12,
-              fontWeight: 700,
-              color: "var(--ink-subtle)",
-              letterSpacing: "-0.01em",
-              fontFeatureSettings: '"tnum" 1',
-            }}
-          >
-            <span style={{ color: ACCENT }}>{earnedCount}</span>
+          <span className="text-xs font-bold tracking-[-0.01em] text-[color:var(--ink-subtle)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
+            <span className="text-[color:var(--accent)]">{earnedCount}</span>
             <span> / {badges.length}</span>
           </span>
         </div>
-        <div
-          style={{
-            marginTop: 10,
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: 8,
-          }}
-        >
+        <div className="mt-2.5 grid grid-cols-3 gap-2">
           {badges.length === 0 && (
-            <p
-              style={{
-                gridColumn: "1 / -1",
-                fontSize: 13,
-                color: "var(--ink-subtle)",
-              }}
-            >
+            <p className="col-span-full text-[13px] text-[color:var(--ink-subtle)]">
               {t("characters.no_badges", locale)}
             </p>
           )}
@@ -305,77 +183,31 @@ export default async function CharactersPage() {
               >
                 {has ? (
                   <div
+                    className="flex flex-col items-center gap-1.5 rounded-[14px] border border-[rgba(255,255,255,0.8)] bg-[color:var(--surface)] px-1.5 pt-3 pb-2.5"
                     style={{
-                      padding: "12px 6px 10px",
-                      borderRadius: 14,
-                      background: "var(--surface)",
-                      border: "1px solid rgba(255,255,255,0.8)",
                       boxShadow:
                         "0 10px 22px -18px rgba(10,10,10,0.18), 0 1px 2px rgba(10,10,10,0.03)",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      gap: 6,
                     }}
                   >
                     <span
                       aria-hidden
-                      style={{ fontSize: 32, lineHeight: 1 }}
+                      className="text-[32px] leading-none"
                     >
                       {b.icon}
                     </span>
-                    <div
-                      style={{
-                        fontSize: 11,
-                        fontWeight: 500,
-                        color: "var(--ink)",
-                        letterSpacing: "-0.01em",
-                        textAlign: "center",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        width: "100%",
-                      }}
-                    >
+                    <div className="w-full truncate text-center text-[11px] font-medium tracking-[-0.01em] text-[color:var(--ink)]">
                       {b.name}
                     </div>
                   </div>
                 ) : (
-                  <div
-                    style={{
-                      padding: "12px 6px 10px",
-                      borderRadius: 14,
-                      background: "var(--surface-sunken)",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      gap: 6,
-                    }}
-                  >
+                  <div className="flex flex-col items-center gap-1.5 rounded-[14px] bg-[color:var(--surface-sunken)] px-1.5 pt-3 pb-2.5">
                     <span
                       aria-hidden
-                      style={{
-                        fontSize: 24,
-                        lineHeight: 1,
-                        fontWeight: 800,
-                        color: "#B5B5BE",
-                      }}
+                      className="text-2xl font-extrabold leading-none text-[#B5B5BE]"
                     >
                       ???
                     </span>
-                    <div
-                      style={{
-                        fontSize: 10,
-                        fontWeight: 500,
-                        color: "var(--ink-subtle)",
-                        letterSpacing: "-0.01em",
-                        textAlign: "center",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        width: "100%",
-                      }}
-                    >
+                    <div className="w-full truncate text-center text-[10px] font-medium tracking-[-0.01em] text-[color:var(--ink-subtle)]">
                       ???
                     </div>
                   </div>
@@ -389,24 +221,8 @@ export default async function CharactersPage() {
         {user.role === "child" && (
           <Link
             href={"/characters/gallery" as never}
-            style={{
-              marginTop: 16,
-              width: "100%",
-              height: 44,
-              borderRadius: 12,
-              background: "var(--surface)",
-              border: "1px solid rgba(255,255,255,0.7)",
-              boxShadow: "0 8px 22px -20px rgba(10,10,10,0.2)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 6,
-              fontSize: 13,
-              fontWeight: 700,
-              color: ACCENT,
-              letterSpacing: "-0.01em",
-              textDecoration: "none",
-            }}
+            className="mt-4 flex h-11 w-full items-center justify-center gap-1.5 rounded-xl border border-[rgba(255,255,255,0.7)] bg-[color:var(--surface)] text-[13px] font-bold tracking-[-0.01em] text-[color:var(--accent)] no-underline"
+            style={{ boxShadow: "0 8px 22px -20px rgba(10,10,10,0.2)" }}
           >
             {t("characters.change", locale)}
             <span aria-hidden>→</span>
@@ -414,7 +230,7 @@ export default async function CharactersPage() {
         )}
 
         {/* Level table toggle */}
-        <div style={{ marginTop: 10 }}>
+        <div className="mt-2.5">
           <LevelTable currentLevel={user.level} />
         </div>
       </div>

@@ -14,21 +14,7 @@ export function LevelTable({ currentLevel }: { currentLevel: number }) {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        style={{
-          width: "100%",
-          padding: "12px 14px",
-          borderRadius: 12,
-          background: "transparent",
-          border: "none",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          cursor: "pointer",
-          fontSize: 13,
-          fontWeight: 600,
-          color: "var(--ink-muted)",
-          letterSpacing: "-0.01em",
-        }}
+        className="flex w-full cursor-pointer items-center justify-between rounded-xl border-none bg-transparent px-3.5 py-3 text-[13px] font-semibold tracking-[-0.01em] text-[color:var(--ink-muted)]"
       >
         <span>
           {open ? t("characters.level_close") : t("characters.level_view")}
@@ -55,16 +41,8 @@ export function LevelTable({ currentLevel }: { currentLevel: number }) {
 
       {open && (
         <div
-          style={{
-            marginTop: 0,
-            padding: "6px 4px 4px",
-            borderRadius: 14,
-            background: "rgba(255,255,255,0.7)",
-            border: "1px solid rgba(255,255,255,0.8)",
-            overflow: "hidden",
-            maxHeight: 360,
-            overflowY: "auto",
-          }}
+          className="mt-0 max-h-[360px] overflow-hidden overflow-y-auto rounded-[14px] border border-[rgba(255,255,255,0.8)] px-1 pt-1.5 pb-1"
+          style={{ background: "rgba(255,255,255,0.7)" }}
         >
           {LEVEL_THRESHOLDS.map((threshold, i) => {
             const level = i + 1;
@@ -72,11 +50,9 @@ export function LevelTable({ currentLevel }: { currentLevel: number }) {
             return (
               <div
                 key={level}
+                className="grid items-center gap-2"
                 style={{
-                  display: "grid",
                   gridTemplateColumns: "54px 1fr auto",
-                  alignItems: "center",
-                  gap: 8,
                   padding: "10px 12px",
                   borderBottom:
                     i === LEVEL_THRESHOLDS.length - 1
@@ -86,37 +62,13 @@ export function LevelTable({ currentLevel }: { currentLevel: number }) {
                   borderRadius: isCurrent ? 8 : 0,
                 }}
               >
-                <span
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 800,
-                    color: "var(--ink)",
-                    fontFeatureSettings: '"tnum" 1',
-                    letterSpacing: "-0.01em",
-                  }}
-                >
+                <span className="text-xs font-extrabold tracking-[-0.01em] text-[color:var(--ink)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
                   Lv.{level}
                 </span>
-                <span
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: "var(--ink)",
-                    letterSpacing: "-0.01em",
-                  }}
-                >
+                <span className="text-[13px] font-semibold tracking-[-0.01em] text-[color:var(--ink)]">
                   {getLevelTitle(level, t)}
                 </span>
-                <span
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 700,
-                    color: ACCENT,
-                    fontFeatureSettings: '"tnum" 1',
-                    letterSpacing: "-0.01em",
-                    whiteSpace: "nowrap",
-                  }}
-                >
+                <span className="whitespace-nowrap text-xs font-bold tracking-[-0.01em] text-[#FF6B9D]" style={{ fontFeatureSettings: '"tnum" 1' }}>
                   {threshold.toLocaleString()} pt
                 </span>
               </div>

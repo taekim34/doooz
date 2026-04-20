@@ -43,14 +43,9 @@ export function FilterChipGroup({
               "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
               "hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
               isActive
-                ? "border-transparent text-white"
+                ? "border-transparent bg-[color:var(--accent)] text-white"
                 : "border-gray-200 bg-gray-100 text-gray-600",
             )}
-            style={
-              isActive
-                ? { backgroundColor: "var(--accent)" }
-                : undefined
-            }
           >
             {opt.label}
             {opt.count != null && (

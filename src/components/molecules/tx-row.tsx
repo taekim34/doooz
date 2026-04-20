@@ -53,23 +53,22 @@ const TxRow = React.forwardRef<HTMLDivElement, TxRowProps>(
 
         {/* Title + date */}
         <div className="min-w-0 flex-1">
-          <p
-            className="truncate text-sm font-medium"
-            style={{ color: "var(--ink)" }}
-          >
+          <p className="truncate text-sm font-medium text-[color:var(--ink)]">
             {title}
           </p>
-          <p className="text-xs" style={{ color: "var(--ink-subtle)" }}>
+          <p className="text-xs text-[color:var(--ink-subtle)]">
             {date}
           </p>
         </div>
 
         {/* Amount */}
         <span
-          className="shrink-0 text-sm font-bold tabular-nums"
-          style={{
-            color: isPositive ? "var(--color-emerald-500, #10B981)" : "var(--color-red-500, #EF4444)",
-          }}
+          className={cn(
+            "shrink-0 text-sm font-bold tabular-nums",
+            isPositive
+              ? "text-[color:var(--color-emerald-500,#10B981)]"
+              : "text-[color:var(--color-red-500,#EF4444)]",
+          )}
         >
           {isPositive ? "+" : ""}
           {amount}

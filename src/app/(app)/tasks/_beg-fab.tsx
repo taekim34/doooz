@@ -29,27 +29,23 @@ export function BegFab({ label, targetId }: Props) {
       <button
         type="button"
         onClick={onClick}
-        className="pointer-events-auto flex items-center gap-2 rounded-full border-none text-white"
+        className="pointer-events-auto flex items-center gap-2 rounded-full border-none text-white cursor-pointer bg-[#1A0F26] py-2 pr-2 pl-6"
         style={{
-          padding: "8px 8px 8px 24px",
-          background: "#1A0F26",
           boxShadow:
             "0 18px 36px -12px rgba(26,15,38,0.55), inset 0 1px 0 rgba(255,255,255,0.08)",
-          cursor: "pointer",
         }}
       >
         <span className="text-base">✨</span>
         <span
-          className="text-base font-bold"
-          style={{ letterSpacing: "-0.2px" }}
+          className="text-base font-bold tracking-[-0.2px]"
         >
           {label}
         </span>
         <span
           className="ml-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
           style={{
-            background: "linear-gradient(135deg,#FF6B9D,#FFA07A)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.4)",
+            background: "var(--accent-gradient)",
+            boxShadow: "var(--shadow-inset-white)",
           }}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">

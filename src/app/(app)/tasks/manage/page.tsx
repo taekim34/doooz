@@ -170,71 +170,32 @@ export default async function TaskManagePage() {
 
 
   return (
-    <div
-      style={{
-        position: "relative",
-        minHeight: "100%",
-        width: "100%",
-        background: "var(--bg)",
-        color: "var(--ink)",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <div className="relative min-h-full w-full bg-[color:var(--bg)] text-[color:var(--ink)] flex flex-col">
+
       <div
-        className="max-w-[720px] lg:max-w-[960px]"
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          padding: "8px 20px 32px",
-          WebkitOverflowScrolling: "touch",
-          marginInline: "auto",
-          width: "100%",
-          boxSizing: "border-box",
-        }}
+        className="max-w-[720px] lg:max-w-[960px] flex-1 overflow-y-auto px-5 pt-2 pb-8 mx-auto w-full box-border"
+        style={{ WebkitOverflowScrolling: "touch" }}
       >
         {/* Header */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "6px 0 14px",
-          }}
-        >
+        <div className="flex items-center justify-between py-1.5 pb-3.5">
           <BackButton href="/tasks" />
           <SectionLabel as="span">PARENT</SectionLabel>
-          <span style={{ width: 36, height: 36 }} />
+          <span className="w-9 h-9" />
         </div>
 
-        <h1
-          style={{
-            margin: "4px 0 4px",
-            fontSize: 24,
-            fontWeight: 800,
-            letterSpacing: "-0.02em",
-          }}
-        >
+        <h1 className="my-1 text-2xl font-extrabold tracking-tight">
           {i18n("tasks.manage_title", locale)}
         </h1>
-        <p
-          style={{
-            margin: 0,
-            fontSize: 13.5,
-            fontWeight: 500,
-            color: "var(--ink-subtle)",
-            letterSpacing: "-0.01em",
-          }}
-        >
+        <p className="m-0 text-[13.5px] font-medium text-[color:var(--ink-subtle)] tracking-[-0.01em]">
           {i18n("tasks.history_parent_guide", locale)}
         </p>
 
         {/* Two-column grid on lg+: left = create form (sticky), right = template list */}
         <div className="lg:grid lg:grid-cols-[420px_1fr] lg:gap-8">
           {/* Left column: Create new task */}
-          <section style={{ marginTop: 22 }} className="lg:sticky lg:top-20 lg:self-start">
+          <section className="mt-5 lg:sticky lg:top-20 lg:self-start">
             <SectionLabel as="span" className="flex items-center">{i18n("tasks.new_task", locale)}</SectionLabel>
-            <div style={{ marginTop: 10 }}>
+            <div className="mt-2.5">
               <CreateTaskForm
                 childrenList={kidList.map((k) => ({ id: k.id, display_name: k.display_name }))}
                 todayLocal={todayLocal}
@@ -249,7 +210,7 @@ export default async function TaskManagePage() {
             {kidList.map((kid) => {
               const mine = activeList.filter((t) => t.assignee_id === kid.id);
               return (
-                <section key={kid.id} style={{ marginTop: 28 }}>
+                <section key={kid.id} className="mt-7">
                   <div className="flex items-center">
                     <SectionLabel as="span">{kid.display_name}</SectionLabel>
                     <span
@@ -265,16 +226,9 @@ export default async function TaskManagePage() {
                       {i18n("tasks.count_suffix", locale)}
                     </span>
                   </div>
-                  <div
-                    style={{
-                      marginTop: 10,
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 8,
-                    }}
-                  >
+                  <div className="mt-2.5 flex flex-col gap-2">
                     {mine.length === 0 ? (
-                      <p style={{ margin: 0, fontSize: 13, color: "var(--ink-subtle)" }}>
+                      <p className="m-0 text-[13px] text-[color:var(--ink-subtle)]">
                         {i18n("tasks.manage_empty", locale)}
                       </p>
                     ) : (
@@ -303,13 +257,13 @@ export default async function TaskManagePage() {
 
             {/* Ended templates */}
             {endedList.length > 0 && (
-              <section style={{ marginTop: 28 }}>
+              <section className="mt-7">
                 <SectionLabel as="span" className="flex items-center">{i18n("tasks.ended", locale)}</SectionLabel>
                 {kidList.map((kid) => {
                   const mine = endedList.filter((t) => t.assignee_id === kid.id);
                   if (mine.length === 0) return null;
                   return (
-                    <div key={`ended-${kid.id}`} style={{ marginTop: 14 }}>
+                    <div key={`ended-${kid.id}`} className="mt-3.5">
                       <div
                         style={{
                           fontSize: 12,
@@ -332,13 +286,8 @@ export default async function TaskManagePage() {
                           {i18n("tasks.count_suffix", locale)}
                         </span>
                       </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 8,
-                        }}
-                      >
+                      <div className="flex flex-col gap-2">
+
                         {mine.map((tpl) => (
                           <TemplateRow
                             key={tpl.id}
@@ -365,7 +314,7 @@ export default async function TaskManagePage() {
           </div>
         </div>
 
-        <div style={{ height: 12 }} />
+        <div className="h-3" />
       </div>
     </div>
   );

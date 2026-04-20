@@ -74,110 +74,47 @@ export default async function GalleryPage() {
 
   return (
     <div
-      className="relative min-h-screen"
-      style={{
-        background: BG,
-        color: "var(--ink)",      }}
+      className="relative min-h-screen text-[color:var(--ink)]"
+      style={{ background: BG }}
     >
       <style>{`
         @keyframes cgTlRise { to { opacity: 1; transform: none; } }
-        .cg-tl-rise { opacity: 0; transform: translateY(8px); animation: cgTlRise 520ms cubic-bezier(0.16,1,0.3,1) forwards; }
+        .cg-tl-rise { opacity: 0; transform: translateY(8px); animation: cgTlRise 520ms var(--ease-spring) forwards; }
         @media (prefers-reduced-motion: reduce) {
           .cg-tl-rise { animation: none; opacity: 1; transform: none; }
         }
       `}</style>
 
       {/* Top bar */}
-      <div
-        style={{
-          padding: "10px 20px 0",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+      <div className="flex items-center justify-between px-5 pt-2.5">
         <BackButton href="/characters" variant="glass" />
-        <div style={{ width: 36 }} />
-        <div style={{ width: 36 }} />
+        <div className="w-9" />
+        <div className="w-9" />
       </div>
 
-      <div className="mx-auto max-w-md" style={{ padding: "4px 20px 28px" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "baseline",
-            justifyContent: "space-between",
-            gap: 8,
-          }}
-        >
-          <h1
-            style={{
-              margin: 0,
-              fontSize: 24,
-              fontWeight: 800,
-              letterSpacing: "-0.02em",
-              color: "var(--ink)",
-            }}
-          >
+      <div className="mx-auto max-w-md px-5 pt-1 pb-7">
+        <div className="flex items-baseline justify-between gap-2">
+          <h1 className="m-0 text-2xl font-extrabold tracking-[-0.02em] text-[color:var(--ink)]">
             {t("characters.gallery_title", locale)}
           </h1>
-          <span
-            style={{
-              fontSize: 12,
-              fontWeight: 700,
-              color: "var(--ink-subtle)",
-              letterSpacing: "-0.01em",
-              fontFeatureSettings: '"tnum" 1',
-            }}
-          >
-            <span style={{ color: ACCENT }}>{unlockedCount}</span>
+          <span className="text-xs font-bold tracking-[-0.01em] text-[color:var(--ink-subtle)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
+            <span className="text-[color:var(--accent)]">{unlockedCount}</span>
             <span> / {list.length}</span>
           </span>
         </div>
-        <p
-          style={{
-            margin: "6px 0 20px",
-            fontSize: 14,
-            fontWeight: 500,
-            color: "var(--ink-subtle)",
-            letterSpacing: "-0.01em",
-            lineHeight: 1.45,
-          }}
-        >
+        <p className="mt-1.5 mb-5 text-sm font-medium leading-[1.45] tracking-[-0.01em] text-[color:var(--ink-subtle)]">
           {t("characters.gallery_desc", locale)}
         </p>
 
         {showLockedBanner && (
           <div
-            style={{
-              marginBottom: 16,
-              padding: "14px 16px",
-              background: "var(--surface)",
-              borderRadius: 14,
-              border: "1px solid rgba(255,107,157,0.18)",
-              boxShadow: "0 8px 20px -14px rgba(255,107,157,0.25)",
-              textAlign: "center",
-            }}
+            className="mb-4 rounded-[14px] border border-[rgba(255,107,157,0.18)] bg-[color:var(--surface)] px-4 py-3.5 text-center"
+            style={{ boxShadow: "0 8px 20px -14px rgba(255,107,157,0.25)" }}
           >
-            <div
-              style={{
-                fontSize: 16,
-                fontWeight: 600,
-                color: "var(--ink)",
-                letterSpacing: "-0.01em",
-              }}
-            >
+            <div className="text-base font-semibold tracking-[-0.01em] text-[color:var(--ink)]">
               {t("characters.gallery_locked_title", locale)}
             </div>
-            <div
-              style={{
-                marginTop: 4,
-                fontSize: 12,
-                fontWeight: 500,
-                color: "var(--ink-subtle)",
-                letterSpacing: "-0.01em",
-              }}
-            >
+            <div className="mt-1 text-xs font-medium tracking-[-0.01em] text-[color:var(--ink-subtle)]">
               {t("characters.gallery_locked_desc", locale).replace(
                 "{level}",
                 String(user.level),
@@ -186,13 +123,7 @@ export default async function GalleryPage() {
           </div>
         )}
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: 10,
-          }}
-        >
+        <div className="grid grid-cols-3 gap-2.5">
           {list.map((c, i) => {
             const locked = c.unlock_level > user.level;
             const isCurrent = c.id === user.character_id;
@@ -209,11 +140,9 @@ export default async function GalleryPage() {
                 <button
                   type="submit"
                   disabled={locked || isCurrent}
+                  className="relative flex w-full flex-col items-center gap-1.5 rounded-[14px] transition-[transform,box-shadow] duration-200"
                   style={{
-                    position: "relative",
-                    width: "100%",
                     padding: "16px 8px 12px",
-                    borderRadius: 14,
                     background: locked
                       ? "rgba(255,255,255,0.55)"
                       : "var(--surface)",
@@ -226,103 +155,33 @@ export default async function GalleryPage() {
                         ? `0 10px 24px -14px ${ACCENT_SHADOW}`
                         : "0 10px 22px -18px rgba(10,10,10,0.18), 0 1px 2px rgba(10,10,10,0.03)",
                     cursor: locked || isCurrent ? "default" : "pointer",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 6,
-                    transition:
-                      "transform 200ms cubic-bezier(0.16,1,0.3,1), box-shadow 200ms cubic-bezier(0.16,1,0.3,1)",
                     opacity: locked ? 0.4 : 1,
                   }}
                 >
                   {isCurrent && (
-                    <span
-                      style={{
-                        position: "absolute",
-                        top: 6,
-                        left: 6,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        height: 18,
-                        padding: "0 7px",
-                        borderRadius: 9999,
-                        background: ACCENT,
-                        color: "var(--on-accent)",
-                        fontSize: 9.5,
-                        fontWeight: 800,
-                        letterSpacing: "0.02em",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
+                    <span className="absolute left-1.5 top-1.5 inline-flex h-[18px] items-center whitespace-nowrap rounded-full bg-[color:var(--accent)] px-[7px] text-[9.5px] font-extrabold tracking-[0.02em] text-[color:var(--on-accent)]">
                       {t("characters.current_character", locale)}
                     </span>
                   )}
                   {locked && isSoon && (
-                    <span
-                      style={{
-                        position: "absolute",
-                        top: 6,
-                        left: 6,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        height: 18,
-                        padding: "0 7px",
-                        borderRadius: 9999,
-                        background: "var(--success)",
-                        color: "var(--on-accent)",
-                        fontSize: 9.5,
-                        fontWeight: 800,
-                        letterSpacing: "0.02em",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
+                    <span className="absolute left-1.5 top-1.5 inline-flex h-[18px] items-center whitespace-nowrap rounded-full bg-[color:var(--success)] px-[7px] text-[9.5px] font-extrabold tracking-[0.02em] text-[color:var(--on-accent)]">
                       {t("characters.gallery_soon", locale)}
                     </span>
                   )}
                   {locked && (
-                    <span
-                      style={{
-                        position: "absolute",
-                        top: 6,
-                        right: 6,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        height: 18,
-                        padding: "0 7px",
-                        borderRadius: 9999,
-                        background: "var(--ink)",
-                        color: "var(--on-accent)",
-                        fontSize: 9.5,
-                        fontWeight: 800,
-                        letterSpacing: "0.02em",
-                        whiteSpace: "nowrap",
-                        fontFeatureSettings: '"tnum" 1',
-                      }}
-                    >
+                    <span className="absolute right-1.5 top-1.5 inline-flex h-[18px] items-center whitespace-nowrap rounded-full bg-[color:var(--ink)] px-[7px] text-[9.5px] font-extrabold tracking-[0.02em] text-[color:var(--on-accent)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
                       Lv.{c.unlock_level}
                     </span>
                   )}
 
                   <span
                     aria-hidden
-                    style={{
-                      fontSize: 48,
-                      lineHeight: 1,
-                      display: "inline-block",
-                      filter: locked ? "grayscale(1)" : "none",
-                    }}
+                    className="inline-block text-[48px] leading-none"
+                    style={{ filter: locked ? "grayscale(1)" : "none" }}
                   >
                     {characterEmoji(c.id, 1)}
                   </span>
-                  <div
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: "var(--ink)",
-                      letterSpacing: "-0.01em",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
+                  <div className="whitespace-nowrap text-[13px] font-semibold tracking-[-0.01em] text-[color:var(--ink)]">
                     {c.name}
                   </div>
                 </button>

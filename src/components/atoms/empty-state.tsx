@@ -40,17 +40,11 @@ const EmptyState = React.forwardRef<HTMLDivElement, EmptyStateProps>(
             {icon}
           </span>
         )}
-        <p
-          className="mt-2 text-sm font-medium"
-          style={{ color: "var(--ink, #0A0A0A)" }}
-        >
+        <p className="mt-2 text-sm font-medium text-[color:var(--ink,#0A0A0A)]">
           {title}
         </p>
         {description && (
-          <p
-            className="mt-1 text-xs"
-            style={{ color: "var(--muted, #9CA3AF)" }}
-          >
+          <p className="mt-1 text-xs text-[color:var(--muted,#9CA3AF)]">
             {description}
           </p>
         )}

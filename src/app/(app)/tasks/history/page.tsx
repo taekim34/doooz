@@ -116,65 +116,30 @@ export default async function TaskHistoryPage({ searchParams }: Props) {
   }).format(dateObj);
 
   return (
-    <div
-      style={{
-        position: "relative",
-        minHeight: "100%",
-        width: "100%",
-        background: "var(--bg)",
-        color: "var(--ink)",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <div className="relative min-h-full w-full bg-[color:var(--bg)] text-[color:var(--ink)] flex flex-col">
+
       {/* Fixed header area */}
-      <div
-        style={{
-          padding: "8px 20px 12px",
-          maxWidth: 720,
-          marginInline: "auto",
-          width: "100%",
-          boxSizing: "border-box",
-        }}
-      >
+      <div className="px-5 pt-2 pb-3 max-w-[720px] mx-auto w-full box-border">
+
         {/* Top bar */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "6px 0 14px",
-          }}
-        >
+        <div className="flex items-center justify-between py-1.5 pb-3.5">
+
           <BackButton href="/tasks" />
           <SectionLabel as="span">{isParent ? "PARENT" : "KID"}</SectionLabel>
-          <span style={{ width: 36, height: 36 }} />
+          <span className="w-9 h-9" />
         </div>
 
-        <h1
-          style={{
-            margin: "0 0 18px",
-            fontSize: 24,
-            fontWeight: 800,
-            letterSpacing: "-0.02em",
-          }}
-        >
+        <h1 className="mb-4 text-2xl font-extrabold tracking-tight">
           {t("tasks.history_title", locale)}
         </h1>
 
         {/* Date navigation */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "8px 4px",
-          }}
-        >
+        <div className="flex items-center justify-between px-1 py-2">
+
           <Link
             href={`/tasks/history?date=${prevDate}${selectedChildId ? `&child=${selectedChildId}` : ""}`}
             aria-label={t("tasks.history_prev", locale)}
-            style={navBtnStyle}
+            className={navBtnClass}
           >
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
               <path
@@ -221,7 +186,7 @@ export default async function TaskHistoryPage({ searchParams }: Props) {
             <Link
               href={`/tasks/history?date=${nextDate}${selectedChildId ? `&child=${selectedChildId}` : ""}`}
               aria-label={t("tasks.history_next", locale)}
-              style={navBtnStyle}
+              className={navBtnClass}
             >
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                 <path
@@ -236,7 +201,7 @@ export default async function TaskHistoryPage({ searchParams }: Props) {
           ) : (
             <span
               aria-disabled
-              style={{ ...navBtnStyle, cursor: "default", opacity: 0.4 }}
+              className={`${navBtnClass} !cursor-default opacity-40`}
             >
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                 <path
@@ -260,14 +225,8 @@ export default async function TaskHistoryPage({ searchParams }: Props) {
         />
 
         {/* Summary strip (4 metrics) */}
-        <div
-          style={{
-            marginTop: 14,
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 8,
-          }}
-        >
+        <div className="mt-3.5 grid grid-cols-4 gap-2">
+
           <StatCard label={t("tasks.completed", locale)} value={summary.done} />
           <StatCard label={t("tasks.missed", locale)} value={summary.missed} />
           <StatCard label={t("home.status_pending", locale)} value={summary.pending} />
@@ -276,34 +235,18 @@ export default async function TaskHistoryPage({ searchParams }: Props) {
       </div>
 
       {/* Scrollable list */}
-      <div
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          padding: "8px 20px 24px",
-          maxWidth: 720,
-          marginInline: "auto",
-          width: "100%",
-          boxSizing: "border-box",
-        }}
-      >
+      <div className="flex-1 overflow-y-auto px-5 pt-2 pb-6 max-w-[720px] mx-auto w-full box-border">
+
         {rows.length === 0 ? (
-          <p
-            style={{
-              margin: 0,
-              padding: "48px 0",
-              textAlign: "center",
-              fontSize: 13.5,
-              color: "var(--ink-subtle)",
-            }}
-          >
+          <p className="m-0 py-12 text-center text-[13.5px] text-[color:var(--ink-subtle)]">
+
             {t("tasks.history_date_empty", locale)}
           </p>
         ) : (
           Object.entries(grouped).map(([groupName, items]) => (
-            <div key={groupName} style={{ marginBottom: 20 }}>
+            <div key={groupName} className="mb-5">
               {isParent && !selectedChildId && (
-                <div style={{ padding: "6px 4px 10px" }}>
+                <div className="px-1 pt-1.5 pb-2.5">
                   <SectionLabel as="span">{groupName}</SectionLabel>
                 </div>
               )}
@@ -316,7 +259,7 @@ export default async function TaskHistoryPage({ searchParams }: Props) {
                   return (
                     <div
                       key={r.id}
-                      style={{ borderBottom: "1px solid var(--border)" }}
+                      className="border-b border-[color:var(--border)]"
                     >
                       <TaskCheckbox
                         id={r.id}
@@ -340,19 +283,7 @@ export default async function TaskHistoryPage({ searchParams }: Props) {
   );
 }
 
-const navBtnStyle: React.CSSProperties = {
-  display: "flex",
-  height: 36,
-  width: 36,
-  alignItems: "center",
-  justifyContent: "center",
-  borderRadius: 9999,
-  background: "var(--surface-raised)",
-  border: "1px solid var(--border)",
-  cursor: "pointer",
-  padding: 0,
-  textDecoration: "none",
-};
+const navBtnClass = "flex h-9 w-9 items-center justify-center rounded-full bg-[color:var(--surface-raised)] border border-[color:var(--border)] cursor-pointer p-0 no-underline";
 
 
 function HistoryReadOnlyRow({

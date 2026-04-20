@@ -59,10 +59,10 @@ export function WantButton({
     letterSpacing: "-0.01em",
     color: "var(--on-accent)",
     background: afford
-      ? "linear-gradient(135deg, #FF6B9D 0%, #FFA07A 100%)"
+      ? "var(--accent-gradient)"
       : "var(--ink-disabled)",
     boxShadow: afford ? "0 8px 18px -10px rgba(255,107,157,0.35)" : "none",
-    transition: "transform 200ms cubic-bezier(0.16,1,0.3,1)",
+    transition: "transform 200ms var(--ease-spring)",
     whiteSpace: "nowrap",
     opacity: busy ? 0.7 : afford ? 1 : 0.5,
   };
@@ -106,19 +106,7 @@ export function CancelRequestButton({ requestId }: { requestId: string }) {
       type="button"
       disabled={busy}
       onClick={onClick}
-      style={{
-        border: "none",
-        background: "transparent",
-        cursor: busy ? "not-allowed" : "pointer",
-        fontSize: 12,
-        fontWeight: 600,
-        color: "var(--ink-muted)",
-        letterSpacing: "-0.01em",
-        padding: "6px 4px",
-        flexShrink: 0,
-        textDecoration: "underline",
-        opacity: busy ? 0.6 : 1,
-      }}
+      className="border-none bg-transparent cursor-pointer text-[12px] font-semibold text-[color:var(--ink-muted)] tracking-[-0.01em] px-1 py-1.5 shrink-0 underline disabled:opacity-60 disabled:cursor-not-allowed"
     >
       {t("common.cancel")}
     </button>

@@ -91,24 +91,16 @@ function KidTopBar({
   const showOverdue = overdueCount > 0;
   const showStreak = !showOverdue && streakDays > 0;
   return (
-    <div
-      className="relative flex items-center justify-between"
-      style={{ padding: "16px 20px 8px" }}
-    >
+    <div className="relative flex items-center justify-between px-5 pt-4 pb-2">
       <Link
         href={"/settings" as Route}
         aria-label="menu"
+        className="flex h-11 w-11 items-center justify-center rounded-full"
         style={{
-          height: 44,
-          width: 44,
-          borderRadius: 9999,
           background: "rgba(255,255,255,0.7)",
           backdropFilter: "blur(10px)",
           WebkitBackdropFilter: "blur(10px)",
-          boxShadow: "0 6px 16px -8px rgba(45,27,61,0.18)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          boxShadow: "var(--shadow-md)",
         }}
       >
         <MenuIcon />
@@ -116,72 +108,45 @@ function KidTopBar({
 
       {showOverdue ? (
         <div
+          className="flex items-center gap-1.5 rounded-full px-3.5 py-2"
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            borderRadius: 9999,
-            padding: "8px 14px",
             background: "linear-gradient(90deg, #FEE2E2, #FECACA)",
             boxShadow:
               "0 8px 20px -10px rgba(239,68,68,0.35), inset 0 1px 0 rgba(255,255,255,0.8)",
           }}
         >
-          <span style={{ fontSize: 14, lineHeight: 1 }}>⚠️</span>
-          <span
-            style={{
-              fontSize: 14,
-              fontWeight: 700,
-              color: "#B91C1C",
-              letterSpacing: "-0.2px",
-            }}
-          >
+          <span className="text-sm leading-none">⚠️</span>
+          <span className="text-sm font-bold tracking-[-0.2px] text-[#B91C1C]">
             {overdueLabel}
           </span>
         </div>
       ) : showStreak ? (
         <div
+          className="flex items-center gap-1.5 rounded-full px-3.5 py-2"
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            borderRadius: 9999,
-            padding: "8px 14px",
             background: "linear-gradient(90deg,#FFF3E0,#FFE4E9)",
             boxShadow:
               "0 8px 20px -10px rgba(255,107,157,0.35), inset 0 1px 0 rgba(255,255,255,0.8)",
           }}
         >
-          <span style={{ fontSize: 15, lineHeight: 1 }}>🔥</span>
-          <span
-            style={{
-              fontSize: 14,
-              fontWeight: 700,
-              letterSpacing: -0.2,
-              color: "var(--ink)",
-            }}
-          >
+          <span className="text-[15px] leading-none">🔥</span>
+          <span className="text-sm font-bold tracking-[-0.2px] text-[color:var(--ink)]">
             {streakLabel}
           </span>
         </div>
       ) : (
-        <span aria-hidden style={{ width: 1 }} />
+        <span aria-hidden className="w-px" />
       )}
 
       <Link
         href={"/points" as Route}
         aria-label="notifications"
+        className="flex h-11 w-11 items-center justify-center rounded-full"
         style={{
-          height: 44,
-          width: 44,
-          borderRadius: 9999,
           background: "rgba(255,255,255,0.7)",
           backdropFilter: "blur(10px)",
           WebkitBackdropFilter: "blur(10px)",
-          boxShadow: "0 6px 16px -8px rgba(45,27,61,0.18)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          boxShadow: "var(--shadow-md)",
         }}
       >
         <BellIcon />
@@ -263,13 +228,8 @@ export function KidHome({
   if (isEmpty) {
     return (
       <div
-        className="relative -mx-4 -mt-4 md:-mx-8 md:-mt-8 pb-8 min-h-[calc(100vh-4rem)] md:min-h-screen"
-        style={{
-          color: "var(--ink)",
-          background: KID_BG_GRADIENT,
-          display: "flex",
-          flexDirection: "column",
-        }}
+        className="relative -mx-4 -mt-4 md:-mx-8 md:-mt-8 flex min-h-[calc(100vh-4rem)] flex-col pb-8 text-[color:var(--ink)] md:min-h-screen"
+        style={{ background: KID_BG_GRADIENT }}
       >
         <KidTopBar
           streakDays={streakDays}
@@ -280,110 +240,51 @@ export function KidHome({
 
         {/* Simple character hero */}
         <div
+          className="mx-4 mt-2.5 rounded-[22px] text-center"
           style={{
-            margin: "10px 16px 0",
             padding: "20px 16px 22px",
-            borderRadius: 22,
             background: "rgba(255,255,255,0.7)",
             backdropFilter: "blur(8px)",
             WebkitBackdropFilter: "blur(8px)",
             border: "1px solid rgba(255,255,255,0.9)",
             boxShadow: "0 16px 40px -24px rgba(10,10,10,0.15)",
-            textAlign: "center",
           }}
         >
-          <div aria-hidden style={{ fontSize: 72, lineHeight: 1, marginBottom: 10 }}>
+          <div aria-hidden className="mb-2.5 text-[72px] leading-none">
             🐣
           </div>
           <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "4px 10px",
-              borderRadius: 9999,
-              background: "var(--surface)",
-              border: "1px solid rgba(255,107,157,0.2)",
-              fontSize: 12,
-              fontWeight: 700,
-              color: "var(--accent)",
-              letterSpacing: "-0.01em",
-              whiteSpace: "nowrap",
-            }}
+            className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(255,107,157,0.2)] bg-[color:var(--surface)] px-2.5 py-1 text-xs font-bold tracking-[-0.01em] text-[color:var(--accent)] whitespace-nowrap"
           >
             Lv.1 · 병아리
           </div>
 
           {/* 0/100 XP bar */}
-          <div style={{ marginTop: 14 }}>
+          <div className="mt-3.5">
             <div
-              style={{
-                height: 8,
-                borderRadius: 9999,
-                background: "rgba(255,255,255,0.8)",
-                border: "1px solid rgba(10,10,10,0.05)",
-                overflow: "hidden",
-              }}
+              className="h-2 overflow-hidden rounded-full border border-[rgba(10,10,10,0.05)]"
+              style={{ background: "rgba(255,255,255,0.8)" }}
             >
               <div
-                style={{
-                  width: "0%",
-                  height: "100%",
-                  background: "linear-gradient(90deg, #FF6B9D 0%, #FFA07A 100%)",
-                }}
+                className="h-full w-0"
+                style={{ background: "linear-gradient(90deg, #FF6B9D 0%, #FFA07A 100%)" }}
               />
             </div>
-            <div
-              style={{
-                marginTop: 6,
-                fontSize: 12,
-                fontWeight: 600,
-                color: "var(--ink-subtle)",
-                letterSpacing: "-0.01em",
-                fontFeatureSettings: '"tnum" 1',
-                whiteSpace: "nowrap",
-              }}
-            >
+            <div className="mt-1.5 text-xs font-semibold tracking-[-0.01em] text-[color:var(--ink-subtle)] whitespace-nowrap" style={{ fontFeatureSettings: '"tnum" 1' }}>
               0 / 100 XP
             </div>
           </div>
         </div>
 
         {/* Empty state */}
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-            padding: "20px 28px",
-          }}
-        >
-          <div aria-hidden style={{ fontSize: 48, lineHeight: 1, marginBottom: 12 }}>
+        <div className="flex flex-1 flex-col items-center justify-center px-7 py-5 text-center">
+          <div aria-hidden className="mb-3 text-[48px] leading-none">
             😴
           </div>
-          <div
-            style={{
-              fontSize: 16,
-              fontWeight: 600,
-              color: "var(--ink)",
-              letterSpacing: "-0.01em",
-              marginBottom: 6,
-            }}
-          >
+          <div className="mb-1.5 text-base font-semibold tracking-[-0.01em] text-[color:var(--ink)]">
             {t("home.no_tasks_title")}
           </div>
-          <div
-            style={{
-              fontSize: 14,
-              fontWeight: 400,
-              color: "var(--ink-subtle)",
-              letterSpacing: "-0.01em",
-              lineHeight: 1.5,
-            }}
-          >
+          <div className="text-sm font-normal leading-normal tracking-[-0.01em] text-[color:var(--ink-subtle)]">
             {t("home.no_tasks_desc")}
           </div>
         </div>
@@ -393,42 +294,27 @@ export function KidHome({
 
   return (
     <div
-      className="relative -mx-4 -mt-4 md:-mx-8 md:-mt-8 pb-8"
+      className="relative -mx-4 -mt-4 pb-8 text-[color:var(--ink)] md:-mx-8 md:-mt-8"
       style={{
         minHeight: "calc(100vh - 4rem)",
-        color: "var(--ink)",
         background: KID_BG_GRADIENT,
       }}
     >
       {/* Ambient glow blobs */}
       <div
         aria-hidden
+        className="pointer-events-none absolute -left-16 -top-20 h-64 w-64 rounded-full opacity-50"
         style={{
-          position: "absolute",
-          top: -80,
-          left: -64,
-          height: 256,
-          width: 256,
-          borderRadius: 9999,
           filter: "blur(48px)",
-          opacity: 0.5,
           background: "radial-gradient(circle,#FFB4C6 0%, transparent 70%)",
-          pointerEvents: "none",
         }}
       />
       <div
         aria-hidden
+        className="pointer-events-none absolute -right-20 top-40 h-72 w-72 rounded-full opacity-40"
         style={{
-          position: "absolute",
-          top: 160,
-          right: -80,
-          height: 288,
-          width: 288,
-          borderRadius: 9999,
           filter: "blur(48px)",
-          opacity: 0.4,
           background: "radial-gradient(circle,#FFD5B8 0%, transparent 70%)",
-          pointerEvents: "none",
         }}
       />
 
@@ -443,7 +329,7 @@ export function KidHome({
 
         {/* Hero card */}
         <FadeUp delay={80}>
-          <div style={{ padding: "16px 20px 0" }}>
+          <div className="px-5 pt-4">
             <div
               className="relative overflow-hidden rounded-[22px]"
               style={{
@@ -474,25 +360,19 @@ export function KidHome({
                 </div>
                 <div className="flex-1 min-w-0">
                   <EyebrowLabel>{t("home.role_adventurer")}</EyebrowLabel>
-                  <div
-                    className="mt-1 text-[28px] font-bold leading-tight"
-                    style={{ color: "var(--ink)", letterSpacing: "-0.3px" }}
-                  >
+                  <div className="mt-1 text-[28px] font-bold leading-tight tracking-[-0.3px] text-[color:var(--ink)]">
                     {user.display_name}
                   </div>
-                  <div
-                    className="mt-0.5 text-[13px] font-medium"
-                    style={{ color: "rgba(45,27,61,0.55)" }}
-                  >
+                  <div className="mt-0.5 text-[13px] font-medium text-[rgba(45,27,61,0.55)]">
                     {nextThreshold ? (
                       <>
                         {t("home.next_level_prefix")}{" "}
-                        <span className="font-bold" style={{ color: "var(--accent)" }}>
+                        <span className="font-bold text-[color:var(--accent)]">
                           {(nextThreshold - user.lifetime_earned).toLocaleString()}pt
                         </span>
                       </>
                     ) : (
-                      <span className="font-bold" style={{ color: "var(--accent)" }}>
+                      <span className="font-bold text-[color:var(--accent)]">
                         {t("home.max_level")}
                       </span>
                     )}
@@ -501,20 +381,14 @@ export function KidHome({
               </div>
               <div className="relative mt-6">
                 <div className="mb-2 flex items-baseline justify-between gap-2">
-                  <span
-                    className="text-[13px] font-semibold"
-                    style={{ color: "rgba(45,27,61,0.6)" }}
-                  >
+                  <span className="text-[13px] font-semibold text-[rgba(45,27,61,0.6)]">
                     {t("home.exp")}
                   </span>
-                  <span
-                    className="text-[13px] font-bold"
-                    style={{ color: "var(--ink)" }}
-                  >
-                    <span style={{ color: "var(--accent)" }}>
+                  <span className="text-[13px] font-bold text-[color:var(--ink)]">
+                    <span className="text-[color:var(--accent)]">
                       {user.lifetime_earned.toLocaleString()}
                     </span>
-                    <span style={{ color: "rgba(45,27,61,0.4)" }}>
+                    <span className="text-[rgba(45,27,61,0.4)]">
                       {" "}/ {nextThreshold?.toLocaleString() ?? "MAX"} pt
                     </span>
                   </span>
@@ -527,25 +401,16 @@ export function KidHome({
 
         {/* Today's missions */}
         <FadeUp delay={160}>
-          <div style={{ padding: "28px 20px 0" }}>
+          <div className="px-5 pt-7">
             <div className="mb-3 flex items-baseline justify-between">
-              <h2
-                className="text-[20px] font-extrabold"
-                style={{ color: "var(--ink)", letterSpacing: "-0.3px" }}
-              >
+              <h2 className="text-[20px] font-extrabold tracking-[-0.3px] text-[color:var(--ink)]">
                 {t("home.today_tasks")}
               </h2>
               <div className="flex items-center gap-1.5">
-                <span
-                  className="text-[13px] font-bold"
-                  style={{ color: "var(--accent)" }}
-                >
+                <span className="text-[13px] font-bold text-[color:var(--accent)]">
                   {doneCount}/{todayTasks.length}
                 </span>
-                <span
-                  className="text-[13px] font-medium"
-                  style={{ color: "rgba(45,27,61,0.55)" }}
-                >
+                <span className="text-[13px] font-medium text-[rgba(45,27,61,0.55)]">
                   {t("home.completed")}
                 </span>
               </div>
@@ -554,16 +419,10 @@ export function KidHome({
               {todayTasks.length === 0 && (
                 <div className="flex flex-col items-center py-10">
                   <span className="text-[48px] leading-none">😴</span>
-                  <p
-                    className="mt-4 text-center text-[16px] font-semibold"
-                    style={{ color: "var(--ink)" }}
-                  >
+                  <p className="mt-4 text-center text-[16px] font-semibold text-[color:var(--ink)]">
                     {t("home.no_tasks_title")}
                   </p>
-                  <p
-                    className="mt-1 text-center text-[14px] font-normal"
-                    style={{ color: "var(--ink-subtle)" }}
-                  >
+                  <p className="mt-1 text-center text-[14px] font-normal text-[color:var(--ink-subtle)]">
                     {t("home.no_tasks_desc")}
                   </p>
                 </div>
@@ -576,67 +435,29 @@ export function KidHome({
                   return (
                     <div
                       key={task.id}
-                      className="relative flex w-full items-center gap-4"
+                      className="relative flex w-full items-center gap-4 rounded-[22px] border-l-2 border-l-[#FCA5A5] bg-[#FEF2F2]"
                       style={{
                         padding: "16px 16px 16px 14px",
-                        borderLeft: "2px solid #FCA5A5",
-                        borderRadius: 22,
-                        background: "#FEF2F2",
                         boxShadow:
                           "0 16px 32px -18px rgba(239,68,68,0.18), inset 0 1px 0 rgba(255,255,255,0.5)",
                       }}
                     >
                       <span
-                        style={{
-                          flexShrink: 0,
-                          display: "flex",
-                          height: 44,
-                          width: 44,
-                          alignItems: "center",
-                          justifyContent: "center",
-                          borderRadius: 9999,
-                          background:
-                            "linear-gradient(135deg,#FEE2E2,#FECACA)",
-                          fontSize: 22,
-                        }}
+                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[22px]"
+                        style={{ background: "linear-gradient(135deg,#FEE2E2,#FECACA)" }}
                       >
                         ⚠️
                       </span>
                       <div className="min-w-0 flex-1">
-                        <div
-                          style={{
-                            fontSize: 17,
-                            fontWeight: 600,
-                            color: "var(--error-strong)",
-                          }}
-                        >
+                        <div className="text-[17px] font-semibold text-[color:var(--error-strong)]">
                           {task.title}
                         </div>
-                        <div
-                          style={{
-                            marginTop: 2,
-                            fontSize: 13,
-                            fontWeight: 700,
-                            color: "var(--error-strong)",
-                          }}
-                        >
+                        <div className="mt-0.5 text-[13px] font-bold text-[color:var(--error-strong)]">
                           +{task.points} pt
                         </div>
                       </div>
                       <span
-                        style={{
-                          flexShrink: 0,
-                          display: "inline-flex",
-                          alignItems: "center",
-                          padding: "4px 10px",
-                          borderRadius: 9999,
-                          background: "var(--error-strong)",
-                          color: "var(--on-accent)",
-                          fontSize: 11,
-                          fontWeight: 800,
-                          letterSpacing: "-0.01em",
-                          whiteSpace: "nowrap",
-                        }}
+                        className="inline-flex shrink-0 items-center rounded-full bg-[color:var(--error-strong)] px-2.5 py-1 text-[11px] font-extrabold tracking-[-0.01em] text-[color:var(--on-accent)] whitespace-nowrap"
                       >
                         {t("home.overdue_label")}
                       </span>
@@ -660,14 +481,14 @@ export function KidHome({
 
         {/* Badges */}
         <FadeUp delay={240}>
-          <div style={{ padding: "24px 20px 0" }}>
+          <div className="px-5 pt-6">
             <Card>
               <CardHeader>
                 <CardTitle className="text-base">{t("home.badges")}</CardTitle>
               </CardHeader>
               <CardContent>
                 {earnedBadges.length === 0 ? (
-                  <p className="text-sm" style={{ color: "var(--ink-subtle)" }}>
+                  <p className="text-sm text-[color:var(--ink-subtle)]">
                     {t("home.no_badges")}
                   </p>
                 ) : (
@@ -698,10 +519,7 @@ export function KidHome({
 
         {/* Beg more FAB */}
         <FadeUp delay={320}>
-          <div
-            className="flex justify-center"
-            style={{ marginTop: 32, padding: "0 20px 40px" }}
-          >
+          <div className="mt-8 flex justify-center px-5 pb-10">
             <a
               href="/tasks"
               className="flex items-center gap-2 rounded-full text-white transition-spring hover:translate-y-[-2px]"
@@ -712,18 +530,15 @@ export function KidHome({
                   "0 18px 36px -12px rgba(26,15,38,0.55), inset 0 1px 0 rgba(255,255,255,0.08)",
               }}
             >
-              <span style={{ fontSize: 16 }}>✨</span>
-              <span
-                className="text-base font-bold"
-                style={{ letterSpacing: "-0.2px" }}
-              >
+              <span className="text-base">✨</span>
+              <span className="text-base font-bold tracking-[-0.2px]">
                 {t("home.beg_more")}
               </span>
               <span
                 className="ml-1 flex h-9 w-9 items-center justify-center rounded-full"
                 style={{
-                  background: "linear-gradient(135deg,#FF6B9D,#FFA07A)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.4)",
+                  background: "var(--accent-gradient)",
+                  boxShadow: "var(--shadow-inset-white)",
                 }}
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -755,4 +570,3 @@ export function KidHome({
     </div>
   );
 }
-

@@ -11,8 +11,6 @@ import { t, type Locale } from "@/lib/i18n";
 import { tileGrad } from "@/lib/tile-grad";
 import { Section } from "@/components/organisms";
 
-const ACCENT = "var(--accent)";
-
 interface ChildRow {
   id: string;
   family_id: string;
@@ -105,103 +103,38 @@ export default async function ChildDetailPage({
   }
 
   return (
-    <div
-      className="relative min-h-screen"
-      style={{
-        background: "var(--bg)",
-        color: "var(--ink)",      }}
-    >
+    <div className="relative min-h-screen bg-[color:var(--bg)] text-[color:var(--ink)]">
       {/* Back */}
-      <div
-        style={{
-          padding: "12px 20px 8px",
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
+      <div className="flex items-center px-5 pt-3 pb-2">
         <BackButton href="/" />
       </div>
 
-      <div className="mx-auto max-w-md" style={{ padding: "4px 20px 28px" }}>
+      <div className="mx-auto max-w-md px-5 pt-1 pb-7">
         {/* Hero */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 14,
-            marginBottom: 18,
-          }}
-        >
+        <div className="mb-[18px] flex items-center gap-3.5">
           <div
+            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl"
             style={{
-              width: 64,
-              height: 64,
-              borderRadius: 16,
               background: tileGrad(child.character_id, child.id),
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
               boxShadow: "0 10px 24px -18px rgba(10,10,10,0.18)",
             }}
           >
-            <span aria-hidden style={{ fontSize: 36, lineHeight: 1 }}>
+            <span aria-hidden className="text-[36px] leading-none">
               {characterEmoji(child.character_id, stage)}
             </span>
           </div>
-          <div
-            style={{
-              flex: 1,
-              minWidth: 0,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            <h1
-              style={{
-                margin: 0,
-                fontSize: 24,
-                fontWeight: 800,
-                letterSpacing: "-0.02em",
-                color: "var(--ink)",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            <h1 className="m-0 truncate text-2xl font-extrabold tracking-[-0.02em] text-[color:var(--ink)]">
               {child.display_name}
             </h1>
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                height: 24,
-                padding: "0 10px",
-                borderRadius: 9999,
-                background: ACCENT,
-                color: "var(--on-accent)",
-                fontSize: 11.5,
-                fontWeight: 800,
-                letterSpacing: "-0.01em",
-                whiteSpace: "nowrap",
-                flexShrink: 0,
-                fontFeatureSettings: '"tnum" 1',
-              }}
-            >
+            <span className="inline-flex h-6 shrink-0 items-center whitespace-nowrap rounded-full bg-[color:var(--accent)] px-2.5 text-[11.5px] font-extrabold tracking-[-0.01em] text-[color:var(--on-accent)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
               Lv.{child.level}
             </span>
           </div>
         </div>
 
         {/* Stats */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: 8,
-          }}
-        >
+        <div className="grid grid-cols-3 gap-2">
           <StatCard
             value={`${child.current_balance.toLocaleString()} pt`}
             label={t("children.current_points", locale)}
@@ -228,14 +161,7 @@ export default async function ChildDetailPage({
           hint={`${doneCount}/${taskList.length}`}
         >
           {taskList.length === 0 ? (
-            <p
-              style={{
-                fontSize: 13,
-                color: "var(--ink-subtle)",
-                padding: "10px 0",
-                margin: 0,
-              }}
-            >
+            <p className="m-0 py-2.5 text-[13px] text-[color:var(--ink-subtle)]">
               {t("children.no_tasks_today", locale)}
             </p>
           ) : (
@@ -245,11 +171,8 @@ export default async function ChildDetailPage({
                 return (
                   <div
                     key={task.id}
+                    className="flex h-12 items-center gap-2.5"
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      height: 48,
                       borderBottom:
                         i === taskList.length - 1
                           ? "none"
@@ -258,25 +181,13 @@ export default async function ChildDetailPage({
                   >
                     <span
                       aria-hidden
-                      style={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: 9999,
-                        background: meta.dot,
-                        flexShrink: 0,
-                      }}
+                      className="h-2 w-2 shrink-0 rounded-full"
+                      style={{ background: meta.dot }}
                     />
                     <div
+                      className="min-w-0 flex-1 truncate text-[15px] font-medium tracking-[-0.01em]"
                       style={{
-                        fontSize: 15,
-                        fontWeight: 500,
                         color: meta.text,
-                        letterSpacing: "-0.01em",
-                        flex: 1,
-                        minWidth: 0,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
                         textDecoration: meta.strike ? "line-through" : "none",
                         textDecorationColor: "var(--ink-subtle)",
                       }}
@@ -284,15 +195,11 @@ export default async function ChildDetailPage({
                       {task.title}
                     </div>
                     <span
+                      className="shrink-0 whitespace-nowrap text-sm font-bold tracking-[-0.01em]"
                       style={{
-                        fontSize: 14,
-                        fontWeight: 700,
                         color:
                           task.status === "completed" ? "var(--success)" : "var(--ink)",
-                        letterSpacing: "-0.01em",
                         fontFeatureSettings: '"tnum" 1',
-                        whiteSpace: "nowrap",
-                        flexShrink: 0,
                       }}
                     >
                       +{task.points} pt
@@ -307,18 +214,11 @@ export default async function ChildDetailPage({
         {/* Transactions */}
         <Section title={t("children.recent_points", locale)}>
           {txList.length === 0 ? (
-            <p
-              style={{
-                fontSize: 13,
-                color: "var(--ink-subtle)",
-                padding: "10px 0",
-                margin: 0,
-              }}
-            >
+            <p className="m-0 py-2.5 text-[13px] text-[color:var(--ink-subtle)]">
               {t("children.no_history", locale)}
             </p>
           ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <div className="flex flex-col gap-0.5">
               {txList.map((tx) => {
                 const positive = tx.amount > 0;
                 const dateStr =
@@ -331,26 +231,9 @@ export default async function ChildDetailPage({
                 return (
                   <div
                     key={tx.id}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      padding: "10px 2px",
-                    }}
+                    className="flex items-center gap-2.5 px-0.5 py-2.5"
                   >
-                    <div
-                      style={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: 9999,
-                        background: "var(--surface-sunken)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexShrink: 0,
-                        fontSize: 14,
-                      }}
-                    >
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[color:var(--surface-sunken)] text-sm">
                       <span aria-hidden>
                         {tx.kind === "penalty"
                           ? "😢"
@@ -359,54 +242,24 @@ export default async function ChildDetailPage({
                             : "🎁"}
                       </span>
                     </div>
-                    <div
-                      style={{
-                        flex: 1,
-                        minWidth: 0,
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 1,
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontSize: 14,
-                          fontWeight: 500,
-                          color: "var(--ink)",
-                          letterSpacing: "-0.01em",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
+                    <div className="flex min-w-0 flex-1 flex-col gap-px">
+                      <div className="truncate text-sm font-medium tracking-[-0.01em] text-[color:var(--ink)]">
                         {tx.kind === "adjustment" &&
                           `${t("children.adjustment", locale)} · `}
                         {tx.reason}
                       </div>
-                      <div
-                        style={{
-                          fontSize: 12,
-                          fontWeight: 400,
-                          color: "var(--ink-subtle)",
-                          letterSpacing: "-0.01em",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
+                      <div className="whitespace-nowrap text-xs font-normal tracking-[-0.01em] text-[color:var(--ink-subtle)]">
                         {dateStr}
                       </div>
                     </div>
                     <span
+                      className="shrink-0 whitespace-nowrap text-sm font-bold tracking-[-0.01em]"
                       style={{
-                        fontSize: 14,
-                        fontWeight: 700,
                         color:
                           tx.kind === "penalty" || tx.amount < 0
                             ? "var(--error)"
                             : "var(--success)",
-                        letterSpacing: "-0.01em",
                         fontFeatureSettings: '"tnum" 1',
-                        whiteSpace: "nowrap",
-                        flexShrink: 0,
                       }}
                     >
                       {tx.amount >= 0 ? "+" : ""}
@@ -425,53 +278,20 @@ export default async function ChildDetailPage({
           hint={`${badges.length}`}
         >
           {badges.length === 0 ? (
-            <p
-              style={{
-                fontSize: 13,
-                color: "var(--ink-subtle)",
-                padding: "10px 0",
-                margin: 0,
-              }}
-            >
+            <p className="m-0 py-2.5 text-[13px] text-[color:var(--ink-subtle)]">
               {t("children.no_badges", locale)}
             </p>
           ) : (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr",
-                gap: 8,
-              }}
-            >
+            <div className="grid grid-cols-3 gap-2">
               {badges.map((b) => (
                 <div
                   key={b.badge_id}
-                  style={{
-                    padding: "12px 6px 10px",
-                    borderRadius: 14,
-                    background: "var(--surface-raised)",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 6,
-                  }}
+                  className="flex flex-col items-center gap-1.5 rounded-[14px] bg-[color:var(--surface-raised)] px-1.5 pt-3 pb-2.5"
                 >
-                  <span aria-hidden style={{ fontSize: 30, lineHeight: 1 }}>
+                  <span aria-hidden className="text-[30px] leading-none">
                     {b.badges?.icon}
                   </span>
-                  <div
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 500,
-                      color: "var(--ink)",
-                      letterSpacing: "-0.01em",
-                      textAlign: "center",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      width: "100%",
-                    }}
-                  >
+                  <div className="w-full truncate text-center text-[11px] font-medium tracking-[-0.01em] text-[color:var(--ink)]">
                     {b.badges?.name}
                   </div>
                 </div>
@@ -483,5 +303,3 @@ export default async function ChildDetailPage({
     </div>
   );
 }
-
-

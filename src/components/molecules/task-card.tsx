@@ -92,10 +92,7 @@ export function TaskCard({
           {title}
         </div>
         {assigneeName && (
-          <div
-            className="mt-0.5 text-[13px]"
-            style={{ color: "var(--ink-subtle)" }}
-          >
+          <div className="mt-0.5 text-[13px] text-[color:var(--ink-subtle)]">
             {assigneeName}
           </div>
         )}
@@ -103,10 +100,7 @@ export function TaskCard({
 
       {/* Points + status badge */}
       <div className="flex shrink-0 flex-col items-end gap-1">
-        <span
-          className="text-[14px] font-bold"
-          style={{ color: "var(--accent)" }}
-        >
+        <span className="text-[14px] font-bold text-[color:var(--accent)]">
           {isCompleted ? `+${points}` : `${points} pt`}
         </span>
         {isPardoned && (

@@ -11,8 +11,6 @@ import { t, type Locale } from "@/lib/i18n";
 import { tileGrad } from "@/lib/tile-grad";
 import { Section } from "@/components/organisms";
 
-const ACCENT = "var(--accent)";
-
 interface MemberRow {
   id: string;
   family_id: string;
@@ -101,118 +99,41 @@ export default async function MemberDetailPage({
       : t("family.role_child", locale);
 
   return (
-    <div
-      className="relative min-h-screen"
-      style={{
-        background: "var(--bg)",
-        color: "var(--ink)",      }}
-    >
+    <div className="relative min-h-screen bg-[color:var(--bg)] text-[color:var(--ink)]">
       {/* Back */}
-      <div
-        style={{
-          padding: "12px 20px 8px",
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
+      <div className="flex items-center px-5 pt-3 pb-2">
         <BackButton href="/family" />
       </div>
 
-      <div className="mx-auto max-w-md" style={{ padding: "4px 20px 28px" }}>
+      <div className="mx-auto max-w-md px-5 pt-1 pb-7">
         {/* Hero */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 14,
-            marginBottom: 18,
-          }}
-        >
+        <div className="mb-[18px] flex items-center gap-3.5">
           <div
+            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl"
             style={{
-              width: 64,
-              height: 64,
-              borderRadius: 16,
               background: tileGrad(member.character_id, member.id),
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
               boxShadow: "0 10px 24px -18px rgba(10,10,10,0.18)",
             }}
           >
-            <span aria-hidden style={{ fontSize: 36, lineHeight: 1 }}>
+            <span aria-hidden className="text-[36px] leading-none">
               {characterEmoji(member.character_id, stage)}
             </span>
           </div>
-          <div
-            style={{
-              flex: 1,
-              minWidth: 0,
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              flexWrap: "wrap",
-            }}
-          >
-            <h1
-              style={{
-                margin: 0,
-                fontSize: 24,
-                fontWeight: 800,
-                letterSpacing: "-0.02em",
-                color: "var(--ink)",
-                whiteSpace: "nowrap",
-              }}
-            >
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
+            <h1 className="m-0 whitespace-nowrap text-2xl font-extrabold tracking-[-0.02em] text-[color:var(--ink)]">
               {member.display_name}
             </h1>
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                height: 22,
-                padding: "0 9px",
-                borderRadius: 9999,
-                background: ACCENT,
-                color: "var(--on-accent)",
-                fontSize: 11,
-                fontWeight: 800,
-                letterSpacing: "-0.01em",
-                whiteSpace: "nowrap",
-                fontFeatureSettings: '"tnum" 1',
-              }}
-            >
+            <span className="inline-flex h-[22px] shrink-0 items-center whitespace-nowrap rounded-full bg-[color:var(--accent)] px-[9px] text-[11px] font-extrabold tracking-[-0.01em] text-[color:var(--on-accent)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
               Lv.{member.level}
             </span>
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                height: 22,
-                padding: "0 8px",
-                borderRadius: 9999,
-                background: "var(--surface-sunken)",
-                color: "var(--ink-subtle)",
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: "-0.01em",
-                whiteSpace: "nowrap",
-              }}
-            >
+            <span className="inline-flex h-[22px] items-center whitespace-nowrap rounded-full bg-[color:var(--surface-sunken)] px-2 text-xs font-semibold tracking-[-0.01em] text-[color:var(--ink-subtle)]">
               {roleLabel}
             </span>
           </div>
         </div>
 
         {/* Stats 2x2 */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 8,
-          }}
-        >
+        <div className="grid grid-cols-2 gap-2">
           <StatCard
             value={`${member.current_balance.toLocaleString()} pt`}
             label={t("points.current", locale)}
@@ -231,18 +152,11 @@ export default async function MemberDetailPage({
         {/* Transactions */}
         <Section title={t("points.history", locale)}>
           {txList.length === 0 ? (
-            <p
-              style={{
-                fontSize: 13,
-                color: "var(--ink-subtle)",
-                padding: "10px 0",
-                margin: 0,
-              }}
-            >
+            <p className="m-0 py-2.5 text-[13px] text-[color:var(--ink-subtle)]">
               {t("points.no_history", locale)}
             </p>
           ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <div className="flex flex-col gap-0.5">
               {txList.map((tx) => {
                 const isZero = tx.amount === 0;
                 const positive = tx.amount > 0;
@@ -270,26 +184,9 @@ export default async function MemberDetailPage({
                 return (
                   <div
                     key={tx.id}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      padding: "10px 2px",
-                    }}
+                    className="flex items-center gap-2.5 px-0.5 py-2.5"
                   >
-                    <div
-                      style={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: 9999,
-                        background: "var(--surface-sunken)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexShrink: 0,
-                        fontSize: 14,
-                      }}
-                    >
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[color:var(--surface-sunken)] text-sm">
                       <span aria-hidden>
                         {tx.kind === "penalty"
                           ? "😢"
@@ -298,49 +195,19 @@ export default async function MemberDetailPage({
                             : "🎁"}
                       </span>
                     </div>
-                    <div
-                      style={{
-                        flex: 1,
-                        minWidth: 0,
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 1,
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontSize: 14,
-                          fontWeight: 500,
-                          color: "var(--ink)",
-                          letterSpacing: "-0.01em",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
+                    <div className="flex min-w-0 flex-1 flex-col gap-px">
+                      <div className="truncate text-sm font-medium tracking-[-0.01em] text-[color:var(--ink)]">
                         {tx.reason}
                       </div>
-                      <div
-                        style={{
-                          fontSize: 12,
-                          fontWeight: 400,
-                          color: "var(--ink-subtle)",
-                          letterSpacing: "-0.01em",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
+                      <div className="whitespace-nowrap text-xs font-normal tracking-[-0.01em] text-[color:var(--ink-subtle)]">
                         {dateStr}
                       </div>
                     </div>
                     <span
+                      className="shrink-0 whitespace-nowrap text-sm font-bold tracking-[-0.01em]"
                       style={{
-                        fontSize: 14,
-                        fontWeight: 700,
                         color: amountColor,
-                        letterSpacing: "-0.01em",
                         fontFeatureSettings: '"tnum" 1',
-                        whiteSpace: "nowrap",
-                        flexShrink: 0,
                       }}
                     >
                       {amountText}
@@ -358,53 +225,20 @@ export default async function MemberDetailPage({
           hint={`${badges.length}`}
         >
           {badges.length === 0 ? (
-            <p
-              style={{
-                fontSize: 13,
-                color: "var(--ink-subtle)",
-                padding: "10px 0",
-                margin: 0,
-              }}
-            >
+            <p className="m-0 py-2.5 text-[13px] text-[color:var(--ink-subtle)]">
               {t("home.no_badges", locale)}
             </p>
           ) : (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr",
-                gap: 8,
-              }}
-            >
+            <div className="grid grid-cols-3 gap-2">
               {badges.map((b) => (
                 <div
                   key={b.badge_id}
-                  style={{
-                    padding: "12px 6px 10px",
-                    borderRadius: 14,
-                    background: "var(--surface-raised)",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 6,
-                  }}
+                  className="flex flex-col items-center gap-1.5 rounded-[14px] bg-[color:var(--surface-raised)] px-1.5 pt-3 pb-2.5"
                 >
-                  <span aria-hidden style={{ fontSize: 30, lineHeight: 1 }}>
+                  <span aria-hidden className="text-[30px] leading-none">
                     {b.badges?.icon}
                   </span>
-                  <div
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 500,
-                      color: "var(--ink)",
-                      letterSpacing: "-0.01em",
-                      textAlign: "center",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      width: "100%",
-                    }}
-                  >
+                  <div className="w-full truncate text-center text-[11px] font-medium tracking-[-0.01em] text-[color:var(--ink)]">
                     {b.badges?.name}
                   </div>
                 </div>
@@ -415,7 +249,7 @@ export default async function MemberDetailPage({
 
         {/* Reset password (parent viewing child only) */}
         {currentUser.role === "parent" && isChild && (
-          <div style={{ marginTop: 20, textAlign: "center" }}>
+          <div className="mt-5 text-center">
             <ResetPasswordButton
               userId={member.id}
               memberName={member.display_name}
@@ -426,5 +260,3 @@ export default async function MemberDetailPage({
     </div>
   );
 }
-
-

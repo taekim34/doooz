@@ -8,7 +8,7 @@
  * To change recurrence, parents delete and re-add.
  */
 
-import { useState, useTransition, type CSSProperties, type FocusEvent } from "react";
+import { useState, useTransition, type FocusEvent } from "react";
 import { updateTaskTemplate } from "@/features/tasks/actions";
 import { useT } from "@/lib/i18n/useT";
 
@@ -32,20 +32,7 @@ type Props = {
   permanentDeleteAction?: (formData: FormData) => Promise<void>;
 };
 
-const inputStyle: CSSProperties = {
-  height: 40,
-  width: "100%",
-  borderRadius: 10,
-  padding: "0 14px",
-  outline: "none",
-  background: "var(--surface-raised)",
-  border: "1px solid var(--border-subtle)",
-  fontSize: 14,
-  fontWeight: 500,
-  color: "var(--ink)",
-  transition: "border-color 150ms, background 150ms",
-  boxSizing: "border-box",
-};
+const inputClass = "h-10 w-full rounded-[10px] px-3.5 outline-none bg-[color:var(--surface-raised)] border border-[color:var(--border-subtle)] text-sm font-medium text-[color:var(--ink)] transition-[border-color,background] duration-150 box-border";
 
 function focusOn(e: FocusEvent<HTMLInputElement | HTMLSelectElement>) {
   e.currentTarget.style.borderColor = "var(--ink)";
@@ -66,86 +53,30 @@ export function TemplateRow({ template, assignees, deleteAction, permanentDelete
 
   if (!isEditing) {
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          padding: "14px 16px",
-          borderRadius: 14,
-          background: "var(--surface-raised)",
-          border: "1px solid var(--border-subtle)",
-        }}
-      >
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div
-            style={{
-              fontSize: 15,
-              fontWeight: 600,
-              color: "var(--ink)",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              letterSpacing: "-0.01em",
-            }}
-          >
+      <div className="flex items-center gap-3 p-3.5 px-4 rounded-[14px] bg-[color:var(--surface-raised)] border border-[color:var(--border-subtle)]">
+        <div className="flex-1 min-w-0">
+          <div className="text-[15px] font-semibold text-[color:var(--ink)] truncate tracking-[-0.01em]">
             {template.title}
           </div>
-          <div
-            style={{
-              marginTop: 3,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              flexWrap: "wrap",
-            }}
-          >
-            <span
-              style={{
-                fontSize: 12,
-                fontWeight: 500,
-                color: "var(--ink-subtle)",
-                letterSpacing: "-0.01em",
-              }}
-            >
+          <div className="mt-0.5 flex items-center gap-2 flex-wrap">
+            <span className="text-[12px] font-medium text-[color:var(--ink-subtle)] tracking-[-0.01em]">
               {template.recurrenceText}
             </span>
             <span
               aria-hidden
-              style={{
-                width: 3,
-                height: 3,
-                borderRadius: 9999,
-                background: "var(--border)",
-              }}
+              className="w-[3px] h-[3px] rounded-full bg-[color:var(--border)]"
             />
-            <span
-              style={{
-                fontSize: 12,
-                fontWeight: 700,
-                color: "var(--accent)",
-                fontFeatureSettings: '"tnum" 1',
-              }}
-            >
+            <span className="text-[12px] font-bold text-[color:var(--accent)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
               +{template.points} pt
             </span>
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
+        <div className="flex gap-1 shrink-0">
           <button
             type="button"
             onClick={() => setIsEditing(true)}
-            style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              fontSize: 13,
-              fontWeight: 600,
-              color: "var(--ink-muted)",
-              padding: "6px 4px",
-              whiteSpace: "nowrap",
-            }}
+            className="bg-transparent border-none cursor-pointer text-[13px] font-semibold text-[color:var(--ink-muted)] px-1 py-1.5 whitespace-nowrap"
           >
             {t("tasks.edit")}
           </button>
@@ -159,17 +90,7 @@ export function TemplateRow({ template, assignees, deleteAction, permanentDelete
               <button
                 type="submit"
                 disabled={isPending}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  cursor: isPending ? "not-allowed" : "pointer",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: "var(--error-strong)",
-                  padding: "6px 4px",
-                  whiteSpace: "nowrap",
-                  opacity: isPending ? 0.6 : 1,
-                }}
+                className="bg-transparent border-none cursor-pointer text-[13px] font-semibold text-[color:var(--error-strong)] px-1 py-1.5 whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {t("tasks.delete")}
               </button>
@@ -186,17 +107,7 @@ export function TemplateRow({ template, assignees, deleteAction, permanentDelete
               <button
                 type="submit"
                 disabled={isPending}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  cursor: isPending ? "not-allowed" : "pointer",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: "var(--error-strong)",
-                  padding: "6px 4px",
-                  whiteSpace: "nowrap",
-                  opacity: isPending ? 0.6 : 1,
-                }}
+                className="bg-transparent border-none cursor-pointer text-[13px] font-semibold text-[color:var(--error-strong)] px-1 py-1.5 whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {t("tasks.permanent_delete")}
               </button>
@@ -215,15 +126,7 @@ export function TemplateRow({ template, assignees, deleteAction, permanentDelete
           setIsEditing(false);
         });
       }}
-      style={{
-        display: "grid",
-        gap: 10,
-        padding: 14,
-        borderRadius: 14,
-        background: "var(--surface-raised)",
-        border: "1px solid var(--border-subtle)",
-        gridTemplateColumns: "1fr 1fr",
-      }}
+      className="grid gap-2.5 p-3.5 rounded-[14px] bg-[color:var(--surface-raised)] border border-[color:var(--border-subtle)] grid-cols-2"
     >
       <input type="hidden" name="id" value={template.id} />
 
@@ -235,7 +138,7 @@ export function TemplateRow({ template, assignees, deleteAction, permanentDelete
         placeholder={t("tasks.title_label")}
         onFocus={focusOn}
         onBlur={focusOff}
-        style={{ ...inputStyle, gridColumn: "1 / -1" }}
+        className={`${inputClass} col-span-full`}
         required
       />
 
@@ -248,7 +151,7 @@ export function TemplateRow({ template, assignees, deleteAction, permanentDelete
         max={10000}
         onFocus={focusOn}
         onBlur={focusOff}
-        style={inputStyle}
+        className={inputClass}
         required
       />
 
@@ -258,12 +161,7 @@ export function TemplateRow({ template, assignees, deleteAction, permanentDelete
         onChange={(e) => setAssigneeId(e.target.value)}
         onFocus={focusOn}
         onBlur={focusOff}
-        style={{
-          ...inputStyle,
-          appearance: "none",
-          WebkitAppearance: "none",
-          MozAppearance: "none",
-        }}
+        className={`${inputClass} appearance-none`}
       >
         {assignees.map((a) => (
           <option key={a.id} value={a.id}>
@@ -272,53 +170,23 @@ export function TemplateRow({ template, assignees, deleteAction, permanentDelete
         ))}
       </select>
 
-      <div style={{ display: "flex", gap: 8, gridColumn: "1 / -1" }}>
+      <div className="flex gap-2 col-span-full">
         <button
           type="submit"
           disabled={isPending}
-          style={{
-            height: 40,
-            padding: "0 18px",
-            borderRadius: 9999,
-            fontSize: 13,
-            fontWeight: 700,
-            color: "var(--on-accent)",
-            background: "var(--ink)",
-            border: "none",
-            cursor: isPending ? "not-allowed" : "pointer",
-            letterSpacing: "-0.01em",
-            opacity: isPending ? 0.6 : 1,
-          }}
+          className="h-10 px-4.5 rounded-full text-[13px] font-bold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em] disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {t("tasks.save")}
         </button>
         <button
           type="button"
           onClick={() => setIsEditing(false)}
-          style={{
-            height: 40,
-            padding: "0 18px",
-            borderRadius: 9999,
-            fontSize: 13,
-            fontWeight: 700,
-            color: "var(--ink)",
-            background: "var(--surface-sunken)",
-            border: "none",
-            cursor: "pointer",
-            letterSpacing: "-0.01em",
-          }}
+          className="h-10 px-4.5 rounded-full text-[13px] font-bold text-[color:var(--ink)] bg-[color:var(--surface-sunken)] border-none cursor-pointer tracking-[-0.01em]"
         >
           {t("tasks.cancel")}
         </button>
       </div>
-      <p
-        style={{
-          margin: 0,
-          fontSize: 11,
-          color: "var(--ink-subtle)",
-          gridColumn: "1 / -1",
-        }}
-      >
+      <p className="m-0 text-[11px] text-[color:var(--ink-subtle)] col-span-full">
         {t("tasks.recurrence_hint")}
       </p>
     </form>

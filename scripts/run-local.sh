@@ -1,6 +1,6 @@
 #!/bin/bash
 # Local dev environment
-# Usage: ./scripts/run-local.sh [start|stop] [--db local|remote] [--restore]
+# Usage: ./scripts/run-local.sh [start|stop] [--db local|remote] [--load-backup]
 
 set -euo pipefail
 
@@ -12,7 +12,7 @@ shift || true
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --db) DB_MODE="$2"; shift 2 ;;
-    --restore) RESTORE=true; shift ;;
+    --load-backup) RESTORE=true; shift ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
 done
@@ -73,7 +73,7 @@ case "$CMD" in
     echo "Local Supabase stopped. (DB data preserved. Use 'supabase stop --no-backup' to reset)"
     ;;
   *)
-    echo "Usage: ./scripts/run-local.sh [start|stop] [--db local|remote] [--restore]"
+    echo "Usage: ./scripts/run-local.sh [start|stop] [--db local|remote] [--load-backup]"
     exit 1
     ;;
 esac

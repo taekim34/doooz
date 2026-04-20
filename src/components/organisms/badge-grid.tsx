@@ -22,8 +22,7 @@ export function BadgeGrid({
   if (badges.length === 0) {
     return (
       <div
-        className={cn("py-4 text-center", className)}
-        style={{ fontSize: 13, color: "var(--ink-subtle)" }}
+        className={cn("py-4 text-center text-[13px] text-[color:var(--ink-subtle)]", className)}
       >
         No badges yet
       </div>
@@ -32,84 +31,34 @@ export function BadgeGrid({
 
   return (
     <div
-      className={className}
-      style={{
-        display: "grid",
-        gridTemplateColumns: `repeat(${columns}, 1fr)`,
-        gap: 8,
-      }}
+      className={cn("grid gap-2", className)}
+      style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
     >
       {badges.map((b) =>
         b.earned ? (
           <div
             key={b.id}
-            style={{
-              padding: "12px 6px 10px",
-              borderRadius: 14,
-              background: "var(--surface-raised)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 6,
-            }}
+            className="flex flex-col items-center gap-1.5 rounded-[14px] bg-[var(--surface-raised)] px-1.5 pb-2.5 pt-3"
           >
-            <span aria-hidden style={{ fontSize: 32, lineHeight: 1 }}>
+            <span aria-hidden className="text-[32px] leading-none">
               {b.emoji}
             </span>
-            <div
-              style={{
-                fontSize: 11,
-                fontWeight: 500,
-                color: "var(--ink)",
-                letterSpacing: "-0.01em",
-                textAlign: "center",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                width: "100%",
-              }}
-            >
+            <div className="w-full truncate text-center text-[11px] font-medium tracking-[-0.01em] text-[color:var(--ink)]">
               {b.name}
             </div>
           </div>
         ) : (
           <div
             key={b.id}
-            style={{
-              padding: "12px 6px 10px",
-              borderRadius: 14,
-              background: "var(--surface-sunken)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 6,
-              opacity: 0.6,
-            }}
+            className="flex flex-col items-center gap-1.5 rounded-[14px] bg-[var(--surface-sunken)] px-1.5 pb-2.5 pt-3 opacity-60"
           >
             <span
               aria-hidden
-              style={{
-                fontSize: 24,
-                lineHeight: 1,
-                fontWeight: 800,
-                color: "#B5B5BE",
-              }}
+              className="text-[24px] font-extrabold leading-none text-[#B5B5BE]"
             >
               🔒
             </span>
-            <div
-              style={{
-                fontSize: 10,
-                fontWeight: 500,
-                color: "var(--ink-subtle)",
-                letterSpacing: "-0.01em",
-                textAlign: "center",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                width: "100%",
-              }}
-            >
+            <div className="w-full truncate text-center text-[10px] font-medium tracking-[-0.01em] text-[color:var(--ink-subtle)]">
               {b.name}
             </div>
           </div>

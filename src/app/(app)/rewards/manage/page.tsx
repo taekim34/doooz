@@ -71,55 +71,26 @@ export default async function RewardsManagePage() {
 
 
   return (
-    <div
-      className="mx-auto max-w-2xl"
-      style={{        background: "var(--bg)",
-        color: "var(--ink)",
-        padding: "12px 20px 28px",
-      }}
-    >
-      <div
-        style={{
-          marginBottom: 4,
-          display: "flex",
-          alignItems: "center",
-          marginLeft: -8,
-        }}
-      >
+    <div className="mx-auto max-w-2xl bg-[color:var(--bg)] text-[color:var(--ink)] px-5 pt-3 pb-7">
+      <div className="mb-1 flex items-center -ml-2">
+
         <BackButton href="/rewards" />
       </div>
 
-      <h1
-        style={{
-          margin: "0 0 6px",
-          fontSize: 24,
-          fontWeight: 800,
-          letterSpacing: "-0.02em",
-          color: "var(--ink)",
-        }}
-      >
+      <h1 className="mb-1.5 text-2xl font-extrabold tracking-tight text-[color:var(--ink)]">
         {t("rewards.manage_title", locale)}
       </h1>
-      <p
-        style={{
-          margin: "0 0 24px",
-          fontSize: 14,
-          fontWeight: 500,
-          color: "var(--ink-subtle)",
-          letterSpacing: "-0.01em",
-          lineHeight: 1.45,
-        }}
-      >
+      <p className="mb-6 text-sm font-medium text-[color:var(--ink-subtle)] tracking-[-0.01em] leading-[1.45]">
         {t("rewards.manage_subtitle", locale)}
       </p>
 
       {/* Create form */}
-      <div style={{ marginBottom: 10 }}>
+      <div className="mb-2.5">
         <SectionLabel as="span">{t("rewards.create_form_label", locale)}</SectionLabel>
       </div>
 
       <form action={createAction}>
-        <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+        <div className="flex gap-2 mb-2.5">
           <RewardManageInput
             type="text"
             name="title"
@@ -149,19 +120,10 @@ export default async function RewardsManagePage() {
         </div>
         <button
           type="submit"
+          className="w-full h-12 rounded-[10px] border-none bg-[color:var(--ink)] text-[color:var(--on-accent)] text-[15px] font-bold tracking-[-0.01em] cursor-pointer"
           style={{
-            width: "100%",
-            height: 48,
-            borderRadius: 10,
-            border: "none",
-            background: "var(--ink)",
-            color: "var(--on-accent)",
-            fontSize: 15,
-            fontWeight: 700,
-            letterSpacing: "-0.01em",
-            cursor: "pointer",
             transition:
-              "transform 180ms cubic-bezier(0.16,1,0.3,1), background 180ms ease",
+              "transform 180ms var(--ease-spring), background 180ms ease",
           }}
         >
           {t("rewards.add", locale)}
@@ -169,77 +131,38 @@ export default async function RewardsManagePage() {
       </form>
 
       {/* Divider */}
-      <div
-        style={{ height: 1, background: "var(--surface-sunken)", margin: "26px 0 18px" }}
-      />
+      <div className="h-px bg-[color:var(--surface-sunken)] my-5 mt-6" />
 
       {/* List */}
-      <div style={{ marginBottom: 10 }}>
+      <div className="mb-2.5">
         <SectionLabel as="span">
           {t("rewards.list", locale)} · {list.length}
         </SectionLabel>
       </div>
 
       {list.length === 0 ? (
-        <div
-          className="text-center"
-          style={{
-            padding: "28px 16px",
-            borderRadius: 14,
-            background: "var(--surface-raised)",
-            color: "var(--ink-subtle)",
-            fontSize: 13,
-            fontWeight: 500,
-            letterSpacing: "-0.01em",
-          }}
-        >
+        <div className="text-center px-4 py-7 rounded-[14px] bg-[color:var(--surface-raised)] text-[color:var(--ink-subtle)] text-[13px] font-medium tracking-[-0.01em]">
+
           {t("rewards.manage_empty", locale)}
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <div className="flex flex-col gap-2">
           {list.map((r) => (
             <div
               key={r.id}
-              className="flex items-center"
-              style={{
-                gap: 12,
-                padding: 16,
-                borderRadius: 14,
-                background: "var(--surface-raised)",
-              }}
+              className="flex items-center gap-3 p-4 rounded-[14px] bg-[color:var(--surface-raised)]"
             >
               <span
                 aria-hidden
-                style={{ fontSize: 32, lineHeight: 1, flexShrink: 0 }}
+                className="text-[32px] leading-none shrink-0"
               >
                 {emojiForTitle(r.title)}
               </span>
-              <div
-                className="flex min-w-0 flex-1 flex-col"
-                style={{ gap: 2 }}
-              >
-                <div
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 600,
-                    color: "var(--ink)",
-                    letterSpacing: "-0.01em",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
+              <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <div className="text-[15px] font-semibold text-[color:var(--ink)] tracking-[-0.01em] truncate">
                   {r.title}
                 </div>
-                <div
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 700,
-                    color: "var(--ink)",
-                    fontFeatureSettings: '"tnum" 1',
-                    letterSpacing: "-0.01em",
-                  }}
-                >
+                <div className="text-sm font-bold text-[color:var(--ink)] tracking-[-0.01em]" style={{ fontFeatureSettings: '"tnum" 1' }}>
                   {r.cost.toLocaleString()} pt
                 </div>
               </div>
@@ -247,17 +170,7 @@ export default async function RewardsManagePage() {
                 <input type="hidden" name="id" value={r.id} />
                 <button
                   type="submit"
-                  style={{
-                    border: "none",
-                    background: "transparent",
-                    cursor: "pointer",
-                    fontSize: 13,
-                    fontWeight: 500,
-                    color: "var(--error)",
-                    letterSpacing: "-0.01em",
-                    padding: "8px 4px",
-                    flexShrink: 0,
-                  }}
+                  className="border-none bg-transparent cursor-pointer text-[13px] font-medium text-[color:var(--error)] tracking-[-0.01em] px-1 py-2 shrink-0"
                 >
                   {t("rewards.delete", locale)}
                 </button>

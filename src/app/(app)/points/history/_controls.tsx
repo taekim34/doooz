@@ -75,24 +75,10 @@ export function HistoryControls({
   };
 
   return (
-    <div
-      style={{
-        marginTop: 16,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: 10,
-      }}
-    >
+    <div className="mt-4 flex items-center justify-between gap-2.5">
       {/* Filter pills */}
-      <div
-        style={{
-          display: "flex",
-          gap: 6,
-          flexWrap: "nowrap",
-          overflowX: "auto",
-        }}
-      >
+      <div className="flex gap-1.5 flex-nowrap overflow-x-auto">
+
         {FILTERS.map((f) => {
           const on = currentFilter === f.v;
           return (
@@ -127,7 +113,7 @@ export function HistoryControls({
       {role === "parent" && kids.length > 0 && (
         <div
           ref={menuRef}
-          style={{ position: "relative", flexShrink: 0 }}
+          className="relative shrink-0"
         >
           <button
             type="button"

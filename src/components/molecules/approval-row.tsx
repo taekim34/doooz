@@ -25,33 +25,23 @@ export function ApprovalRow({
 
   return (
     <div
-      className={cn("flex items-center gap-3 rounded-[14px] p-4", className)}
+      className={cn("flex items-center gap-3 rounded-[14px] bg-[var(--surface-raised)] p-4", className)}
       style={{
-        background: "var(--surface-raised)",
         boxShadow: "var(--shadow-card, 0 1px 3px rgba(0,0,0,0.04))",
       }}
     >
       {/* Child info */}
       <div className="min-w-0 flex-1">
-        <div
-          className="text-[16px] font-semibold"
-          style={{ color: "var(--ink)" }}
-        >
+        <div className="text-[16px] font-semibold text-[color:var(--ink)]">
           {taskTitle}
         </div>
-        <div
-          className="mt-0.5 text-[13px]"
-          style={{ color: "var(--ink-subtle)" }}
-        >
+        <div className="mt-0.5 text-[13px] text-[color:var(--ink-subtle)]">
           {childName}
         </div>
       </div>
 
       {/* Points */}
-      <span
-        className="shrink-0 text-[14px] font-bold"
-        style={{ color: "var(--accent)" }}
-      >
+      <span className="shrink-0 text-[14px] font-bold text-[color:var(--accent)]">
         +{points}
       </span>
 

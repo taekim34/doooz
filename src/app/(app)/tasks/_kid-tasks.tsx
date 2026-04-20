@@ -55,17 +55,13 @@ export function KidTasks({
   const hasRequests = myPending.length > 0 || myRejected.length > 0 || myApproved.length > 0;
 
   return (
-    <div className="-m-4 md:-m-8" style={{ minHeight: "100%" }}>
+    <div className="-m-4 md:-m-8 min-h-full">
       {/* Decorative blur orb */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-16 -top-20"
+        className="pointer-events-none absolute -left-16 -top-20 h-64 w-64 rounded-full opacity-40"
         style={{
-          height: 256,
-          width: 256,
-          borderRadius: 9999,
           filter: "blur(48px)",
-          opacity: 0.4,
           background: "radial-gradient(circle,#FFB4C6 0%, transparent 70%)",
         }}
       />
@@ -80,7 +76,7 @@ export function KidTasks({
       {/* Upcoming section */}
       {upcoming.length > 0 && (
         <div className="px-5 pb-4">
-          <h3 className="mb-3 text-[15px] font-bold" style={{ color: "var(--ink)" }}>
+          <h3 className="mb-3 text-[15px] font-bold text-[color:var(--ink)]">
             {t("tasks.upcoming", locale)}
           </h3>
           <div className="flex flex-col gap-3">
@@ -107,10 +103,10 @@ export function KidTasks({
             boxShadow: "0 12px 28px -18px rgba(45,27,61,0.1), inset 0 1px 0 rgba(255,255,255,0.6), 0 0 0 1.5px rgba(156,163,175,0.2)",
           }}
         >
-          <h3 className="mb-1 text-[15px] font-bold" style={{ color: "var(--ink)" }}>
+          <h3 className="mb-1 text-[15px] font-bold text-[color:var(--ink)]">
             {t("tasks.beg_title", locale)}
           </h3>
-          <p className="mb-3 text-[12px]" style={{ color: "rgba(45,27,61,0.5)" }}>
+          <p className="mb-3 text-[12px] text-[rgba(45,27,61,0.5)]">
             {t("tasks.beg_desc", locale)}
           </p>
           <BegForm />
@@ -120,7 +116,7 @@ export function KidTasks({
       {/* My Requests */}
       {hasRequests && (
         <div className="px-5 pb-4">
-          <h3 className="mb-3 text-[15px] font-bold" style={{ color: "var(--ink)" }}>
+          <h3 className="mb-3 text-[15px] font-bold text-[color:var(--ink)]">
             {t("tasks.my_requests", locale)}
           </h3>
           <div className="flex flex-col gap-2">
@@ -132,13 +128,12 @@ export function KidTasks({
               >
                 <div className="flex items-center gap-3">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-base"
-                    style={{ background: "linear-gradient(135deg,#FEF3C7,#FDE68A)" }}
+                    style={{ background: "var(--gradient-warning)" }}
                   >⏳</span>
-                  <span className="text-[14px] font-semibold" style={{ color: "var(--ink)" }}>{c.title}</span>
+                  <span className="text-[14px] font-semibold text-[color:var(--ink)]">{c.title}</span>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
-                  <span className="rounded-full px-2 py-0.5 text-[11px] font-bold"
-                    style={{ background: "var(--warning-bg)", color: "#D97706" }}
+                  <span className="rounded-full px-2 py-0.5 text-[11px] font-bold bg-[color:var(--warning-bg)] text-[#D97706]"
                   >
                     {t("tasks.beg_waiting", locale)}
                   </span>
@@ -156,10 +151,9 @@ export function KidTasks({
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-base"
                     style={{ background: "linear-gradient(135deg,#FEE2E2,#F3F4F6)" }}
                   >❌</span>
-                  <span className="text-[14px] font-semibold" style={{ color: "rgba(45,27,61,0.5)" }}>{c.title}</span>
+                  <span className="text-[14px] font-semibold text-[rgba(45,27,61,0.5)]">{c.title}</span>
                 </div>
-                <span className="rounded-full px-2 py-0.5 text-[11px] font-bold"
-                  style={{ background: "var(--error-bg)", color: "var(--error-strong)" }}
+                <span className="rounded-full px-2 py-0.5 text-[11px] font-bold bg-[color:var(--error-bg)] text-[color:var(--error-strong)]"
                 >
                   {t("tasks.beg_failed", locale)}
                 </span>
@@ -175,10 +169,9 @@ export function KidTasks({
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-base"
                     style={{ background: "linear-gradient(135deg,#D1FAE5,#A7F3D0)" }}
                   >✅</span>
-                  <span className="text-[14px] font-semibold" style={{ color: "var(--ink)" }}>{c.title}</span>
+                  <span className="text-[14px] font-semibold text-[color:var(--ink)]">{c.title}</span>
                 </div>
-                <span className="rounded-full px-2 py-0.5 text-[11px] font-bold"
-                  style={{ background: "var(--success-bg)", color: "#059669" }}
+                <span className="rounded-full px-2 py-0.5 text-[11px] font-bold bg-[color:var(--success-bg)] text-[#059669]"
                 >
                   {t("tasks.beg_approved", locale)}
                 </span>
@@ -192,8 +185,7 @@ export function KidTasks({
       <div className="flex justify-center pb-32">
         <Link
           href="/tasks/history"
-          className="text-[13px] font-semibold underline"
-          style={{ color: "rgba(45,27,61,0.45)" }}
+          className="text-[13px] font-semibold underline text-[rgba(45,27,61,0.45)]"
         >
           {t("tasks.history", locale)}
         </Link>

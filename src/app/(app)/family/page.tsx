@@ -28,142 +28,60 @@ export default async function FamilyPage() {
   const kids = members.filter((m) => m.role === "child").length;
 
   return (
-    <div
-      className="relative min-h-screen"
-      style={{
-        background: "var(--bg)",
-        color: "var(--ink)",      }}
-    >
+    <div className="relative min-h-screen bg-[color:var(--bg)] text-[color:var(--ink)]">
       <style>{`
         @keyframes fmTlRise { to { opacity: 1; transform: none; } }
-        .fm-tl-rise { opacity: 0; transform: translateY(8px); animation: fmTlRise 520ms cubic-bezier(0.16,1,0.3,1) forwards; }
+        .fm-tl-rise { opacity: 0; transform: translateY(8px); animation: fmTlRise 520ms var(--ease-spring) forwards; }
         @media (prefers-reduced-motion: reduce) {
           .fm-tl-rise { animation: none; opacity: 1; transform: none; }
         }
       `}</style>
 
       {/* Back */}
-      <div
-        style={{
-          padding: "12px 20px 8px",
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
+      <div className="flex items-center px-5 pt-3 pb-2">
         <BackButton href="/" />
       </div>
 
-      <div className="mx-auto max-w-md" style={{ padding: "4px 20px 24px" }}>
+      <div className="mx-auto max-w-md px-5 pt-1 pb-6">
         <SectionLabel as="span">
           {locale === "ko" ? "가족" : locale === "ja" ? "家族" : "Family"}
         </SectionLabel>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "baseline",
-            justifyContent: "space-between",
-            gap: 8,
-            marginTop: 4,
-            marginBottom: 22,
-          }}
-        >
-          <h1
-            style={{
-              margin: 0,
-              fontSize: 24,
-              fontWeight: 800,
-              letterSpacing: "-0.02em",
-              color: "var(--ink)",
-            }}
-          >
+        <div className="mt-1 mb-[22px] flex items-baseline justify-between gap-2">
+          <h1 className="m-0 text-2xl font-extrabold tracking-[-0.02em] text-[color:var(--ink)]">
             {family.name}
           </h1>
-          <span
-            style={{
-              fontSize: 12,
-              fontWeight: 600,
-              color: "var(--ink-subtle)",
-              letterSpacing: "-0.01em",
-              whiteSpace: "nowrap",
-              fontFeatureSettings: '"tnum" 1',
-            }}
-          >
+          <span className="whitespace-nowrap text-xs font-semibold tracking-[-0.01em] text-[color:var(--ink-subtle)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
             {t("family.role_parent", locale)} {parents} ·{" "}
             {t("family.role_child", locale)} {kids}
           </span>
         </div>
 
         {/* Members */}
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: 8 }}
-        >
+        <div className="flex flex-col gap-2">
           {members.map((m, i) => (
             <Link
               key={m.id}
               href={`/family/member/${m.id}` as never}
-              className="fm-tl-rise"
+              className="fm-tl-rise flex items-center gap-3 rounded-[14px] bg-[color:var(--surface-raised)] p-3 no-underline transition-[background] duration-150"
               style={{
                 animationDelay: `${i * 40}ms`,
-                textDecoration: "none",
                 color: "inherit",
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                padding: 12,
-                borderRadius: 14,
-                background: "var(--surface-raised)",
-                transition: "background 150ms cubic-bezier(0.16,1,0.3,1)",
               }}
             >
               <div
-                style={{
-                  width: 42,
-                  height: 42,
-                  borderRadius: 12,
-                  background: tileGrad(m.character_id, m.id),
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
+                className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl"
+                style={{ background: tileGrad(m.character_id, m.id) }}
               >
-                <span aria-hidden style={{ fontSize: 24, lineHeight: 1 }}>
+                <span aria-hidden className="text-2xl leading-none">
                   {characterEmoji(m.character_id, getStage(m.level))}
                 </span>
               </div>
 
-              <div
-                style={{
-                  flex: 1,
-                  minWidth: 0,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 1,
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 700,
-                    color: "var(--ink)",
-                    letterSpacing: "-0.01em",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
+              <div className="flex min-w-0 flex-1 flex-col gap-px">
+                <div className="truncate text-[15px] font-bold tracking-[-0.01em] text-[color:var(--ink)]">
                   {m.display_name}
                 </div>
-                <div
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 500,
-                    color: "var(--ink-subtle)",
-                    letterSpacing: "-0.01em",
-                    fontFeatureSettings: '"tnum" 1',
-                    whiteSpace: "nowrap",
-                  }}
-                >
+                <div className="whitespace-nowrap text-xs font-medium tracking-[-0.01em] text-[color:var(--ink-subtle)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
                   Lv.{m.level} ·{" "}
                   {m.role === "parent"
                     ? t("family.role_parent", locale)
@@ -171,24 +89,8 @@ export default async function FamilyPage() {
                 </div>
               </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  flexShrink: 0,
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: "var(--ink)",
-                    letterSpacing: "-0.01em",
-                    fontFeatureSettings: '"tnum" 1',
-                    whiteSpace: "nowrap",
-                  }}
-                >
+              <div className="flex shrink-0 items-center gap-2.5">
+                <span className="whitespace-nowrap text-[13px] font-semibold tracking-[-0.01em] text-[color:var(--ink)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
                   {m.current_balance.toLocaleString()} pt
                 </span>
                 <svg
@@ -214,30 +116,10 @@ export default async function FamilyPage() {
 
       {/* Invite CTA */}
       {user.role === "parent" && (
-        <div
-          className="mx-auto max-w-md"
-          style={{ padding: "10px 20px 22px" }}
-        >
+        <div className="mx-auto max-w-md px-5 pt-2.5 pb-[22px]">
           <Link
             href={"/family/invite" as never}
-            style={{
-              width: "100%",
-              height: 48,
-              borderRadius: 10,
-              background: "var(--surface)",
-              border: "1px solid var(--border)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              fontSize: 15,
-              fontWeight: 600,
-              color: "var(--ink)",
-              letterSpacing: "-0.01em",
-              textDecoration: "none",
-              transition:
-                "transform 200ms cubic-bezier(0.16,1,0.3,1), background 150ms cubic-bezier(0.16,1,0.3,1)",
-            }}
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-[10px] border border-[color:var(--border)] bg-[color:var(--surface)] text-[15px] font-semibold tracking-[-0.01em] text-[color:var(--ink)] no-underline transition-[transform,background] duration-200"
           >
             <svg
               width="16"

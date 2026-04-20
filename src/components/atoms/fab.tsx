@@ -37,13 +37,12 @@ const FAB = React.forwardRef<HTMLButtonElement, FABProps>(
       <button
         ref={ref}
         type="button"
-        className={cn(fabVariants({ variant, size }), className)}
-        style={{
-          ...(variant !== "secondary"
-            ? { background: "var(--accent-color, #6366F1)" }
-            : {}),
-          ...style,
-        }}
+        className={cn(
+          fabVariants({ variant, size }),
+          variant !== "secondary" && "bg-[var(--accent-color,#6366F1)]",
+          className,
+        )}
+        style={style}
         {...props}
       >
         {icon}

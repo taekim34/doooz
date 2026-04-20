@@ -37,7 +37,7 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
         style={{
           boxShadow:
             variant === "default"
-              ? "0 1px 2px rgba(10,10,10,0.04)"
+              ? "var(--shadow-card-parent)"
               : undefined,
         }}
         {...props}
@@ -46,20 +46,18 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
           <div className="mb-1 text-[18px] leading-none">{icon}</div>
         )}
         <div
-          className="text-[22px] font-extrabold leading-tight"
-          style={{
-            color: isAccent ? "inherit" : "var(--ink)",
-            letterSpacing: "-0.02em",
-            fontFeatureSettings: '"tnum" 1',
-          }}
+          className={cn(
+            "text-[22px] font-extrabold leading-tight tracking-[-0.02em] tabular-nums",
+            isAccent ? "text-inherit" : "text-[color:var(--ink)]",
+          )}
         >
           {value}
         </div>
         <div
-          className="mt-0.5 text-[11px] font-semibold"
-          style={{
-            color: isAccent ? "rgba(255,255,255,0.8)" : "var(--ink-subtle)",
-          }}
+          className={cn(
+            "mt-0.5 text-[11px] font-semibold",
+            isAccent ? "text-white/80" : "text-[color:var(--ink-subtle)]",
+          )}
         >
           {label}
         </div>
