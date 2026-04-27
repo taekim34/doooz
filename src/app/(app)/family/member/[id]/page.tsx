@@ -8,6 +8,7 @@ import { getStage } from "@/lib/level";
 import { formatDateInFamilyTz } from "@/lib/datetime/family-tz";
 import { ResetPasswordButton } from "@/app/(app)/family/member/_reset-password";
 import { t, type Locale } from "@/lib/i18n";
+import { formatPointsReason } from "@/features/points/format-reason";
 import { tileGrad } from "@/lib/tile-grad";
 import { Section } from "@/components/organisms";
 
@@ -195,7 +196,7 @@ export default async function MemberDetailPage({
                     </div>
                     <div className="flex min-w-0 flex-1 flex-col gap-px">
                       <div className="truncate text-sm font-medium tracking-[-0.01em] text-[color:var(--ink)]">
-                        {tx.reason}
+                        {formatPointsReason(tx.reason, locale)}
                       </div>
                       <div className="whitespace-nowrap text-xs font-normal tracking-[-0.01em] text-[color:var(--ink-subtle)]">
                         {dateStr}

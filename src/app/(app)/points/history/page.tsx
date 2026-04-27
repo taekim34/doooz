@@ -7,6 +7,7 @@ import { BackButton, SectionLabel } from "@/components/atoms";
 import type { Route } from "next";
 import { HistoryControls, type FilterKind } from "./_controls";
 import { txMeta } from "@/lib/tx-meta";
+import { formatPointsReason } from "@/features/points/format-reason";
 
 const PAGE_SIZE = 50;
 
@@ -213,10 +214,12 @@ function HistoryRow({
     tx.task_instances?.due_date ??
     formatDateInFamilyTz(tx.created_at, timezone, "yyyy-MM-dd");
 
+  const reasonText = formatPointsReason(tx.reason, locale);
+  const reasonIsCode = reasonText !== tx.reason;
   const label =
-    (isPenalty ? t("points.missed_task", locale) + " · " : "") +
-    (isAdjustment ? t("points.adjustment", locale) + " · " : "") +
-    tx.reason;
+    (isPenalty && !reasonIsCode ? t("points.missed_task", locale) + " · " : "") +
+    (isAdjustment && !reasonIsCode ? t("points.adjustment", locale) + " · " : "") +
+    reasonText;
 
   const source = actorName ?? "";
 

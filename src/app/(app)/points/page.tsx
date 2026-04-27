@@ -7,6 +7,7 @@ import { BackButton, SectionLabel } from "@/components/atoms";
 import { AnimatedBalance } from "./_animated-balance";
 import { CharacterAvatar } from "@/components/molecules/character-avatar";
 import { txMeta } from "@/lib/tx-meta";
+import { formatPointsReason } from "@/features/points/format-reason";
 
 type Tx = {
   id: string;
@@ -612,12 +613,16 @@ function TxRow({
   const whenRaw =
     tx.task_instances?.due_date ??
     formatDateInFamilyTz(tx.created_at, timezone, "MM-dd");
+  const reasonText = formatPointsReason(tx.reason, locale);
   const isPenalty = tx.kind === "penalty";
   const isAdjustment = tx.kind === "adjustment";
+  // For penalty rows the localized reason ("놓친 할일") already conveys the kind,
+  // so only prefix when the reason is custom user text. Same idea for adjustment.
+  const reasonIsCode = reasonText !== tx.reason;
   const label =
-    (isPenalty ? t("points.missed_task", locale) + " · " : "") +
-    (isAdjustment ? t("points.adjustment", locale) + " · " : "") +
-    tx.reason;
+    (isPenalty && !reasonIsCode ? t("points.missed_task", locale) + " · " : "") +
+    (isAdjustment && !reasonIsCode ? t("points.adjustment", locale) + " · " : "") +
+    reasonText;
   return (
     <div
       style={{

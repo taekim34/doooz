@@ -8,6 +8,7 @@ import { getStage } from "@/lib/level";
 import { familyToday, formatDateInFamilyTz } from "@/lib/datetime/family-tz";
 import { getRank } from "@/features/children/rank";
 import { t, type Locale } from "@/lib/i18n";
+import { formatPointsReason } from "@/features/points/format-reason";
 import { tileGrad } from "@/lib/tile-grad";
 import { Section } from "@/components/organisms";
 
@@ -240,9 +241,17 @@ export default async function ChildDetailPage({
                     </div>
                     <div className="flex min-w-0 flex-1 flex-col gap-px">
                       <div className="truncate text-sm font-medium tracking-[-0.01em] text-[color:var(--ink)]">
-                        {tx.kind === "adjustment" &&
-                          `${t("children.adjustment", locale)} · `}
-                        {tx.reason}
+                        {(() => {
+                          const r = formatPointsReason(tx.reason, locale);
+                          const isCode = r !== tx.reason;
+                          return (
+                            <>
+                              {tx.kind === "adjustment" && !isCode &&
+                                `${t("children.adjustment", locale)} · `}
+                              {r}
+                            </>
+                          );
+                        })()}
                       </div>
                       <div className="whitespace-nowrap text-xs font-normal tracking-[-0.01em] text-[color:var(--ink-subtle)]">
                         {dateStr}
