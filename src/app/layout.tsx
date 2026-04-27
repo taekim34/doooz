@@ -9,7 +9,7 @@ const DEFAULT_LOCALE = process.env.NEXT_PUBLIC_DEFAULT_LOCALE || "en";
 const LOCALE_COOKIE = process.env.NEXT_PUBLIC_LOCALE_COOKIE || "doooz_locale";
 
 export const metadata: Metadata = {
-  title: process.env.NEXT_PUBLIC_APP_NAME || "DOOOZ",
+  title: process.env.NEXT_PUBLIC_APP_NAME || "Doooz",
   description:
     process.env.NEXT_PUBLIC_APP_DESCRIPTION ||
     "Family tasks, points, and multi-year adventures.",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: process.env.NEXT_PUBLIC_APP_NAME || "DOOOZ",
+    title: process.env.NEXT_PUBLIC_APP_NAME || "Doooz",
   },
 };
 

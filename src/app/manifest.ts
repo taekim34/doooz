@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
-  const appName = process.env.NEXT_PUBLIC_APP_NAME || "DOOOZ";
+  const appName = process.env.NEXT_PUBLIC_APP_NAME || "Doooz";
   const themeColor = process.env.NEXT_PUBLIC_THEME_COLOR || "#7c3aed";
   return {
     name: appName,

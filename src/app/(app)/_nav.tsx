@@ -87,7 +87,7 @@ export function AppNav({
         }}
       >
         <div className="flex items-center gap-2">
-          <Image src="/logo.png" alt="DOOOZ" width={54} height={54} priority className="h-[27px] w-[27px]" />
+          <Image src="/logo.png" alt="Doooz" width={54} height={54} priority className="h-[27px] w-[27px]" />
           <span className="text-xs text-[color:var(--ink-subtle)]">{familyName}</span>
         </div>
         <NavLink
@@ -120,8 +120,8 @@ export function AppNav({
           {/* Left: logo + name + role badge */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
-              <Image src="/logo.png" alt="DOOOZ" width={54} height={54} priority className="h-[27px] w-[27px]" />
-              <span className="text-lg font-extrabold tracking-tight text-[color:var(--ink)]">doooz</span>
+              <Image src="/logo.png" alt="Doooz" width={54} height={54} priority className="h-[27px] w-[27px]" />
+              <span className="text-lg font-extrabold tracking-tight text-[color:var(--ink)]">Doooz</span>
             </div>
             <span
               className={cn(

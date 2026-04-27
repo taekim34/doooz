@@ -141,7 +141,7 @@ export function LoginForm({
       <div className="flex justify-center">
         <Image
           src="/login-logo.png"
-          alt="DOOOZ"
+          alt="Doooz"
           width={400}
           height={400}
           priority
