@@ -37,11 +37,13 @@ const characterAvatarVariants = cva(
   "relative inline-flex items-center justify-center overflow-hidden rounded-full shadow-[inset_0_-4px_0_rgba(0,0,0,0.04)]",
   {
     variants: {
+      // Sizes scaled 1.5× over the post-PNG-rollout baseline so the
+      // illustrated portraits read clearly even in dense lists.
       size: {
-        sm: "h-10 w-10",
-        md: "h-12 w-12",
-        lg: "h-[72px] w-[72px]",
-        xl: "h-28 w-28",
+        sm: "h-[60px] w-[60px]",
+        md: "h-[72px] w-[72px]",
+        lg: "h-[108px] w-[108px]",
+        xl: "h-[168px] w-[168px]",
       },
     },
     defaultVariants: {
@@ -51,10 +53,10 @@ const characterAvatarVariants = cva(
 );
 
 const SIZE_PX: Record<NonNullable<CharacterAvatarProps["size"]>, number> = {
-  sm: 40,
-  md: 48,
-  lg: 72,
-  xl: 112,
+  sm: 60,
+  md: 72,
+  lg: 108,
+  xl: 168,
 };
 
 /* ------------------------------------------------------------------ */
@@ -68,6 +70,10 @@ export interface CharacterAvatarProps
   showLevel?: boolean;
   level?: number;
   className?: string;
+  /** Spring-back squish on :active. */
+  tappable?: boolean;
+  /** Pass-through to inner CharacterIcon (e.g. "breathe" for hero use). */
+  idle?: "breathe";
 }
 
 const STAGE_BADGE: Record<1 | 2 | 3 | 4 | 5, string> = {
@@ -79,7 +85,7 @@ const STAGE_BADGE: Record<1 | 2 | 3 | 4 | 5, string> = {
 };
 
 const CharacterAvatar = React.forwardRef<HTMLDivElement, CharacterAvatarProps>(
-  ({ characterId, size = "md", showLevel, level, className }, ref) => {
+  ({ characterId, size = "md", showLevel, level, className, tappable, idle }, ref) => {
     const stage = getStage(level ?? 1);
     const bg = hashPick(characterId);
     const px = SIZE_PX[size];
@@ -100,6 +106,8 @@ const CharacterAvatar = React.forwardRef<HTMLDivElement, CharacterAvatarProps>(
             stage={stage}
             pixelSize={Math.round(px * 0.86)}
             hideBadge
+            tappable={tappable}
+            idle={idle}
           />
         </div>
 

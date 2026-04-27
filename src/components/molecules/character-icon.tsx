@@ -31,6 +31,12 @@ const STAGE_BADGE: Record<CharacterStage, string> = {
  *
  * Unknown character IDs fall back to the legacy emoji string from emoji-map,
  * which already concatenates the stage suffix — so behaviour stays consistent.
+ *
+ * Animation props:
+ *   tappable — adds spring-back squish on :active. Default false (set true
+ *              for clickable characters; non-interactive avatars stay still).
+ *   idle="breathe" — slow pulsing scale. Use sparingly; one or two on screen
+ *              feels alive, dozens feels chaotic.
  */
 export interface CharacterIconProps {
   id: string | null | undefined;
@@ -42,6 +48,10 @@ export interface CharacterIconProps {
   ariaLabel?: string;
   /** Hide the stage badge (e.g. neutral picker / gallery thumbnails). */
   hideBadge?: boolean;
+  /** Add :active scale spring-back. Use for clickable characters. */
+  tappable?: boolean;
+  /** Idle motion — "breathe" for a slow pulse, undefined for static. */
+  idle?: "breathe";
 }
 
 export function CharacterIcon({
@@ -51,14 +61,22 @@ export function CharacterIcon({
   className,
   ariaLabel,
   hideBadge,
+  tappable,
+  idle,
 }: CharacterIconProps) {
   const src = characterImageSrc(id);
+  const animClass = [
+    tappable ? "ch-tap" : "",
+    idle === "breathe" ? "ch-breathe" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   if (!src) {
     return (
       <span
         aria-label={ariaLabel ?? id ?? undefined}
-        className={className}
+        className={[className, animClass].filter(Boolean).join(" ")}
         style={{
           display: "inline-flex",
           alignItems: "center",
@@ -79,7 +97,7 @@ export function CharacterIcon({
   return (
     <span
       aria-label={ariaLabel ?? id ?? "character"}
-      className={className}
+      className={[className, animClass].filter(Boolean).join(" ")}
       style={{
         position: "relative",
         display: "inline-block",

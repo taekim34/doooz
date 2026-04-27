@@ -504,6 +504,51 @@
   }
 }
 
+/* =========================
+   Character animations
+   ========================= */
+
+/* Idle breathing — slow, opt-in via .ch-breathe */
+@keyframes chBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+/* Tap squish — applied via :active state on .ch-tap */
+@keyframes chPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.93); }
+  100% { transform: scale(1); }
+}
+
+/* Scroll-in fade + scale — used by ScrollReveal */
+@keyframes chReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.ch-breathe {
+  animation: chBreathe 3.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.ch-tap {
+  transition: transform 160ms var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+.ch-tap:active {
+  transform: scale(0.93);
+}
+
+.ch-reveal {
+  animation: chReveal 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* Reduced motion — hard override */
 @media (prefers-reduced-motion: reduce) {
   *,
