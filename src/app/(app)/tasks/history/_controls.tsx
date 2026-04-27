@@ -27,7 +27,10 @@ export function HistoryControls({
         if (v === null) params.delete(k);
         else params.set(k, v);
       }
-      router.push(`/tasks/history?${params.toString()}`);
+      const next = params.toString();
+      // Skip no-op navigations (clicking the active filter chip again).
+      if (next === searchParams.toString()) return;
+      router.push(`/tasks/history?${next}`);
     },
     [router, searchParams],
   );

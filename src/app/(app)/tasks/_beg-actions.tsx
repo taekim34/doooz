@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,27 +9,30 @@ export function BegActions({ id }: { id: string }) {
   const router = useRouter();
   const t = useT();
   const [points, setPoints] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [approving, startApprove] = useTransition();
+  const [rejecting, startReject] = useTransition();
 
-  async function approve() {
+  function approve() {
     const pts = Number(points);
     if (!pts || pts < 1) return;
-    setLoading(true);
-    await fetch(`/api/tasks/beg/${id}/approve`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ points: pts }),
+    startApprove(async () => {
+      await fetch(`/api/tasks/beg/${id}/approve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ points: pts }),
+      });
+      router.refresh();
     });
-    router.refresh();
-    setLoading(false);
   }
 
-  async function reject() {
-    setLoading(true);
-    await fetch(`/api/tasks/beg/${id}/reject`, { method: "POST" });
-    router.refresh();
-    setLoading(false);
+  function reject() {
+    startReject(async () => {
+      await fetch(`/api/tasks/beg/${id}/reject`, { method: "POST" });
+      router.refresh();
+    });
   }
+
+  const busy = approving || rejecting;
 
   return (
     <div className="flex items-center gap-1">
@@ -42,13 +45,25 @@ export function BegActions({ id }: { id: string }) {
           onChange={(e) => setPoints(e.target.value)}
           placeholder={t("tasks.points_label")}
           className="w-24 pr-7 text-sm"
+          disabled={busy}
         />
         <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">pt</span>
       </div>
-      <Button size="sm" onClick={approve} disabled={loading || !points}>
+      <Button
+        size="sm"
+        onClick={approve}
+        disabled={busy || !points}
+        aria-busy={approving}
+      >
         {t("common.approve")}
       </Button>
-      <Button size="sm" variant="outline" onClick={reject} disabled={loading}>
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={reject}
+        disabled={busy}
+        aria-busy={rejecting}
+      >
         {t("common.reject")}
       </Button>
     </div>

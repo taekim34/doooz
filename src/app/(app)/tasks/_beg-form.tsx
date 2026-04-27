@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -9,22 +9,22 @@ export function BegForm() {
   const router = useRouter();
   const t = useT();
   const [title, setTitle] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [pending, startTransition] = useTransition();
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!title.trim() || loading) return;
-    setLoading(true);
-    const res = await fetch("/api/tasks/beg", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: title.trim() }),
+    if (!title.trim() || pending) return;
+    startTransition(async () => {
+      const res = await fetch("/api/tasks/beg", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: title.trim() }),
+      });
+      if (res.ok) {
+        setTitle("");
+        router.refresh();
+      }
     });
-    if (res.ok) {
-      setTitle("");
-      router.refresh();
-    }
-    setLoading(false);
   }
 
   return (
@@ -35,9 +35,10 @@ export function BegForm() {
         placeholder={t("tasks.beg_placeholder")}
         maxLength={80}
         required
+        disabled={pending}
       />
-      <Button type="submit" disabled={loading} size="sm">
-        {loading ? "..." : t("tasks.beg_request")}
+      <Button type="submit" disabled={pending} size="sm" aria-busy={pending}>
+        {t("tasks.beg_request")}
       </Button>
     </form>
   );

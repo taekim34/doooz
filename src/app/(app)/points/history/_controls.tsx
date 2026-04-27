@@ -64,6 +64,8 @@ export function HistoryControls({
 
   function chooseKid(id: string | null) {
     setKidOpen(false);
+    // Skip no-op: clicking the already-selected kid shouldn't navigate.
+    if ((id ?? "") === (selectedChildId || "")) return;
     router.push(buildHref(currentFilter, id));
   }
 
