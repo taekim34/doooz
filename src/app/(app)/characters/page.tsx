@@ -225,7 +225,7 @@ export default async function CharactersPage() {
 
         {/* Level table toggle */}
         <div className="mt-2.5">
-          <LevelTable currentLevel={user.level} />
+          <LevelTable currentLifetime={user.lifetime_earned} />
         </div>
       </div>
     </div>
