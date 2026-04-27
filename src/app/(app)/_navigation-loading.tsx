@@ -48,6 +48,20 @@ export function NavigationLoading({ children }: { children: React.ReactNode }) {
       if (!anchor) return;
       const href = anchor.getAttribute("href");
       if (!href || href.startsWith("http") || href.startsWith("#") || anchor.target === "_blank") return;
+      // Skip same-page clicks — Next.js doesn't actually navigate, so the
+      // url-change effect can't hide the spinner and we'd wait out the 4s
+      // safety net for nothing.
+      try {
+        const url = new URL(href, window.location.origin);
+        if (
+          url.pathname === window.location.pathname &&
+          url.search === window.location.search
+        ) {
+          return;
+        }
+      } catch {
+        // Bad href format — fall through and show spinner anyway.
+      }
       show();
     }
     document.addEventListener("click", onClick, { capture: true });

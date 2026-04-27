@@ -102,10 +102,14 @@ export function AppNav({
                 <Link
                   key={it.href}
                   href={it.href}
+                  aria-current={active ? "page" : undefined}
+                  aria-disabled={active || undefined}
+                  tabIndex={active ? -1 : undefined}
+                  onClick={active ? (e) => e.preventDefault() : undefined}
                   className={cn(
                     "rounded-full px-3.5 py-2 text-[13.5px] font-medium transition-all",
                     active
-                      ? "bg-[color:var(--ink)] text-[color:var(--on-accent)]"
+                      ? "pointer-events-none cursor-default bg-[color:var(--ink)] text-[color:var(--on-accent)]"
                       : "text-[color:var(--ink-muted)] hover:bg-[color:var(--surface-sunken)] hover:text-[color:var(--ink)]",
                   )}
                 >
@@ -154,7 +158,14 @@ export function AppNav({
             <Link
               key={it.href}
               href={it.href}
-              className="flex flex-col items-center gap-0.5 py-2 transition-colors"
+              aria-current={active ? "page" : undefined}
+              aria-disabled={active || undefined}
+              tabIndex={active ? -1 : undefined}
+              onClick={active ? (e) => e.preventDefault() : undefined}
+              className={cn(
+                "flex flex-col items-center gap-0.5 py-2 transition-colors",
+                active && "pointer-events-none",
+              )}
               style={{
                 color: active
                   ? isKid ? "var(--accent-kid)" : "var(--accent-parent)"
