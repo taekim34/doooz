@@ -60,7 +60,7 @@ export default async function PickCharacterPage() {
                     boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                   }}
                 >
-                  <CharacterIcon id={c.id} stage={2} pixelSize={64} />
+                  <CharacterIcon id={c.id} stage={2} pixelSize={96} tappable={!locked} />
                   <span className="mt-2 text-[color:var(--ink)]">{c.name}</span>
                   {locked && (
                     <div className="absolute top-2 right-2">

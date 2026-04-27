@@ -177,8 +177,9 @@ export default async function GalleryPage() {
                   <CharacterIcon
                     id={c.id}
                     stage={2}
-                    pixelSize={64}
+                    pixelSize={96}
                     className={locked ? "grayscale" : ""}
+                    tappable={!locked}
                   />
                   <div className="whitespace-nowrap text-[13px] font-semibold tracking-[-0.01em] text-[color:var(--ink)]">
                     {c.name}

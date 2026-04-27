@@ -79,14 +79,15 @@ export default async function CharactersPage() {
           <div
             data-ch-avatar
             style={{
-              animation: "chBounce 2000ms ease-in-out infinite",
               filter: "drop-shadow(0 10px 18px rgba(10,10,10,0.14))",
             }}
           >
             <CharacterIcon
               id={user.character_id}
               stage={stage}
-              pixelSize={144}
+              pixelSize={216}
+              idle="breathe"
+              tappable
             />
           </div>
           <div className="mt-2.5 flex items-center gap-2 whitespace-nowrap">

@@ -212,7 +212,7 @@ export default async function SettingsPage({
             <CharacterIcon
               id={user.character_id}
               stage={getStage(user.level)}
-              pixelSize={44}
+              pixelSize={66}
               className="shrink-0"
             />
             <div className="min-w-0 flex-1 truncate text-sm font-medium tracking-[-0.01em] text-[color:var(--ink)]">

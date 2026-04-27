@@ -69,13 +69,14 @@ export default async function FamilyPage() {
               }}
             >
               <div
-                className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl"
+                className="flex h-[64px] w-[64px] shrink-0 items-center justify-center rounded-xl"
                 style={{ background: tileGrad(m.character_id, m.id) }}
               >
                 <CharacterIcon
                   id={m.character_id}
                   stage={getStage(m.level)}
-                  pixelSize={36}
+                  pixelSize={54}
+                  tappable
                 />
               </div>
 

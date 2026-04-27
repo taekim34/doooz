@@ -114,7 +114,7 @@ export default async function ChildDetailPage({
         {/* Hero */}
         <div className="mb-[18px] flex items-center gap-3.5">
           <div
-            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl"
+            className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl"
             style={{
               background: tileGrad(child.character_id, child.id),
               boxShadow: "0 10px 24px -18px rgba(10,10,10,0.18)",
@@ -123,7 +123,7 @@ export default async function ChildDetailPage({
             <CharacterIcon
               id={child.character_id}
               stage={stage}
-              pixelSize={56}
+              pixelSize={84}
             />
           </div>
           <div className="flex min-w-0 flex-1 items-center gap-2">
