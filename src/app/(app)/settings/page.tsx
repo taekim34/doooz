@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { CharacterIcon } from "@/components/molecules/character-icon";
 import { getStage } from "@/lib/level";
 import { TimezoneSelect } from "@/components/ui/timezone-select";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { BackButton, SectionLabel } from "@/components/atoms";
 import { ThemeToggle } from "./_theme-toggle";
 import { t, type Locale } from "@/lib/i18n";
@@ -194,9 +195,9 @@ export default async function SettingsPage({
               required
               className={`${inputCls} min-w-0 flex-1`}
             />
-            <button type="submit" className={savePillCls}>
+            <SubmitButton className={savePillCls}>
               {t("settings.save", locale)}
-            </button>
+            </SubmitButton>
           </form>
         </div>
 
@@ -320,9 +321,9 @@ export default async function SettingsPage({
                   </p>
                 )}
                 <div className="mt-0.5 flex justify-end">
-                  <button type="submit" className={savePillCls}>
+                  <SubmitButton className={savePillCls}>
                     {t("settings.save", locale)}
-                  </button>
+                  </SubmitButton>
                 </div>
               </form>
             </div>
@@ -373,12 +374,11 @@ export default async function SettingsPage({
                 {sp.pw_ok}
               </p>
             )}
-            <button
-              type="submit"
+            <SubmitButton
               className="mt-0.5 h-10 cursor-pointer self-end rounded-[10px] border-none bg-[color:var(--ink)] px-[18px] text-sm font-bold tracking-[-0.01em] text-[color:var(--on-accent)]"
             >
               {t("settings.change_button", locale)}
-            </button>
+            </SubmitButton>
           </form>
         </div>
 
@@ -392,12 +392,11 @@ export default async function SettingsPage({
             </SectionLabel>
           </div>
           <form action={logoutAction}>
-            <button
-              type="submit"
+            <SubmitButton
               className="block w-full cursor-pointer border-none bg-transparent py-2.5 text-left text-sm font-semibold tracking-[-0.01em] text-[color:var(--ink)]"
             >
               {t("settings.logout", locale)}
-            </button>
+            </SubmitButton>
           </form>
           {isAdmin ? (
             <DeleteFamily locale={locale} />

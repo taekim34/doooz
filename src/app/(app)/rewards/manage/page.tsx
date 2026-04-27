@@ -6,6 +6,7 @@ import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
 import { t, type Locale } from "@/lib/i18n";
 import { RewardManageInput } from "./_input";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 import { emojiForTitle } from "@/features/rewards/emoji";
 
@@ -118,8 +119,7 @@ export default async function RewardsManagePage() {
             }}
           />
         </div>
-        <button
-          type="submit"
+        <SubmitButton
           className="w-full h-12 rounded-[10px] border-none bg-[color:var(--ink)] text-[color:var(--on-accent)] text-[15px] font-bold tracking-[-0.01em] cursor-pointer"
           style={{
             transition:
@@ -127,7 +127,7 @@ export default async function RewardsManagePage() {
           }}
         >
           {t("rewards.add", locale)}
-        </button>
+        </SubmitButton>
       </form>
 
       {/* Divider */}
@@ -168,12 +168,9 @@ export default async function RewardsManagePage() {
               </div>
               <form action={deleteAction}>
                 <input type="hidden" name="id" value={r.id} />
-                <button
-                  type="submit"
-                  className="border-none bg-transparent cursor-pointer text-[13px] font-medium text-[color:var(--error)] tracking-[-0.01em] px-1 py-2 shrink-0"
-                >
+                <SubmitButton className="border-none bg-transparent cursor-pointer text-[13px] font-medium text-[color:var(--error)] tracking-[-0.01em] px-1 py-2 shrink-0">
                   {t("rewards.delete", locale)}
-                </button>
+                </SubmitButton>
               </form>
             </div>
           ))}
