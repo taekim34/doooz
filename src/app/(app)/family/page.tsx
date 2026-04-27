@@ -44,7 +44,7 @@ export default async function FamilyPage() {
 
       <div className="mx-auto max-w-md px-5 pt-1 pb-6">
         <SectionLabel as="span">
-          {locale === "ko" ? "가족" : locale === "ja" ? "家族" : "Family"}
+          {t("common.family", locale)}
         </SectionLabel>
         <div className="mt-1 mb-[22px] flex items-baseline justify-between gap-2">
           <h1 className="m-0 text-2xl font-extrabold tracking-[-0.02em] text-[color:var(--ink)]">

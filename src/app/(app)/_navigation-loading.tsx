@@ -22,8 +22,8 @@ export function NavigationLoading({ children }: { children: React.ReactNode }) {
   const show = useCallback(() => {
     setLoading(true);
     clearTimeout(timerRef.current);
-    // Auto-hide after 8s (safety net)
-    timerRef.current = setTimeout(() => setLoading(false), 8000);
+    // Auto-hide after 4s (safety net for navigations)
+    timerRef.current = setTimeout(() => setLoading(false), 4000);
   }, []);
 
   const hide = useCallback(() => {
@@ -31,36 +31,28 @@ export function NavigationLoading({ children }: { children: React.ReactNode }) {
     clearTimeout(timerRef.current);
   }, []);
 
-  // Hide on route change complete
+  // Hide whenever URL (path or query) changes — covers redirects + soft navigations
   useEffect(() => {
-    const key = `${pathname}?${searchParams}`;
+    const key = `${pathname}?${searchParams?.toString() ?? ""}`;
     if (key !== prevKey.current) {
-      hide();
       prevKey.current = key;
+      hide();
     }
   }, [pathname, searchParams, hide]);
 
-  // Intercept link clicks and form submits to show overlay immediately
+  // Intercept internal link clicks only. Form submissions use per-button
+  // useFormStatus pattern (no global overlay) to avoid race conditions.
   useEffect(() => {
     function onClick(e: MouseEvent) {
       const anchor = (e.target as HTMLElement).closest("a");
       if (!anchor) return;
       const href = anchor.getAttribute("href");
       if (!href || href.startsWith("http") || href.startsWith("#") || anchor.target === "_blank") return;
-      // Internal navigation — show loading
       show();
     }
-    function onSubmit(e: Event) {
-      const form = e.target as HTMLFormElement;
-      if (form.getAttribute("action") || form.method === "post") {
-        show();
-      }
-    }
     document.addEventListener("click", onClick, { capture: true });
-    document.addEventListener("submit", onSubmit, { capture: true });
     return () => {
       document.removeEventListener("click", onClick, { capture: true });
-      document.removeEventListener("submit", onSubmit, { capture: true });
     };
   }, [show]);
 

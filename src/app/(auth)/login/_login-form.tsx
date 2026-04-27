@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Route } from "next";
 import { useT } from "@/lib/i18n/useT";
+import { SubmitButton } from "@/components/ui/submit-button";
 const FAMILY_STORAGE_KEY = process.env.NEXT_PUBLIC_FAMILY_STORAGE_KEY || "doooz_family_name";
 
 const inputCls =
@@ -92,14 +93,29 @@ function OnboardCard({
   );
 }
 
+type FamilyFieldErrors = {
+  family_name?: string;
+  display_name?: string;
+  password?: string;
+  form?: string;
+};
+
 export function LoginForm({
   defaultTab,
   error,
+  familyFieldErrors = {},
+  defaultEmail = "",
+  defaultFamilyName = "",
+  defaultDisplayName = "",
   familyLoginAction,
   emailLoginAction,
 }: {
   defaultTab: "family" | "email";
   error?: string;
+  familyFieldErrors?: FamilyFieldErrors;
+  defaultEmail?: string;
+  defaultFamilyName?: string;
+  defaultDisplayName?: string;
   familyLoginAction: (formData: FormData) => void;
   emailLoginAction: (formData: FormData) => void;
 }) {
@@ -111,13 +127,12 @@ export function LoginForm({
 
   const familyInputRef = useRef<HTMLInputElement>(null);
 
-  // Restore cached family name
+  // Restore cached family name (server-provided defaultFamilyName takes precedence)
   useEffect(() => {
     if (!familyInputRef.current) return;
+    if (familyInputRef.current.value) return;
     const cached = localStorage.getItem(FAMILY_STORAGE_KEY);
-    if (!familyInputRef.current.value && cached) {
-      familyInputRef.current.value = cached;
-    }
+    if (cached) familyInputRef.current.value = cached;
   }, []);
 
   return (
@@ -174,6 +189,7 @@ export function LoginForm({
               name="family_name"
               autoComplete="organization"
               placeholder={t("auth.family_name_placeholder")}
+              defaultValue={defaultFamilyName}
               required
               maxLength={40}
               onFocus={handleFocus}
@@ -184,6 +200,9 @@ export function LoginForm({
               }}
               className={inputCls}
             />
+            {familyFieldErrors.family_name && (
+              <p className="m-0 mt-1 text-[12px] font-medium text-[color:var(--error)]">{familyFieldErrors.family_name}</p>
+            )}
           </Field>
           <Field label={t("auth.my_name_label")}>
             <input
@@ -191,11 +210,15 @@ export function LoginForm({
               name="display_name"
               autoComplete="name"
               placeholder={t("auth.my_name_placeholder")}
+              defaultValue={defaultDisplayName}
               required
               onFocus={handleFocus}
               onBlur={handleBlur}
               className={inputCls}
             />
+            {familyFieldErrors.display_name && (
+              <p className="m-0 mt-1 text-[12px] font-medium text-[color:var(--error)]">{familyFieldErrors.display_name}</p>
+            )}
           </Field>
           <Field label={t("auth.password")}>
             <div className="relative">
@@ -215,18 +238,18 @@ export function LoginForm({
                 {showPw ? <EyeOffIcon/> : <EyeIcon/>}
               </button>
             </div>
+            {familyFieldErrors.password && (
+              <p className="m-0 mt-1 text-[12px] font-medium text-[color:var(--error)]">{familyFieldErrors.password}</p>
+            )}
           </Field>
-          {defaultTab !== "email" && error && (
-            <p className="m-0 text-sm font-medium text-[color:var(--error)]">{error}</p>
+          {defaultTab !== "email" && (familyFieldErrors.form || error) && (
+            <p className="m-0 text-sm font-medium text-[color:var(--error)]">{familyFieldErrors.form || error}</p>
           )}
-          <button type="submit"
-            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
-            className="mt-[6px] h-12 w-full rounded-[10px] text-[15px] font-semibold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em]"
-            style={{
-              boxShadow: "var(--shadow-card-parent)",
-              transition: "transform 200ms var(--ease-spring)",
-            }}>{t("auth.login_button")}</button>
+          <SubmitButton
+            className="mt-[6px] h-12 w-full rounded-[10px] text-[15px] font-semibold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em] disabled:opacity-70"
+            style={{ boxShadow: "var(--shadow-card-parent)" }}>
+            {t("auth.login_button")}
+          </SubmitButton>
         </form>
 
         {/* Email login form */}
@@ -242,6 +265,7 @@ export function LoginForm({
               inputMode="email"
               autoComplete="email"
               placeholder="you@family.com"
+              defaultValue={defaultEmail}
               required
               onFocus={handleFocus}
               onBlur={handleBlur}
@@ -270,14 +294,11 @@ export function LoginForm({
           {defaultTab === "email" && error && (
             <p className="m-0 text-sm font-medium text-[color:var(--error)]">{error}</p>
           )}
-          <button type="submit"
-            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
-            className="mt-[6px] h-12 w-full rounded-[10px] text-[15px] font-semibold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em]"
-            style={{
-              boxShadow: "var(--shadow-card-parent)",
-              transition: "transform 200ms var(--ease-spring)",
-            }}>{t("auth.login_button")}</button>
+          <SubmitButton
+            className="mt-[6px] h-12 w-full rounded-[10px] text-[15px] font-semibold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em] disabled:opacity-70"
+            style={{ boxShadow: "var(--shadow-card-parent)" }}>
+            {t("auth.login_button")}
+          </SubmitButton>
         </form>
       </div>
 

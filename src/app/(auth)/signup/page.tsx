@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { t } from "@/lib/i18n";
 import { getAuthLocale } from "@/lib/i18n/auth-locale";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 async function signupAction(formData: FormData) {
   "use server";
@@ -10,9 +11,17 @@ async function signupAction(formData: FormData) {
   const password = String(formData.get("password") || "");
   const mode = String(formData.get("mode") || "create"); // 'create' | 'join'
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.signUp({ email, password });
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const next = mode === "join" ? "/onboarding/join-family" : "/onboarding/create-family";
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(next)}`,
+    },
+  });
   if (error) {
-    redirect(`/signup?error=${encodeURIComponent(error.message)}`);
+    redirect(`/signup?error=${encodeURIComponent(error.message)}&email=${encodeURIComponent(email)}`);
   }
   // If email confirmation is required, session won't exist yet
   if (data?.user && !data.session) {
@@ -27,14 +36,21 @@ async function resendConfirmAction(formData: FormData) {
   const email = String(formData.get("email") || "").trim();
   if (!email) redirect("/signup?confirm=1");
   const supabase = await createClient();
-  await supabase.auth.resend({ type: "signup", email });
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  await supabase.auth.resend({
+    type: "signup",
+    email,
+    options: {
+      emailRedirectTo: `${siteUrl}/auth/callback?next=/onboarding/create-family`,
+    },
+  });
   redirect(`/signup?confirm=1&email=${encodeURIComponent(email)}&resent=1`);
 }
 
 export default async function SignupPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; confirm?: string; email?: string; resent?: string }>;
+  searchParams: Promise<{ error?: string; confirm?: string; email?: string; resent?: string; }>;
 }) {
   const sp = await searchParams;
   const locale = await getAuthLocale();
@@ -76,16 +92,21 @@ export default async function SignupPage({
             </div>
           )}
 
+          {/* Spam folder hint */}
+          <p className="mt-3 mb-0 inline-flex items-center gap-1.5 text-[12px] font-medium text-[color:var(--ink-subtle)] leading-[1.4]">
+            <span aria-hidden>&#x1F4EC;</span>
+            {t("auth.check_spam_hint", locale)}
+          </p>
+
           {/* Resend CTA */}
-          <form action={resendConfirmAction} className="w-full mt-7">
+          <form action={resendConfirmAction} className="w-full mt-5">
             <input type="hidden" name="email" value={sp.email || ""} />
-            <button
-              type="submit"
-              className="h-12 w-full rounded-[10px] text-[15px] font-bold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em]"
+            <SubmitButton
+              className="h-12 w-full rounded-[10px] text-[15px] font-bold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em] disabled:opacity-70"
               style={{ boxShadow: "0 1px 2px rgba(10,10,10,0.04), 0 12px 28px -16px rgba(10,10,10,0.4)" }}
             >
               {t("auth.check_email_resend", locale)}
-            </button>
+            </SubmitButton>
           </form>
 
           {/* Back to login */}
@@ -118,6 +139,7 @@ export default async function SignupPage({
             type="email"
             name="email"
             placeholder={t("auth.email_placeholder", locale)}
+            defaultValue={sp.email || ""}
             required
             className="h-12 w-full rounded-[10px] bg-[color:var(--surface-raised)] border border-[color:var(--border-subtle)] px-4 text-[17px] font-medium text-[color:var(--ink)] outline-none transition-[border-color,background] duration-150"
           />
@@ -141,13 +163,12 @@ export default async function SignupPage({
           <div className="text-[color:var(--error)] text-sm text-center mt-2">{sp.error}</div>
         )}
 
-        <button
-          type="submit"
-          className="mt-[6px] h-12 w-full rounded-[10px] text-[15px] font-semibold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em]"
+        <SubmitButton
+          className="mt-[6px] h-12 w-full rounded-[10px] text-[15px] font-semibold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em] disabled:opacity-70"
           style={{ boxShadow: "var(--shadow-card-parent)" }}
         >
           {t("auth.signup_button", locale)}
-        </button>
+        </SubmitButton>
       </form>
 
       <div className="mt-4 text-center flex flex-col gap-2">

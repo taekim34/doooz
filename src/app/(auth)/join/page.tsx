@@ -1,10 +1,12 @@
 import { randomUUID } from "node:crypto";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import type { Route } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { SectionLabel } from "@/components/atoms";
 import { FamilyNameInput } from "./_family-name-input";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { t } from "@/lib/i18n";
 import { getAuthLocale } from "@/lib/i18n/auth-locale";
 
@@ -30,13 +32,21 @@ async function joinAction(formData: FormData) {
   const role =
     String(formData.get("role") || "child") === "parent" ? "parent" : "child";
 
-  const redirectWith = (msg: string) =>
-    redirect(`/join?error=${encodeURIComponent(msg)}&family_name=${encodeURIComponent(familyName)}`);
+  const preserve = new URLSearchParams({
+    family_name: familyName,
+    invite_code: inviteCode,
+    display_name: displayName,
+    role,
+  });
+  const redirectWith = (code: string) =>
+    redirect(`/join?error_code=${code}&${preserve.toString()}` as Route);
+  const redirectWithText = (msg: string) =>
+    redirect(`/join?error=${encodeURIComponent(msg)}&${preserve.toString()}` as Route);
 
-  if (!familyName) redirectWith(t("auth.error_family_name_required", locale));
-  if (!inviteCode) redirectWith(t("auth.error_invite_code_required", locale));
-  if (!displayName) redirectWith(t("auth.error_name_required", locale));
-  if (pin.length < 6) redirectWith(t("auth.error_password_min", locale));
+  if (!familyName) redirectWith("family_name_required");
+  if (!inviteCode) redirectWith("invite_code_required");
+  if (!displayName) redirectWith("name_required");
+  if (pin.length < 6) redirectWith("password_min");
 
   // WHY: admin required — invite link join needs cross-family lookup before user has a family_id
   const admin = createAdminClient();
@@ -48,7 +58,7 @@ async function joinAction(formData: FormData) {
     .eq("name", familyName)
     .eq("invite_code", inviteCode)
     .maybeSingle();
-  if (!fam) redirectWith(t("auth.error_invite_mismatch", locale));
+  if (!fam) redirectWith("invite_mismatch");
 
   // 2. Create the auth user with a synthetic email, pre-confirmed.
   const familyId = fam!.id;
@@ -62,7 +72,7 @@ async function joinAction(formData: FormData) {
     },
   );
   if (createErr || !created?.user) {
-    redirectWith(createErr?.message ?? t("auth.signup_failed", locale));
+    redirectWithText(createErr?.message ?? t("auth.signup_failed", locale));
   }
 
   const newUserId = created!.user!.id;
@@ -77,7 +87,7 @@ async function joinAction(formData: FormData) {
   if (insertErr) {
     // Roll back the auth user so the next attempt doesn't collide.
     await admin.auth.admin.deleteUser(newUserId);
-    redirectWith(insertErr.message);
+    redirectWithText(insertErr.message);
   }
 
   // 4. Establish a browser session by signing in with the same synthetic
@@ -88,7 +98,7 @@ async function joinAction(formData: FormData) {
     password: pin,
   });
   if (signInErr) {
-    redirectWith(signInErr.message);
+    redirectWithText(signInErr.message);
   }
 
   redirect("/onboarding/pick-character");
@@ -103,10 +113,35 @@ const selectCls =
 export default async function JoinPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; family_name?: string }>;
+  searchParams: Promise<{
+    error?: string;
+    error_code?: string;
+    family_name?: string;
+    invite_code?: string;
+    display_name?: string;
+    role?: string;
+  }>;
 }) {
   const sp = await searchParams;
   const locale = await getAuthLocale();
+
+  const fieldError = (codes: string[]) =>
+    sp.error_code && codes.includes(sp.error_code) ? errMsg(sp.error_code) : null;
+  function errMsg(code: string): string {
+    switch (code) {
+      case "family_name_required": return t("auth.error_family_name_required", locale);
+      case "invite_code_required": return t("auth.error_invite_code_required", locale);
+      case "name_required": return t("auth.error_name_required", locale);
+      case "password_min": return t("auth.error_password_min", locale);
+      case "invite_mismatch": return t("auth.error_invite_mismatch", locale);
+      default: return "";
+    }
+  }
+  const inlineFamily = fieldError(["family_name_required"]);
+  const inlineInvite = fieldError(["invite_code_required", "invite_mismatch"]);
+  const inlineName = fieldError(["name_required"]);
+  const inlinePin = fieldError(["password_min"]);
+
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-col items-center text-center">
@@ -125,6 +160,9 @@ export default async function JoinPage({
         <label className="flex flex-col gap-2">
           <SectionLabel as="span">{t("auth.family_name_label", locale)}</SectionLabel>
           <FamilyNameInput defaultValue={sp.family_name} placeholder={t("auth.family_name_placeholder", locale)} />
+          {inlineFamily && (
+            <p className="m-0 text-[12px] font-medium text-[color:var(--error)]">{inlineFamily}</p>
+          )}
         </label>
 
         <label className="flex flex-col gap-2">
@@ -135,11 +173,15 @@ export default async function JoinPage({
             autoCorrect="off"
             spellCheck={false}
             placeholder={t("auth.invite_code_placeholder", locale)}
+            defaultValue={sp.invite_code || ""}
             required
             maxLength={20}
             className={`${inputCls} uppercase tracking-[0.12em]`}
             style={{ fontFeatureSettings: '"tnum" 1' }}
           />
+          {inlineInvite && (
+            <p className="m-0 text-[12px] font-medium text-[color:var(--error)]">{inlineInvite}</p>
+          )}
         </label>
 
         <label className="flex flex-col gap-2">
@@ -148,10 +190,14 @@ export default async function JoinPage({
             name="display_name"
             autoComplete="name"
             placeholder={t("auth.my_name_placeholder", locale)}
+            defaultValue={sp.display_name || ""}
             required
             maxLength={20}
             className={inputCls}
           />
+          {inlineName && (
+            <p className="m-0 text-[12px] font-medium text-[color:var(--error)]">{inlineName}</p>
+          )}
         </label>
 
         <label className="flex flex-col gap-2">
@@ -165,11 +211,14 @@ export default async function JoinPage({
             required
             className={inputCls}
           />
+          {inlinePin && (
+            <p className="m-0 text-[12px] font-medium text-[color:var(--error)]">{inlinePin}</p>
+          )}
         </label>
 
         <label className="flex flex-col gap-2">
           <SectionLabel as="span">{t("auth.role_label", locale)}</SectionLabel>
-          <select name="role" defaultValue="child" className={selectCls}>
+          <select name="role" defaultValue={sp.role === "parent" ? "parent" : "child"} className={selectCls}>
             <option value="child">{t("auth.role_child", locale)}</option>
             <option value="parent">{t("auth.role_parent", locale)}</option>
           </select>
@@ -181,13 +230,12 @@ export default async function JoinPage({
           </div>
         )}
 
-        <button
-          type="submit"
-          className="mt-[10px] h-12 w-full rounded-[10px] text-[15px] font-bold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em]"
+        <SubmitButton
+          className="mt-[10px] h-12 w-full rounded-[10px] text-[15px] font-bold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em] disabled:opacity-70"
           style={{ boxShadow: "0 1px 2px rgba(10,10,10,0.04), 0 12px 28px -16px rgba(10,10,10,0.4)" }}
         >
           {t("auth.join_submit", locale)}
-        </button>
+        </SubmitButton>
       </form>
 
       <div className="mt-6 text-center">

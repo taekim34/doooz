@@ -174,14 +174,14 @@ export function TemplateRow({ template, assignees, deleteAction, permanentDelete
         <button
           type="submit"
           disabled={isPending}
-          className="h-10 px-4.5 rounded-full text-[13px] font-bold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em] disabled:opacity-60 disabled:cursor-not-allowed"
+          className="h-10 px-[18px] rounded-full text-[13px] font-bold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em] disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {t("tasks.save")}
         </button>
         <button
           type="button"
           onClick={() => setIsEditing(false)}
-          className="h-10 px-4.5 rounded-full text-[13px] font-bold text-[color:var(--ink)] bg-[color:var(--surface-sunken)] border-none cursor-pointer tracking-[-0.01em]"
+          className="h-10 px-[18px] rounded-full text-[13px] font-bold text-[color:var(--ink)] bg-[color:var(--surface-sunken)] border-none cursor-pointer tracking-[-0.01em]"
         >
           {t("tasks.cancel")}
         </button>

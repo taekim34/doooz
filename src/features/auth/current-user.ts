@@ -15,7 +15,7 @@ export interface CurrentUser {
   lifetime_earned: number;
   level: number;
   tone: Tone;
-  mode: Mode;
+  color_mode: Mode;
 }
 
 export interface CurrentFamily {
@@ -44,7 +44,7 @@ export async function requireUser(): Promise<{
   // so that the user can read their own row via RLS.
   const { data: row } = await supabase
     .from("users")
-    .select("id, family_id, role, display_name, character_id, current_balance, lifetime_earned, level, tone, mode")
+    .select("id, family_id, role, display_name, character_id, current_balance, lifetime_earned, level, tone, color_mode")
     .eq("id", authUser.id)
     .maybeSingle();
 
@@ -53,7 +53,7 @@ export async function requireUser(): Promise<{
   const r = {
     ...row,
     tone: (row.tone === "cool" ? "cool" : "warm"),
-    mode: (row.mode === "dark" ? "dark" : "light"),
+    color_mode: (row.color_mode === "dark" ? "dark" : "light"),
   } as Omit<CurrentUser, "email">;
 
   // Everyone must pick a character.

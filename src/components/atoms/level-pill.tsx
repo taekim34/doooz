@@ -10,7 +10,7 @@ const levelPillVariants = cva(
         default:
           "bg-[color:var(--accent)]/10 text-[color:var(--accent)]",
         accent:
-          "bg-[image:var(--accent-gradient)] text-white",
+          "bg-[image:var(--accent-gradient)] text-[color:var(--on-accent)]",
         outline:
           "border border-[color:var(--accent)] text-[color:var(--accent)] bg-transparent",
       },

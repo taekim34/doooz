@@ -30,7 +30,7 @@ function hashPick(id: string | null): string {
 /* ------------------------------------------------------------------ */
 
 const characterAvatarVariants = cva(
-  "relative inline-flex items-center justify-center rounded-full shadow-[inset_0_-4px_0_rgba(0,0,0,0.04)]",
+  "relative inline-flex items-center justify-center overflow-hidden rounded-full shadow-[inset_0_-4px_0_rgba(0,0,0,0.04)]",
   {
     variants: {
       size: {
@@ -66,14 +66,15 @@ const CharacterAvatar = React.forwardRef<HTMLDivElement, CharacterAvatarProps>(
     const bg = hashPick(characterId);
 
     return (
-      <div
-        ref={ref}
-        role="img"
-        aria-label={characterId}
-        className={cn(characterAvatarVariants({ size }), className)}
-        style={{ backgroundImage: bg }}
-      >
-        {emoji}
+      <div ref={ref} className={cn("relative inline-flex", className)}>
+        <div
+          role="img"
+          aria-label={characterId}
+          className={cn(characterAvatarVariants({ size }))}
+          style={{ backgroundImage: bg }}
+        >
+          {emoji}
+        </div>
 
         {showLevel && level != null && (
           <LevelPill

@@ -143,7 +143,7 @@ export default async function MemberDetailPage({
             label={t("points.lifetime", locale)}
           />
           <StatCard
-            value={`${activeDays}${locale === "ko" ? "일" : locale === "ja" ? "日" : "d"}`}
+            value={`${activeDays}${t("common.day_suffix", locale)}`}
             label={t("member.active_days", locale)}
           />
           <StatCard value={joinDate} label={t("member.join_date", locale)} />
@@ -166,11 +166,7 @@ export default async function MemberDetailPage({
                     ? "var(--success)"
                     : "var(--error)";
                 const amountText = isZero
-                  ? locale === "ko"
-                    ? "승인"
-                    : locale === "ja"
-                      ? "承認"
-                      : "Approved"
+                  ? t("common.approved", locale)
                   : (positive ? "+" : "") +
                     tx.amount.toLocaleString() +
                     " pt";

@@ -14,7 +14,7 @@ const backButtonVariants = cva(
         default:
           "bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-[color:var(--ink-subtle)] hover:bg-[var(--border-subtle)]",
         glass:
-          "bg-white/70 backdrop-blur-sm border border-white/50 text-[color:var(--ink-subtle)] hover:bg-white/90",
+          "bg-[color:var(--surface)]/70 backdrop-blur-sm border border-[color:var(--border-subtle)] text-[color:var(--ink-subtle)] hover:bg-[color:var(--surface)]/90",
       },
     },
     defaultVariants: {

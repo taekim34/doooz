@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import type { Route } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { SectionLabel } from "@/components/atoms";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { t } from "@/lib/i18n";
 import { getAuthLocale } from "@/lib/i18n/auth-locale";
 
@@ -13,7 +15,17 @@ async function joinAction(formData: FormData) {
   const displayName = String(formData.get("display_name") || "").trim();
   const inviteCode = String(formData.get("invite_code") || "").trim();
   const role = String(formData.get("role") || "child") === "parent" ? "parent" : "child";
-  if (!familyName || !displayName || !inviteCode) redirect(`/onboarding/join-family?error=${encodeURIComponent(t("auth.error_input", locale))}`);
+
+  const preserve = new URLSearchParams({
+    family_name: familyName,
+    display_name: displayName,
+    invite_code: inviteCode,
+    role,
+  });
+  const errorUrl = (msg: string) =>
+    `/onboarding/join-family?error=${encodeURIComponent(msg)}&${preserve.toString()}` as Route;
+
+  if (!familyName || !displayName || !inviteCode) redirect(errorUrl(t("auth.error_input", locale)));
 
   const supabase = await createClient();
   const {
@@ -29,7 +41,7 @@ async function joinAction(formData: FormData) {
     .eq("name", familyName)
     .eq("invite_code", inviteCode)
     .maybeSingle();
-  if (!fam) redirect(`/onboarding/join-family?error=${encodeURIComponent(t("auth.error_invite_mismatch", locale))}`);
+  if (!fam) redirect(errorUrl(t("auth.error_invite_mismatch", locale)));
 
   const { error: uerr } = await admin.from("users").insert({
     id: authUser.id,
@@ -37,7 +49,7 @@ async function joinAction(formData: FormData) {
     role,
     display_name: displayName,
   });
-  if (uerr) redirect(`/onboarding/join-family?error=${encodeURIComponent(t("auth.error_join_failed", locale))}`);
+  if (uerr) redirect(errorUrl(t("auth.error_join_failed", locale)));
 
   redirect("/onboarding/pick-character");
 }
@@ -51,7 +63,13 @@ const selectCls =
 export default async function JoinFamilyPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{
+    error?: string;
+    family_name?: string;
+    display_name?: string;
+    invite_code?: string;
+    role?: string;
+  }>;
 }) {
   const sp = await searchParams;
   const locale = await getAuthLocale();
@@ -80,6 +98,7 @@ export default async function JoinFamilyPage({
             name="family_name"
             autoComplete="organization"
             placeholder={t("auth.family_name_placeholder", locale)}
+            defaultValue={sp.family_name || ""}
             required
             maxLength={40}
             className={inputCls}
@@ -95,6 +114,7 @@ export default async function JoinFamilyPage({
             autoCorrect="off"
             spellCheck={false}
             placeholder={t("auth.invite_code_placeholder", locale)}
+            defaultValue={sp.invite_code || ""}
             required
             maxLength={20}
             className={`${inputCls} uppercase tracking-[0.12em]`}
@@ -109,6 +129,7 @@ export default async function JoinFamilyPage({
             name="display_name"
             autoComplete="name"
             placeholder={t("auth.my_name_placeholder", locale)}
+            defaultValue={sp.display_name || ""}
             required
             maxLength={20}
             className={inputCls}
@@ -117,7 +138,7 @@ export default async function JoinFamilyPage({
 
         <label className="flex flex-col gap-2">
           <SectionLabel as="span">{t("auth.role_label", locale)}</SectionLabel>
-          <select name="role" defaultValue="child" className={selectCls}>
+          <select name="role" defaultValue={sp.role === "parent" ? "parent" : "child"} className={selectCls}>
             <option value="child">{t("auth.role_child", locale)}</option>
             <option value="parent">{t("auth.role_parent", locale)}</option>
           </select>
@@ -129,13 +150,12 @@ export default async function JoinFamilyPage({
           </div>
         )}
 
-        <button
-          type="submit"
-          className="mt-[10px] h-12 w-full rounded-[10px] text-[15px] font-bold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em]"
+        <SubmitButton
+          className="mt-[10px] h-12 w-full rounded-[10px] text-[15px] font-bold text-[color:var(--on-accent)] bg-[color:var(--ink)] border-none cursor-pointer tracking-[-0.01em] disabled:opacity-70"
           style={{ boxShadow: "0 1px 2px rgba(10,10,10,0.04), 0 12px 28px -16px rgba(10,10,10,0.4)" }}
         >
           {t("auth.join_submit", locale)}
-        </button>
+        </SubmitButton>
       </form>
 
       <div className="mt-6 flex items-center justify-center gap-[6px]">

@@ -48,7 +48,7 @@ export function DeleteFamily({ locale }: { locale: Locale }) {
       >
         {t("settings.delete_family", locale)}
         <span className="ml-1.5 text-[11px] font-bold tracking-[0.02em] text-[color:var(--ink-subtle)]">
-          ({locale === "ko" ? "관리자만" : locale === "ja" ? "管理者のみ" : "Admin only"})
+          ({t("common.admin_only", locale)})
         </span>
       </button>
 

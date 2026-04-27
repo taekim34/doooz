@@ -8,7 +8,7 @@ const statCardVariants = cva(
     variants: {
       variant: {
         default: "bg-[var(--surface-raised)]",
-        accent: "bg-[image:var(--accent-gradient)] text-white",
+        accent: "bg-[image:var(--accent-gradient)] text-[color:var(--on-accent)]",
         muted: "border border-dashed border-[color:var(--ink-subtle)]/30 bg-transparent",
       },
     },
@@ -56,7 +56,7 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
         <div
           className={cn(
             "mt-0.5 text-[11px] font-semibold",
-            isAccent ? "text-white/80" : "text-[color:var(--ink-subtle)]",
+            isAccent ? "text-[color:var(--on-accent)]/80" : "text-[color:var(--ink-subtle)]",
           )}
         >
           {label}

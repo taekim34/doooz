@@ -140,13 +140,13 @@ export function CelebrationOverlay({
                 "0 8px 20px -6px rgba(255,107,157,0.5), inset 0 1px 0 rgba(255,255,255,0.5)",
             }}
           >
-            <span className="whitespace-nowrap text-[13px] font-bold uppercase tracking-[0.12em] text-white">
+            <span className="whitespace-nowrap text-[13px] font-bold uppercase tracking-[0.12em] text-[color:var(--on-accent)]">
               LEVEL UP
             </span>
             <span className="inline-flex items-center gap-1">
-              <LevelPill level={levelUp.from} size="sm" variant="outline" className="border-white/60 text-white" />
-              <span className="text-[13px] font-bold text-white">→</span>
-              <LevelPill level={levelUp.to} size="sm" variant="outline" className="border-white/60 text-white" />
+              <LevelPill level={levelUp.from} size="sm" variant="outline" className="border-[color:var(--on-accent)]/60 text-[color:var(--on-accent)]" />
+              <span className="text-[13px] font-bold text-[color:var(--on-accent)]">→</span>
+              <LevelPill level={levelUp.to} size="sm" variant="outline" className="border-[color:var(--on-accent)]/60 text-[color:var(--on-accent)]" />
             </span>
           </div>
         )}
@@ -156,7 +156,7 @@ export function CelebrationOverlay({
           <button
             onClick={dismiss}
             type="button"
-            className="flex h-12 cursor-pointer items-center gap-2 rounded-full border-none bg-[#1A0F26] pl-[22px] pr-1.5 text-[15px] font-bold tracking-[-0.01em] text-white font-[inherit]"
+            className="flex h-12 cursor-pointer items-center gap-2 rounded-full border-none bg-[color:var(--ink)] pl-[22px] pr-1.5 text-[15px] font-bold tracking-[-0.01em] text-[color:var(--on-accent)] font-[inherit]"
             style={{
               boxShadow:
                 "0 14px 28px -10px rgba(26,15,38,0.5), inset 0 1px 0 rgba(255,255,255,0.08)",

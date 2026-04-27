@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { now } from "@/lib/datetime/clock";
+import { useT } from "@/lib/i18n/useT";
 
 type Approval = {
   id: string;
@@ -19,15 +20,16 @@ export function ApprovalList({
   approvals: Approval[];
 }) {
   const router = useRouter();
+  const t = useT();
   const [pending, startTransition] = useTransition();
 
   function timeAgo(iso: string): string {
     const mins = Math.round((now() - new Date(iso).getTime()) / 60000);
-    if (mins < 1) return "방금";
-    if (mins < 60) return `${mins}분 전`;
+    if (mins < 1) return t("common.just_now");
+    if (mins < 60) return t("common.minutes_ago").replace("{n}", String(mins));
     const hrs = Math.round(mins / 60);
-    if (hrs < 24) return `${hrs}시간 전`;
-    return `${Math.round(hrs / 24)}일 전`;
+    if (hrs < 24) return t("common.hours_ago").replace("{n}", String(hrs));
+    return t("common.days_ago").replace("{n}", String(Math.round(hrs / 24)));
   }
 
   async function handleAction(id: string, action: "approve" | "reject") {

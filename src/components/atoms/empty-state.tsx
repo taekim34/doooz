@@ -9,7 +9,7 @@ const emptyStateVariants = cva(
       variant: {
         default: "py-8",
         compact: "py-4",
-        card: "rounded-2xl bg-white py-8 px-6 shadow-sm border border-[var(--border-subtle)]",
+        card: "rounded-2xl bg-[color:var(--surface-raised)] py-8 px-6 shadow-sm border border-[var(--border-subtle)]",
       },
     },
     defaultVariants: {

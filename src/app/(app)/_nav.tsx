@@ -49,16 +49,16 @@ export function AppNav({
       <header
         className="sticky top-0 z-40 flex items-center justify-between border-b border-[rgba(10,10,10,0.06)] px-4 py-2 md:hidden"
         style={{
-          background: "rgba(255,255,255,0.92)",
+          background: "color-mix(in srgb, var(--surface) 92%, transparent)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
         }}
       >
         <div className="flex items-center gap-2">
           <Image src="/logo.png" alt="DOOOZ" width={54} height={54} priority className="h-[27px] w-[27px]" />
-          <span className="text-xs text-gray-400">{familyName}</span>
+          <span className="text-xs text-[color:var(--ink-subtle)]">{familyName}</span>
         </div>
-        <Link href={"/settings" as Route} className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600">
+        <Link href={"/settings" as Route} className="flex h-8 w-8 items-center justify-center rounded-full text-[color:var(--ink-subtle)] transition-colors hover:bg-[color:var(--surface-sunken)] hover:text-[color:var(--ink-muted)]">
           <SettingsGearIcon />
         </Link>
       </header>
@@ -67,7 +67,7 @@ export function AppNav({
       <nav
         className="sticky top-0 z-40 hidden border-b border-[rgba(10,10,10,0.06)] md:block"
         style={{
-          background: "rgba(255,255,255,0.85)",
+          background: "color-mix(in srgb, var(--surface) 85%, transparent)",
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
         }}
@@ -80,7 +80,7 @@ export function AppNav({
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
               <Image src="/logo.png" alt="DOOOZ" width={54} height={54} priority className="h-[27px] w-[27px]" />
-              <span className="text-lg font-extrabold tracking-tight text-gray-900">doooz</span>
+              <span className="text-lg font-extrabold tracking-tight text-[color:var(--ink)]">doooz</span>
             </div>
             <span
               className={cn(
@@ -105,8 +105,8 @@ export function AppNav({
                   className={cn(
                     "rounded-full px-3.5 py-2 text-[13.5px] font-medium transition-all",
                     active
-                      ? "bg-gray-900 text-white"
-                      : "text-gray-500 hover:bg-gray-100 hover:text-gray-700",
+                      ? "bg-[color:var(--ink)] text-[color:var(--on-accent)]"
+                      : "text-[color:var(--ink-muted)] hover:bg-[color:var(--surface-sunken)] hover:text-[color:var(--ink)]",
                   )}
                 >
                   <span className="mr-1.5">{it.emoji}</span>
@@ -120,7 +120,7 @@ export function AppNav({
           <div className="flex items-center gap-2">
             <Link
               href={"/settings" as Route}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-[color:var(--ink-subtle)] transition-colors hover:bg-[color:var(--surface-sunken)] hover:text-[color:var(--ink-muted)]"
             >
               <SettingsGearIcon />
             </Link>
@@ -143,7 +143,7 @@ export function AppNav({
       <nav
         className="fixed bottom-0 left-0 right-0 z-40 grid grid-cols-6 border-t border-[rgba(10,10,10,0.06)] pb-[env(safe-area-inset-bottom)] md:hidden"
         style={{
-          background: "rgba(255,255,255,0.92)",
+          background: "color-mix(in srgb, var(--surface) 92%, transparent)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
         }}

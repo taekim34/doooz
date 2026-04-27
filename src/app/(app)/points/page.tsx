@@ -5,7 +5,6 @@ import { formatDateInFamilyTz } from "@/lib/datetime/family-tz";
 import Link from "next/link";
 import { BackButton, SectionLabel } from "@/components/atoms";
 import { AnimatedBalance } from "./_animated-balance";
-import { PointsViewToggle } from "./_view-toggle";
 import { CharacterAvatar } from "@/components/molecules/character-avatar";
 import { txMeta } from "@/lib/tx-meta";
 
@@ -120,18 +119,7 @@ export default async function PointsPage() {
 
           <BackButton href="/" className="points-back-btn" />
 
-          {/* Parents get a segmented toggle. Kids see nothing in the center. */}
-          {isKid ? (
-            <span />
-          ) : (
-            <PointsViewToggle
-              defaultMode={defaultMode}
-              kidLabel={t("points.kid_view", locale)}
-              parentLabel={t("points.parent_view", locale)}
-            />
-          )}
-
-          <span className="w-9 h-9" />
+          <span />
         </div>
 
         {/* Page title + subtitle */}
@@ -282,7 +270,7 @@ export default async function PointsPage() {
 
           {/* Right column: Recent transactions — kid */}
           <div>
-            <div className="mt-5.5 flex items-center justify-between gap-3 lg:!mt-0">
+            <div className="mt-8 flex items-center justify-between gap-3 lg:mt-0">
               <SectionLabel>{t("points.recent", locale)}</SectionLabel>
               <Link
                 href="/points/history"
@@ -363,7 +351,7 @@ export default async function PointsPage() {
 
               {/* Family totals */}
               {kidList.length > 0 && (
-                <div className="mt-4.5">
+                <div className="mt-8">
                   <SectionLabel>{t("points.family_balance", locale)}</SectionLabel>
                   <div
                     style={{
@@ -434,7 +422,7 @@ export default async function PointsPage() {
 
             {/* Right column: Recent transactions — parent */}
             <div>
-              <div className="mt-5.5 flex items-center justify-between gap-3 lg:!mt-0">
+              <div className="mt-8 flex items-center justify-between gap-3 lg:mt-0">
                 <SectionLabel>{t("points.recent", locale)}</SectionLabel>
                 <Link
                   href="/points/history"

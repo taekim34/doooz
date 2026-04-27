@@ -6,6 +6,7 @@ import { characterEmoji } from "@/features/characters/emoji-map";
 import { getStage } from "@/lib/level";
 import { TimezoneSelect } from "@/components/ui/timezone-select";
 import { BackButton, SectionLabel } from "@/components/atoms";
+import { ThemeToggle } from "./_theme-toggle";
 import { t, type Locale } from "@/lib/i18n";
 import { DeleteAccount } from "./_delete-account";
 import { DeleteFamily } from "./_delete-family";
@@ -51,9 +52,13 @@ async function updateFamilyAction(formData: FormData) {
     .update({ name: familyName || undefined, timezone, locale: localeVal })
     .eq("id", familyId);
   if (error?.code === "23505") {
-    redirect(
-      `/settings?error=${encodeURIComponent(t("settings.error_family_exists"))}`,
-    );
+    const params = new URLSearchParams({
+      error_code: "family_exists",
+      family_name: familyName,
+      timezone,
+      locale: localeVal,
+    });
+    redirect(`/settings?${params.toString()}`);
   }
   redirect("/settings");
 }
@@ -104,10 +109,9 @@ async function updateToneAction(formData: FormData) {
   const {
     data: { user: authUser },
   } = await supabase.auth.getUser();
-  if (!authUser) redirect("/login");
+  if (!authUser) return;
   const tone = formData.get("tone") === "cool" ? "cool" : "warm";
   await supabase.from("users").update({ tone }).eq("id", authUser.id);
-  redirect("/settings");
 }
 
 async function updateModeAction(formData: FormData) {
@@ -116,10 +120,9 @@ async function updateModeAction(formData: FormData) {
   const {
     data: { user: authUser },
   } = await supabase.auth.getUser();
-  if (!authUser) redirect("/login");
-  const mode = formData.get("mode") === "dark" ? "dark" : "light";
-  await supabase.from("users").update({ mode }).eq("id", authUser.id);
-  redirect("/settings");
+  if (!authUser) return;
+  const color_mode = formData.get("mode") === "dark" ? "dark" : "light";
+  await supabase.from("users").update({ color_mode }).eq("id", authUser.id);
 }
 
 async function logoutAction() {
@@ -140,8 +143,12 @@ export default async function SettingsPage({
 }: {
   searchParams: Promise<{
     error?: string;
+    error_code?: string;
     pw_error?: string;
     pw_ok?: string;
+    family_name?: string;
+    timezone?: string;
+    locale?: string;
   }>;
 }) {
   const sp = await searchParams;
@@ -221,63 +228,42 @@ export default async function SettingsPage({
           </div>
         </div>
 
-        {/* Tone toggle (kid only) */}
+        {/* Tone & mode toggles (kid only — parent fixed to warm+light) */}
         {user.role === "child" && (
           <>
             <div className={dividerStyle} />
             <div>
               <div className="mb-2.5">
-                <SectionLabel as="span">배경 톤</SectionLabel>
+                <SectionLabel as="span">{t("settings.theme_tone", locale)}</SectionLabel>
               </div>
-              <form action={updateToneAction}>
-                <div className="inline-flex gap-0.5 rounded-full bg-[color:var(--border)] p-[3px]">
-                  {(["warm", "cool"] as const).map((v) => {
-                    const on = user.tone === v;
-                    return (
-                      <button
-                        key={v}
-                        type="submit"
-                        name="tone"
-                        value={v}
-                        className={`cursor-pointer rounded-full border-none px-5 py-2 text-[13px] tracking-[-0.01em] transition-all ${on ? "font-bold bg-[color:var(--surface)] text-[color:var(--ink)]" : "font-medium bg-transparent text-[color:var(--ink-subtle)]"}`}
-                        style={{ boxShadow: on ? "0 1px 3px rgba(0,0,0,0.08)" : "none" }}
-                      >
-                        {v === "warm" ? "🌅 Warm" : "🌊 Cool"}
-                      </button>
-                    );
-                  })}
-                </div>
-              </form>
+              <ThemeToggle
+                name="tone"
+                current={user.tone}
+                options={[
+                  { value: "warm", label: "🌅 Warm" },
+                  { value: "cool", label: "🌊 Cool" },
+                ]}
+                action={updateToneAction}
+              />
+            </div>
+
+            <div className={dividerStyle} />
+            <div>
+              <div className="mb-2.5">
+                <SectionLabel as="span">{t("settings.color_mode_label", locale)}</SectionLabel>
+              </div>
+              <ThemeToggle
+                name="mode"
+                current={user.color_mode}
+                options={[
+                  { value: "light", label: "☀️ Light" },
+                  { value: "dark", label: "🌙 Dark" },
+                ]}
+                action={updateModeAction}
+              />
             </div>
           </>
         )}
-
-        {/* Dark mode toggle (all roles) */}
-        <div className={dividerStyle} />
-        <div>
-          <div className="mb-2.5">
-            <SectionLabel as="span">{locale === "ko" ? "화면 모드" : locale === "ja" ? "表示モード" : "Display Mode"}</SectionLabel>
-          </div>
-          <form action={updateModeAction}>
-            <div className="inline-flex gap-0.5 rounded-full bg-[color:var(--border)] p-[3px]">
-              {(["light", "dark"] as const).map((v) => {
-                const on = user.mode === v;
-                return (
-                  <button
-                    key={v}
-                    type="submit"
-                    name="mode"
-                    value={v}
-                    className={`cursor-pointer rounded-full border-none px-5 py-2 text-[13px] tracking-[-0.01em] transition-all ${on ? "font-bold bg-[color:var(--surface)] text-[color:var(--ink)]" : "font-medium bg-transparent text-[color:var(--ink-subtle)]"}`}
-                    style={{ boxShadow: on ? "0 1px 3px rgba(0,0,0,0.08)" : "none" }}
-                  >
-                    {v === "light" ? "☀️ Light" : "🌙 Dark"}
-                  </button>
-                );
-              })}
-            </div>
-          </form>
-        </div>
 
         {/* Family settings (parent only) */}
         {user.role === "parent" && (
@@ -288,12 +274,7 @@ export default async function SettingsPage({
                 <SectionLabel as="span">{t("settings.family", locale)}</SectionLabel>
                 {isAdmin && (
                   <span className="whitespace-nowrap text-[10.5px] font-bold uppercase tracking-[0.1em] text-[color:var(--ink-subtle)]">
-                    ·{" "}
-                    {locale === "ko"
-                      ? "관리자"
-                      : locale === "ja"
-                        ? "管理者"
-                        : "Admin"}
+                    · {t("common.admin", locale)}
                   </span>
                 )}
               </div>
@@ -303,19 +284,24 @@ export default async function SettingsPage({
               >
                 <input
                   name="family_name"
-                  defaultValue={family.name}
+                  defaultValue={sp.family_name ?? family.name}
                   required
                   maxLength={40}
                   placeholder={t("settings.family_name", locale)}
                   className={inputCls}
                 />
+                {sp.error_code === "family_exists" && (
+                  <p className="m-0 text-[12px] font-medium text-[color:var(--error)]">
+                    {t("settings.error_family_exists", locale)}
+                  </p>
+                )}
                 <TimezoneSelect
                   name="timezone"
-                  defaultValue={family.timezone}
+                  defaultValue={sp.timezone ?? family.timezone}
                 />
                 <select
                   name="locale"
-                  defaultValue={family.locale || "ko"}
+                  defaultValue={sp.locale ?? family.locale ?? "ko"}
                   className={`${inputCls} cursor-pointer appearance-none pr-10`}
                   style={{
                     backgroundImage:
@@ -328,7 +314,7 @@ export default async function SettingsPage({
                   <option value="ja">日本語</option>
                   <option value="en">English</option>
                 </select>
-                {sp.error && (
+                {sp.error && !sp.error_code && (
                   <p className="m-0 text-[13px] text-[color:var(--error)]">
                     {sp.error}
                   </p>
@@ -402,7 +388,7 @@ export default async function SettingsPage({
         <div>
           <div className="mb-2.5">
             <SectionLabel as="span">
-              {locale === "ko" ? "계정" : locale === "ja" ? "アカウント" : "Account"}
+              {t("common.account", locale)}
             </SectionLabel>
           </div>
           <form action={logoutAction}>

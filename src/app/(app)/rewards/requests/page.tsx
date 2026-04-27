@@ -91,7 +91,7 @@ export default async function RewardRequestsPage() {
 
 
   const rowClass = "flex items-center gap-2.5 p-3 rounded-[14px] bg-[color:var(--surface-raised)]";
-  const emptyClass = "px-4 py-5.5 rounded-[14px] bg-[color:var(--surface-raised)] text-center text-[color:var(--ink-subtle)] text-[13px] font-medium tracking-[-0.01em]";
+  const emptyClass = "px-4 py-[22px] rounded-[14px] bg-[color:var(--surface-raised)] text-center text-[color:var(--ink-subtle)] text-[13px] font-medium tracking-[-0.01em]";
 
   return (
     <div className="mx-auto max-w-3xl bg-[color:var(--bg)] text-[color:var(--ink)] px-5 pt-3 pb-7">

@@ -167,7 +167,7 @@ export function ParentHome({
           />
           <StatCard
             label={t("home.streak", locale)}
-            value={`${streakDays}${locale === "ko" ? "일" : locale === "ja" ? "日" : "d"}`}
+            value={`${streakDays}${t("common.day_suffix", locale)}`}
           />
         </div>
       </FadeUp>

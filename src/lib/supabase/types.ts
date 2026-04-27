@@ -544,7 +544,7 @@ export type Database = {
           id: string
           level: number
           lifetime_earned: number
-          mode: string
+          color_mode: string
           role: string
           tone: string
         }
@@ -558,7 +558,7 @@ export type Database = {
           id: string
           level?: number
           lifetime_earned?: number
-          mode?: string
+          color_mode?: string
           role: string
           tone?: string
         }
@@ -572,7 +572,7 @@ export type Database = {
           id?: string
           level?: number
           lifetime_earned?: number
-          mode?: string
+          color_mode?: string
           role?: string
           tone?: string
         }

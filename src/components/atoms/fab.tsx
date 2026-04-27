@@ -11,7 +11,7 @@ const fabVariants = cva(
       variant: {
         primary: "text-white",
         secondary:
-          "border border-[var(--border)] bg-white text-[color:var(--ink)] hover:bg-[var(--surface-raised)]",
+          "border border-[var(--border)] bg-[color:var(--surface-raised)] text-[color:var(--ink)] hover:bg-[var(--surface-sunken)]",
       },
       size: {
         default: "h-14 w-14",

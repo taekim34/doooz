@@ -141,13 +141,7 @@ export default async function ChildDetailPage({
           />
           <StatCard
             value={`${doneCount}/${taskList.length}`}
-            label={
-              locale === "ko"
-                ? "오늘 완료"
-                : locale === "ja"
-                  ? "今日完了"
-                  : "Today"
-            }
+            label={t("children.today_complete", locale)}
           />
           <StatCard
             value={`#${rank.rank}`}

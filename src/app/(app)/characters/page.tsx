@@ -140,13 +140,7 @@ export default async function CharactersPage() {
         {/* Stage road */}
         <div className="mt-[22px]">
           <SectionLabel as="span">
-            {t("characters.stages", locale) !== "characters.stages"
-              ? t("characters.stages", locale)
-              : locale === "ko"
-                ? "성장 단계"
-                : locale === "ja"
-                  ? "成長段階"
-                  : "Stages"}
+            {t("characters.growth_stage", locale)}
           </SectionLabel>
         </div>
         <div
