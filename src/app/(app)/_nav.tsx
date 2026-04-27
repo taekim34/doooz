@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Route } from "next";
 import { usePathname } from "next/navigation";
+import * as React from "react";
 import { cn } from "@/lib/utils";
 import { t as translate, type Locale } from "@/lib/i18n";
 
@@ -12,6 +13,37 @@ type NavItem = {
   emoji: string;
   roles?: ReadonlyArray<"parent" | "child">;
 };
+
+/**
+ * Self-aware nav link: when `active` is true the click is suppressed
+ * (preventDefault + pointer-events-none) and a11y signals are emitted,
+ * so tapping the current page can never trigger a no-op navigation +
+ * the global spinner. Visual styling is left to the caller.
+ */
+function NavLink({
+  active,
+  className,
+  children,
+  ...rest
+}: {
+  active: boolean;
+  href: Route;
+  className?: string;
+  children: React.ReactNode;
+} & Omit<React.ComponentProps<typeof Link>, "href" | "className" | "onClick" | "tabIndex" | "aria-current" | "aria-disabled">) {
+  return (
+    <Link
+      aria-current={active ? "page" : undefined}
+      aria-disabled={active || undefined}
+      tabIndex={active ? -1 : undefined}
+      onClick={active ? (e) => e.preventDefault() : undefined}
+      className={cn(active && "pointer-events-none cursor-default", className)}
+      {...rest}
+    >
+      {children}
+    </Link>
+  );
+}
 
 const ITEMS: ReadonlyArray<NavItem> = [
   { href: "/" as Route, labelKey: "nav.home", emoji: "\u{1F3E0}" },
@@ -58,21 +90,18 @@ export function AppNav({
           <Image src="/logo.png" alt="DOOOZ" width={54} height={54} priority className="h-[27px] w-[27px]" />
           <span className="text-xs text-[color:var(--ink-subtle)]">{familyName}</span>
         </div>
-        <Link
+        <NavLink
           href={"/settings" as Route}
-          aria-current={isActive("/settings") ? "page" : undefined}
-          aria-disabled={isActive("/settings") || undefined}
-          tabIndex={isActive("/settings") ? -1 : undefined}
-          onClick={isActive("/settings") ? (e) => e.preventDefault() : undefined}
+          active={isActive("/settings")}
           className={cn(
             "flex h-8 w-8 items-center justify-center rounded-full transition-colors",
             isActive("/settings")
-              ? "pointer-events-none cursor-default text-[color:var(--ink-muted)]"
+              ? "text-[color:var(--ink-muted)]"
               : "text-[color:var(--ink-subtle)] hover:bg-[color:var(--surface-sunken)] hover:text-[color:var(--ink-muted)]",
           )}
         >
           <SettingsGearIcon />
-        </Link>
+        </NavLink>
       </header>
 
       {/* ── Desktop top nav (md+) ── */}
@@ -111,44 +140,38 @@ export function AppNav({
             {items.map((it) => {
               const active = isActive(it.href);
               return (
-                <Link
+                <NavLink
                   key={it.href}
                   href={it.href}
-                  aria-current={active ? "page" : undefined}
-                  aria-disabled={active || undefined}
-                  tabIndex={active ? -1 : undefined}
-                  onClick={active ? (e) => e.preventDefault() : undefined}
+                  active={active}
                   className={cn(
                     "rounded-full px-3.5 py-2 text-[13.5px] font-medium transition-all",
                     active
-                      ? "pointer-events-none cursor-default bg-[color:var(--ink)] text-[color:var(--on-accent)]"
+                      ? "bg-[color:var(--ink)] text-[color:var(--on-accent)]"
                       : "text-[color:var(--ink-muted)] hover:bg-[color:var(--surface-sunken)] hover:text-[color:var(--ink)]",
                   )}
                 >
                   <span className="mr-1.5">{it.emoji}</span>
                   {t(it.labelKey)}
-                </Link>
+                </NavLink>
               );
             })}
           </div>
 
           {/* Right: settings gear + avatar */}
           <div className="flex items-center gap-2">
-            <Link
+            <NavLink
               href={"/settings" as Route}
-              aria-current={isActive("/settings") ? "page" : undefined}
-              aria-disabled={isActive("/settings") || undefined}
-              tabIndex={isActive("/settings") ? -1 : undefined}
-              onClick={isActive("/settings") ? (e) => e.preventDefault() : undefined}
+              active={isActive("/settings")}
               className={cn(
                 "flex h-8 w-8 items-center justify-center rounded-full transition-colors",
                 isActive("/settings")
-                  ? "pointer-events-none cursor-default text-[color:var(--ink-muted)]"
+                  ? "text-[color:var(--ink-muted)]"
                   : "text-[color:var(--ink-subtle)] hover:bg-[color:var(--surface-sunken)] hover:text-[color:var(--ink-muted)]",
               )}
             >
               <SettingsGearIcon />
-            </Link>
+            </NavLink>
             <div
               className={cn(
                 "flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-white",
@@ -176,17 +199,11 @@ export function AppNav({
         {items.map((it) => {
           const active = isActive(it.href);
           return (
-            <Link
+            <NavLink
               key={it.href}
               href={it.href}
-              aria-current={active ? "page" : undefined}
-              aria-disabled={active || undefined}
-              tabIndex={active ? -1 : undefined}
-              onClick={active ? (e) => e.preventDefault() : undefined}
-              className={cn(
-                "flex flex-col items-center gap-0.5 py-2 transition-colors",
-                active && "pointer-events-none",
-              )}
+              active={active}
+              className="flex flex-col items-center gap-0.5 py-2 transition-colors"
               style={{
                 color: active
                   ? isKid ? "var(--accent-kid)" : "var(--accent-parent)"
@@ -197,7 +214,7 @@ export function AppNav({
               <span className={cn("text-[10px]", active && "font-semibold")}>
                 {t(it.labelKey)}
               </span>
-            </Link>
+            </NavLink>
           );
         })}
       </nav>
