@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import { characterEmoji } from "@/features/characters/emoji-map";
+import { CharacterIcon } from "@/components/molecules/character-icon";
 import { getStage } from "@/lib/level";
 import { LevelPill } from "@/components/atoms";
 
@@ -28,16 +28,20 @@ function hashPick(id: string | null): string {
 /* ------------------------------------------------------------------ */
 /*  CVA variants                                                       */
 /* ------------------------------------------------------------------ */
+//
+//  Sizes scaled up vs the legacy emoji-only avatar — illustrated PNGs
+//  need more breathing room than a single glyph to read clearly.
+//
 
 const characterAvatarVariants = cva(
   "relative inline-flex items-center justify-center overflow-hidden rounded-full shadow-[inset_0_-4px_0_rgba(0,0,0,0.04)]",
   {
     variants: {
       size: {
-        sm: "h-8 w-8 text-base",
-        md: "h-10 w-10 text-xl",
-        lg: "h-14 w-14 text-3xl",
-        xl: "h-20 w-20 text-[42px]",
+        sm: "h-10 w-10",
+        md: "h-12 w-12",
+        lg: "h-[72px] w-[72px]",
+        xl: "h-28 w-28",
       },
     },
     defaultVariants: {
@@ -45,6 +49,13 @@ const characterAvatarVariants = cva(
     },
   },
 );
+
+const SIZE_PX: Record<NonNullable<CharacterAvatarProps["size"]>, number> = {
+  sm: 40,
+  md: 48,
+  lg: 72,
+  xl: 112,
+};
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
@@ -62,8 +73,8 @@ export interface CharacterAvatarProps
 const CharacterAvatar = React.forwardRef<HTMLDivElement, CharacterAvatarProps>(
   ({ characterId, size = "md", showLevel, level, className }, ref) => {
     const stage = getStage(level ?? 1);
-    const emoji = characterEmoji(characterId, stage);
     const bg = hashPick(characterId);
+    const px = SIZE_PX[size];
 
     return (
       <div ref={ref} className={cn("relative inline-flex", className)}>
@@ -73,7 +84,11 @@ const CharacterAvatar = React.forwardRef<HTMLDivElement, CharacterAvatarProps>(
           className={cn(characterAvatarVariants({ size }))}
           style={{ backgroundImage: bg }}
         >
-          {emoji}
+          <CharacterIcon
+            id={characterId}
+            stage={stage}
+            pixelSize={Math.round(px * 0.86)}
+          />
         </div>
 
         {showLevel && level != null && (

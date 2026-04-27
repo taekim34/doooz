@@ -1,6 +1,6 @@
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
-import { characterEmoji } from "@/features/characters/emoji-map";
+import { CharacterIcon } from "@/components/molecules/character-icon";
 import { getStage } from "@/lib/level";
 import Link from "next/link";
 import { BackButton, SectionLabel } from "@/components/atoms";
@@ -72,9 +72,11 @@ export default async function FamilyPage() {
                 className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl"
                 style={{ background: tileGrad(m.character_id, m.id) }}
               >
-                <span aria-hidden className="text-2xl leading-none">
-                  {characterEmoji(m.character_id, getStage(m.level))}
-                </span>
+                <CharacterIcon
+                  id={m.character_id}
+                  stage={getStage(m.level)}
+                  pixelSize={36}
+                />
               </div>
 
               <div className="flex min-w-0 flex-1 flex-col gap-px">

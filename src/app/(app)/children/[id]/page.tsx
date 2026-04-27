@@ -3,7 +3,7 @@ import Link from "next/link";
 import { BackButton, StatCard } from "@/components/atoms";
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
-import { characterEmoji } from "@/features/characters/emoji-map";
+import { CharacterIcon } from "@/components/molecules/character-icon";
 import { getStage } from "@/lib/level";
 import { familyToday, formatDateInFamilyTz } from "@/lib/datetime/family-tz";
 import { getRank } from "@/features/children/rank";
@@ -119,9 +119,11 @@ export default async function ChildDetailPage({
               boxShadow: "0 10px 24px -18px rgba(10,10,10,0.18)",
             }}
           >
-            <span aria-hidden className="text-[36px] leading-none">
-              {characterEmoji(child.character_id, stage)}
-            </span>
+            <CharacterIcon
+              id={child.character_id}
+              stage={stage}
+              pixelSize={56}
+            />
           </div>
           <div className="flex min-w-0 flex-1 items-center gap-2">
             <h1 className="m-0 truncate text-2xl font-extrabold tracking-[-0.02em] text-[color:var(--ink)]">

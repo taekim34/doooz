@@ -4,7 +4,7 @@ import Link from "next/link";
 import { BackButton } from "@/components/atoms";
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
-import { characterEmoji } from "@/features/characters/emoji-map";
+import { CharacterIcon } from "@/components/molecules/character-icon";
 import { t, type Locale } from "@/lib/i18n";
 
 const ACCENT = "var(--accent)";
@@ -174,13 +174,12 @@ export default async function GalleryPage() {
                     </span>
                   )}
 
-                  <span
-                    aria-hidden
-                    className="inline-block text-[48px] leading-none"
-                    style={{ filter: locked ? "grayscale(1)" : "none" }}
-                  >
-                    {characterEmoji(c.id, 1)}
-                  </span>
+                  <CharacterIcon
+                    id={c.id}
+                    stage={2}
+                    pixelSize={64}
+                    className={locked ? "grayscale" : ""}
+                  />
                   <div className="whitespace-nowrap text-[13px] font-semibold tracking-[-0.01em] text-[color:var(--ink)]">
                     {c.name}
                   </div>

@@ -1,6 +1,6 @@
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
-import { characterEmoji } from "@/features/characters/emoji-map";
+import { CharacterIcon } from "@/components/molecules/character-icon";
 import { getStage, progressToNextLevel, getLevelTitle } from "@/lib/level";
 import Link from "next/link";
 import { BackButton, SectionLabel } from "@/components/atoms";
@@ -77,15 +77,17 @@ export default async function CharactersPage() {
         {/* Hero */}
         <div className="flex flex-col items-center pt-2.5 pb-1">
           <div
-            aria-hidden
             data-ch-avatar
-            className="text-[96px] leading-none"
             style={{
               animation: "chBounce 2000ms ease-in-out infinite",
               filter: "drop-shadow(0 10px 18px rgba(10,10,10,0.14))",
             }}
           >
-            {characterEmoji(user.character_id, stage)}
+            <CharacterIcon
+              id={user.character_id}
+              stage={stage}
+              pixelSize={144}
+            />
           </div>
           <div className="mt-2.5 flex items-center gap-2 whitespace-nowrap">
             <span className="text-2xl font-extrabold tracking-[-0.02em] text-[color:var(--ink)]">

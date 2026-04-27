@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
-import { characterEmoji } from "@/features/characters/emoji-map";
+import { CharacterIcon } from "@/components/molecules/character-icon";
 import { getStage } from "@/lib/level";
 import { TimezoneSelect } from "@/components/ui/timezone-select";
 import { BackButton, SectionLabel } from "@/components/atoms";
@@ -208,12 +208,12 @@ export default async function SettingsPage({
             <SectionLabel as="span">{t("settings.character", locale)}</SectionLabel>
           </div>
           <div className="flex items-center gap-3 px-0.5 py-2.5">
-            <span
-              aria-hidden
-              className="shrink-0 text-[32px] leading-none"
-            >
-              {characterEmoji(user.character_id, getStage(user.level))}
-            </span>
+            <CharacterIcon
+              id={user.character_id}
+              stage={getStage(user.level)}
+              pixelSize={44}
+              className="shrink-0"
+            />
             <div className="min-w-0 flex-1 truncate text-sm font-medium tracking-[-0.01em] text-[color:var(--ink)]">
               {user.display_name}
             </div>

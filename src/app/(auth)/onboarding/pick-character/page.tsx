@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { t } from "@/lib/i18n";
 import { getAuthLocale } from "@/lib/i18n/auth-locale";
 import { FadeUp } from "@/components/molecules";
-import { CharacterAvatar } from "@/components/molecules/character-avatar";
+import { CharacterIcon } from "@/components/molecules/character-icon";
 import { EyebrowLabel, LevelPill } from "@/components/atoms";
 
 async function pickAction(formData: FormData) {
@@ -60,7 +60,7 @@ export default async function PickCharacterPage() {
                     boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                   }}
                 >
-                  <CharacterAvatar characterId={c.id} size="md" />
+                  <CharacterIcon id={c.id} stage={2} pixelSize={64} />
                   <span className="mt-2 text-[color:var(--ink)]">{c.name}</span>
                   {locked && (
                     <div className="absolute top-2 right-2">

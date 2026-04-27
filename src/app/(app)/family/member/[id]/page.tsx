@@ -3,7 +3,7 @@ import Link from "next/link";
 import { BackButton, SectionLabel, StatCard } from "@/components/atoms";
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
-import { characterEmoji } from "@/features/characters/emoji-map";
+import { CharacterIcon } from "@/components/molecules/character-icon";
 import { getStage } from "@/lib/level";
 import { formatDateInFamilyTz } from "@/lib/datetime/family-tz";
 import { ResetPasswordButton } from "@/app/(app)/family/member/_reset-password";
@@ -115,9 +115,11 @@ export default async function MemberDetailPage({
               boxShadow: "0 10px 24px -18px rgba(10,10,10,0.18)",
             }}
           >
-            <span aria-hidden className="text-[36px] leading-none">
-              {characterEmoji(member.character_id, stage)}
-            </span>
+            <CharacterIcon
+              id={member.character_id}
+              stage={stage}
+              pixelSize={56}
+            />
           </div>
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
             <h1 className="m-0 whitespace-nowrap text-2xl font-extrabold tracking-[-0.02em] text-[color:var(--ink)]">
