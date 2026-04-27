@@ -27,8 +27,8 @@ const MAP: Record<string, [string, string, string, string, string]> = {
   honey:   ["🍯", "🍯", "🍯", "🍯", "🍯"],
   leaf:    ["🍃", "🍃", "🍃", "🍃", "🍃"],
   frost:   ["❄️", "❄️", "❄️", "❄️", "❄️"],
-  // Mythical (unlock L16)
-  gumiho:  ["🦊", "🦊", "🦊", "🦊", "🦊"],
+  // Mythical creatures (unlock L16) — alongside dragon/unicorn
+  gumiho:  ["🌙", "🌙", "🌙", "🌙", "🌙"],
   griffin: ["🦅", "🦅", "🦅", "🦅", "🦅"],
   pegasus: ["🐴", "🐴", "🐴", "🐴", "🐴"],
   phoenix: ["🔥", "🔥", "🔥", "🔥", "🔥"],
