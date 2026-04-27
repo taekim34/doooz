@@ -5,24 +5,43 @@ import { characterImageSrc } from "@/features/characters/image-map";
 import type { CharacterStage } from "@/lib/level";
 
 /**
+ * Stage badges overlaid on the base PNG to convey evolution at a glance:
+ *   1 병아리 → 🐣  (baby — small chick clings to the character)
+ *   2 루키   → none
+ *   3 용사   → ✨  (sparkle aura)
+ *   4 영웅   → ⚔️
+ *   5 전설   → 👑
+ *
+ * Once dedicated baby/hero/legend art ships these can be retired stage by stage.
+ */
+const STAGE_BADGE: Record<CharacterStage, string> = {
+  1: "🐣",
+  2: "",
+  3: "✨",
+  4: "⚔️",
+  5: "👑",
+};
+
+/**
  * Renders a character at an exact pixel size.
  *
- * - Stage 1 (baby, L1-L6): falls back to emoji until baby art ships.
- * - Stage 2+: PNG via next/image with object-fit: contain so the
- *   transparent illustrations sit naturally inside circular masks
- *   without cropping.
+ * Always shows the base PNG (when available) so character identity persists
+ * across every level. Stage 1 / 3 / 4 / 5 add a small emoji badge in the
+ * lower-right corner — that's the temporary stand-in for stage-specific art.
  *
- * Use directly inline (replaces raw `characterEmoji(...)` spans) or
- * compose inside CharacterAvatar for the framed/levelled variant.
+ * Unknown character IDs fall back to the legacy emoji string from emoji-map,
+ * which already concatenates the stage suffix — so behaviour stays consistent.
  */
 export interface CharacterIconProps {
   id: string | null | undefined;
   stage: CharacterStage;
-  /** Rendered box size in pixels. Image fills the box; emoji uses ~90% as font-size. */
+  /** Rendered box size in pixels. */
   pixelSize: number;
   className?: string;
   /** Defaults to the character id; override for accessibility-aware labels. */
   ariaLabel?: string;
+  /** Hide the stage badge (e.g. neutral picker / gallery thumbnails). */
+  hideBadge?: boolean;
 }
 
 export function CharacterIcon({
@@ -31,8 +50,9 @@ export function CharacterIcon({
   pixelSize,
   className,
   ariaLabel,
+  hideBadge,
 }: CharacterIconProps) {
-  const src = stage === 1 ? null : characterImageSrc(id);
+  const src = characterImageSrc(id);
 
   if (!src) {
     return (
@@ -54,15 +74,44 @@ export function CharacterIcon({
     );
   }
 
+  const badge = hideBadge ? "" : STAGE_BADGE[stage];
+
   return (
-    <Image
-      src={src}
-      alt={ariaLabel ?? id ?? "character"}
-      width={pixelSize}
-      height={pixelSize}
+    <span
+      aria-label={ariaLabel ?? id ?? "character"}
       className={className}
-      style={{ objectFit: "contain", width: pixelSize, height: pixelSize }}
-      unoptimized
-    />
+      style={{
+        position: "relative",
+        display: "inline-block",
+        width: pixelSize,
+        height: pixelSize,
+        lineHeight: 0,
+      }}
+    >
+      <Image
+        src={src}
+        alt={ariaLabel ?? id ?? "character"}
+        width={pixelSize}
+        height={pixelSize}
+        style={{ objectFit: "contain", width: pixelSize, height: pixelSize }}
+        unoptimized
+      />
+      {badge && (
+        <span
+          aria-hidden
+          style={{
+            position: "absolute",
+            right: -Math.round(pixelSize * 0.04),
+            bottom: -Math.round(pixelSize * 0.04),
+            fontSize: Math.round(pixelSize * 0.34),
+            lineHeight: 1,
+            filter: "drop-shadow(0 1px 2px rgba(10,10,10,0.22))",
+            pointerEvents: "none",
+          }}
+        >
+          {badge}
+        </span>
+      )}
+    </span>
   );
 }

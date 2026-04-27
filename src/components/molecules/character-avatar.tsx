@@ -70,11 +70,22 @@ export interface CharacterAvatarProps
   className?: string;
 }
 
+const STAGE_BADGE: Record<1 | 2 | 3 | 4 | 5, string> = {
+  1: "🐣",
+  2: "",
+  3: "✨",
+  4: "⚔️",
+  5: "👑",
+};
+
 const CharacterAvatar = React.forwardRef<HTMLDivElement, CharacterAvatarProps>(
   ({ characterId, size = "md", showLevel, level, className }, ref) => {
     const stage = getStage(level ?? 1);
     const bg = hashPick(characterId);
     const px = SIZE_PX[size];
+    // Badge is rendered outside the circular clip so it isn't cropped by
+    // overflow-hidden — CharacterIcon hides its own internal badge here.
+    const badge = STAGE_BADGE[stage];
 
     return (
       <div ref={ref} className={cn("relative inline-flex", className)}>
@@ -88,8 +99,23 @@ const CharacterAvatar = React.forwardRef<HTMLDivElement, CharacterAvatarProps>(
             id={characterId}
             stage={stage}
             pixelSize={Math.round(px * 0.86)}
+            hideBadge
           />
         </div>
+
+        {badge && (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -top-1 -right-1"
+            style={{
+              fontSize: Math.round(px * 0.34),
+              lineHeight: 1,
+              filter: "drop-shadow(0 1px 2px rgba(10,10,10,0.22))",
+            }}
+          >
+            {badge}
+          </span>
+        )}
 
         {showLevel && level != null && (
           <LevelPill
