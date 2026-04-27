@@ -7,6 +7,20 @@ import { KidHome } from "./_kid-home";
 import { ParentHome } from "./_parent-home";
 import type { Locale } from "@/lib/i18n";
 
+function daysAheadLabel(today: string, due: string, tomorrow: string): string {
+  const [yT, mT, dT] = today.split("-").map(Number);
+  const [yD, mD, dD] = due.split("-").map(Number);
+  // eslint-disable-next-line no-restricted-syntax
+  const days = Math.round(
+    (Date.UTC(yD ?? 1970, (mD ?? 1) - 1, dD ?? 1) -
+      Date.UTC(yT ?? 1970, (mT ?? 1) - 1, dT ?? 1)) /
+      86_400_000,
+  );
+  if (days <= 0) return "";
+  if (days === 1) return tomorrow;
+  return `D-${days}`;
+}
+
 export default async function HomePage() {
   const { user, family } = await requireUser();
   const locale = (family.locale || "ko") as Locale;
@@ -19,7 +33,11 @@ export default async function HomePage() {
       p_family_id: family.id,
     });
 
-    const [{ data: tasks }, { data: overdueTasks }, { data: earnedBadges }, { data: completions }] =
+    // Past-due overdue tasks are intentionally not fetched — penalty has
+    // already been applied by the cron, so they should not clutter today's
+    // view. Future-due tasks ride along in `tasks` and are split into a
+    // separate "미리하기" section in KidHome (not counted in today's totals).
+    const [{ data: tasks }, { data: earnedBadges }, { data: completions }] =
       await Promise.all([
         supabase
           .from("task_instances")
@@ -28,11 +46,6 @@ export default async function HomePage() {
           .gte("due_date", today)
           .in("status", ["pending", "completed", "rejected", "pardoned", "requested"])
           .order("due_date"),
-        supabase
-          .from("task_instances")
-          .select("id")
-          .eq("assignee_id", user.id)
-          .eq("status", "overdue"),
         supabase
           .from("user_badges")
           .select("badge_id, earned_at, badges(name, icon)")
@@ -46,9 +59,17 @@ export default async function HomePage() {
           .not("completed_at", "is", null),
       ]);
 
-    const todayOnly = ((tasks ?? []) as Array<{
+    type KidTask = {
       id: string; title: string; points: number; status: string; due_date: string; template_id: string | null;
-    }>).filter((c) => c.due_date === today);
+    };
+    const allTasks = (tasks ?? []) as KidTask[];
+    const todayOnly = allTasks.filter((c) => c.due_date === today);
+    const tomorrowLabel =
+      locale === "ja" ? "明日" : locale === "en" ? "Tomorrow" : "내일";
+    const upcoming = allTasks
+      .filter((c) => c.due_date > today && c.status === "pending")
+      .sort((a, b) => a.due_date.localeCompare(b.due_date))
+      .map((c) => ({ ...c, trailing: daysAheadLabel(today, c.due_date, tomorrowLabel) }));
 
     const streakDays = computeStreak(
       ((completions ?? []) as Array<{ completed_at: string }>).map((c) => new Date(c.completed_at)),
@@ -72,7 +93,8 @@ export default async function HomePage() {
         progressFraction={progress.fraction}
         nextThreshold={progress.nextThreshold}
         todayTasks={todayOnly}
-        overdueCount={(overdueTasks ?? []).length}
+        upcomingTasks={upcoming}
+        overdueCount={0}
         earnedBadges={(earnedBadges ?? []) as Array<{ badge_id: string; badges: { name: string; icon: string } | null }>}
         streakDays={streakDays}
       />

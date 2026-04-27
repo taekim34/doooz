@@ -21,6 +21,8 @@ type Task = {
   template_id: string | null;
 };
 
+type UpcomingTask = Task & { trailing: string };
+
 type Badge = {
   badge_id: string;
   badges: { name: string; icon: string } | null;
@@ -39,6 +41,7 @@ type KidHomeProps = {
   progressFraction: number;
   nextThreshold: number | null;
   todayTasks: Task[];
+  upcomingTasks: UpcomingTask[];
   overdueCount: number;
   earnedBadges: Badge[];
   streakDays: number;
@@ -47,6 +50,7 @@ type KidHomeProps = {
 
 const KID_BG_GRADIENT =
   "linear-gradient(135deg, #FFF5EC 0%, #FFE4E9 40%, #E5EFFF 100%)";
+
 
 function MenuIcon() {
   return (
@@ -161,6 +165,7 @@ export function KidHome({
   progressFraction,
   nextThreshold,
   todayTasks,
+  upcomingTasks,
   overdueCount,
   earnedBadges,
   streakDays,
@@ -220,7 +225,7 @@ export function KidHome({
   }
 
   const doneCount = todayTasks.filter((tk) => getStatus(tk) === "completed").length;
-  const isEmpty = todayTasks.length === 0 && overdueCount === 0;
+  const isEmpty = todayTasks.length === 0 && overdueCount === 0 && upcomingTasks.length === 0;
   const streakLabel = t("home.streak_days", { days: String(streakDays) });
   const overdueLabel = t("home.overdue_badge", { count: String(overdueCount) });
 
@@ -429,48 +434,12 @@ export function KidHome({
               )}
               {todayTasks.map((task) => {
                 const status = getStatus(task);
-                const isOverdue = status === "overdue";
-
-                if (isOverdue) {
-                  return (
-                    <div
-                      key={task.id}
-                      className="relative flex w-full items-center gap-4 rounded-[22px] border-l-2 border-l-[#FCA5A5] bg-[#FEF2F2]"
-                      style={{
-                        padding: "16px 16px 16px 14px",
-                        boxShadow:
-                          "0 16px 32px -18px rgba(239,68,68,0.18), inset 0 1px 0 rgba(255,255,255,0.5)",
-                      }}
-                    >
-                      <span
-                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[22px]"
-                        style={{ background: "linear-gradient(135deg,#FEE2E2,#FECACA)" }}
-                      >
-                        ⚠️
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <div className="text-[17px] font-semibold text-[color:var(--error-strong)]">
-                          {task.title}
-                        </div>
-                        <div className="mt-0.5 text-[13px] font-bold text-[color:var(--error-strong)]">
-                          +{task.points} pt
-                        </div>
-                      </div>
-                      <span
-                        className="inline-flex shrink-0 items-center rounded-full bg-[color:var(--error-strong)] px-2.5 py-1 text-[11px] font-extrabold tracking-[-0.01em] text-[color:var(--on-accent)] whitespace-nowrap"
-                      >
-                        {t("home.overdue_label")}
-                      </span>
-                    </div>
-                  );
-                }
-
                 return (
                   <TaskCard
                     key={task.id}
                     title={task.title}
                     points={task.points}
-                    status={status === "completed" ? "completed" : status === "pardoned" ? "pardoned" : status === "overdue" ? "overdue" : "pending"}
+                    status={status === "completed" ? "completed" : status === "pardoned" ? "pardoned" : "pending"}
                     onToggle={pending || status === "pardoned" ? undefined : () => onToggle(task)}
                   />
                 );
@@ -478,6 +447,38 @@ export function KidHome({
             </div>
           </div>
         </FadeUp>
+
+        {/* Upcoming — future-dated tasks shown as a separate section so kids
+            can knock them out early. Not counted toward today's total. */}
+        {upcomingTasks.length > 0 && (
+          <FadeUp delay={210}>
+            <div className="px-5 pt-7">
+              <div className="mb-3 flex items-baseline justify-between">
+                <h2 className="text-[18px] font-extrabold tracking-[-0.3px] text-[color:var(--ink)]">
+                  {t("home.upcoming_title")}
+                </h2>
+                <span className="text-[12px] font-medium text-[color:var(--ink-subtle)]">
+                  {t("home.upcoming_hint")}
+                </span>
+              </div>
+              <div className="space-y-3">
+                {upcomingTasks.map((task) => {
+                  const status = getStatus(task);
+                  return (
+                    <TaskCard
+                      key={task.id}
+                      title={task.title}
+                      points={task.points}
+                      status={status === "completed" ? "completed" : "pending"}
+                      onToggle={pending ? undefined : () => onToggle(task)}
+                      trailing={task.trailing}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          </FadeUp>
+        )}
 
         {/* Badges */}
         <FadeUp delay={240}>

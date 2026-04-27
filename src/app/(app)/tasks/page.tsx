@@ -39,12 +39,15 @@ export default async function TasksPage() {
     p_family_id: family.id,
   });
 
+  // Past-due overdue tasks have already had their penalty applied by the
+  // overdue cron — they are intentionally NOT fetched here so they don't
+  // clutter the active views. Only today + future tasks are surfaced.
   const [tasksRes, membersRes] = await Promise.all([
     supabase
       .from("task_instances")
       .select("id, title, points, status, due_date, assignee_id, template_id")
       .eq("family_id", family.id)
-      .in("status", ["pending", "completed", "overdue", "pardoned", "requested", "rejected"])
+      .in("status", ["pending", "completed", "pardoned", "requested", "rejected"])
       .gte("due_date", today)
       .order("due_date"),
     supabase
@@ -54,16 +57,7 @@ export default async function TasksPage() {
       .order("display_name"),
   ]);
 
-  const { data: overdueOrPast } = await supabase
-    .from("task_instances")
-    .select("id, title, points, status, due_date, assignee_id, template_id")
-    .eq("family_id", family.id)
-    .in("status", ["overdue"])
-    .lt("due_date", today);
-
-  const upcomingAll = (tasksRes.data ?? []) as Task[];
-  const past = (overdueOrPast ?? []) as Task[];
-  const all: Task[] = [...upcomingAll, ...past];
+  const all: Task[] = (tasksRes.data ?? []) as Task[];
   const members = (membersRes.data ?? []) as Member[];
 
   // ═══════════════════════════════════════════════
@@ -74,33 +68,22 @@ export default async function TasksPage() {
     const todayAll = mine
       .filter((c) => c.due_date === today && c.status !== "requested" && c.status !== "rejected")
       .sort((a, b) => {
-        const order: Record<string, number> = { pending: 0, overdue: 1, pardoned: 2, completed: 3 };
+        const order: Record<string, number> = { pending: 0, pardoned: 1, completed: 2 };
         return (order[a.status] ?? 9) - (order[b.status] ?? 9);
       });
     const todayDone = todayAll.filter((c) => c.status === "completed" || c.status === "pardoned").length;
     const myPending = mine.filter((c) => c.status === "requested");
     const myRejected = mine.filter((c) => c.status === "rejected");
     const myApproved = mine.filter((c) => c.due_date === today && c.status === "completed" && c.template_id === null);
-    const overdue = mine.filter((c) => c.status === "overdue");
 
-    const allTaskItems = [
-      ...todayAll.map((c) => ({
-        id: c.id,
-        title: c.title,
-        points: c.points,
-        status: c.status,
-        readOnly: c.status === "pardoned" || (c.template_id === null && c.status === "completed"),
-        isBeg: c.template_id === null,
-      })),
-      ...overdue.map((c) => ({
-        id: c.id,
-        title: c.title,
-        points: c.points,
-        status: c.status,
-        readOnly: true as boolean,
-        isBeg: false,
-      })),
-    ];
+    const allTaskItems = todayAll.map((c) => ({
+      id: c.id,
+      title: c.title,
+      points: c.points,
+      status: c.status,
+      readOnly: c.status === "pardoned" || (c.template_id === null && c.status === "completed"),
+      isBeg: c.template_id === null,
+    }));
 
     const upcoming = mine
       .filter((c) => c.due_date > today && c.status === "pending")
@@ -143,7 +126,8 @@ export default async function TasksPage() {
     return {
       member: m,
       todayList: mine.filter((c) => c.due_date === today && !["completed", "requested", "rejected"].includes(c.status)),
-      overdue: mine.filter((c) => c.status === "overdue"),
+      // Past-due overdue intentionally hidden — penalty already applied by cron.
+      overdue: [] as Task[],
       doneToday: mine.filter((c) => c.due_date === today && c.status === "completed"),
     };
   });

@@ -8,6 +8,8 @@ export type TaskCardProps = {
   status: "pending" | "completed" | "overdue" | "pardoned";
   onToggle?: () => void;
   assigneeName?: string;
+  /** Small label rendered under the title (e.g. "D-3" / "내일" for upcoming tasks). */
+  trailing?: string;
   className?: string;
 };
 
@@ -17,6 +19,7 @@ export function TaskCard({
   status,
   onToggle,
   assigneeName,
+  trailing,
   className,
 }: TaskCardProps) {
   const isCompleted = status === "completed";
@@ -94,6 +97,11 @@ export function TaskCard({
         {assigneeName && (
           <div className="mt-0.5 text-[13px] text-[color:var(--ink-subtle)]">
             {assigneeName}
+          </div>
+        )}
+        {trailing && (
+          <div className="mt-0.5 text-[12.5px] font-semibold text-[color:var(--ink-subtle)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
+            {trailing}
           </div>
         )}
       </div>
