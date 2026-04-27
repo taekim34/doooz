@@ -1,7 +1,7 @@
 /**
- * Emoji placeholders for the 12 characters × 5 evolution stages.
- * 병아리 (L1-6) → 루키 (L7-12) → 용사 (L13-18) → 영웅 (L19-24) → 전설 (L25-30)
- * Replace with SVG illustrations later (schema unchanged).
+ * Emoji placeholders for 22 characters × 5 evolution stages.
+ * Used as fallback only when no PNG is available (stage 1 / unknown id).
+ * 병아리 (L1-6) → 루키 (L7-12) → 용사 (L13-18) → 영웅 (L19-24) → 전설 (L25+)
  */
 import type { CharacterStage } from "@/lib/level";
 
