@@ -1,6 +1,7 @@
 "use client";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/lib/i18n/useT";
@@ -15,14 +16,21 @@ export function BegForm() {
     e.preventDefault();
     if (!title.trim() || pending) return;
     startTransition(async () => {
-      const res = await fetch("/api/tasks/beg", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: title.trim() }),
-      });
-      if (res.ok) {
+      try {
+        const res = await fetch("/api/tasks/beg", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title: title.trim() }),
+        });
+        if (!res.ok) {
+          const j = await res.json().catch(() => ({}));
+          toast.error(j.error || t("tasks.error_network"));
+          return;
+        }
         setTitle("");
         router.refresh();
+      } catch (e) {
+        toast.error((e as Error).message || t("tasks.error_network"));
       }
     });
   }

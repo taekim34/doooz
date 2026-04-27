@@ -435,6 +435,8 @@
   "tasks.edit": "Edit",
   "tasks.end_date": "End date (optional)",
   "tasks.ended": "Ended",
+  "tasks.error_approve_failed": "Approval failed",
+  "tasks.error_reject_failed": "Rejection failed",
   "tasks.error_cancel_failed": "Cancel failed",
   "tasks.error_complete_failed": "Complete failed",
   "tasks.error_network": "Network error",

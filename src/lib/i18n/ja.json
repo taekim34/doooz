@@ -435,6 +435,8 @@
   "tasks.edit": "編集",
   "tasks.end_date": "終了日（任意）",
   "tasks.ended": "終了",
+  "tasks.error_approve_failed": "承認に失敗しました",
+  "tasks.error_reject_failed": "却下に失敗しました",
   "tasks.error_cancel_failed": "キャンセルに失敗しました",
   "tasks.error_complete_failed": "完了処理に失敗しました",
   "tasks.error_network": "ネットワークエラー",

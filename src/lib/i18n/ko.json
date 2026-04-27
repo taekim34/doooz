@@ -435,6 +435,8 @@
   "tasks.edit": "수정",
   "tasks.end_date": "종료일 (선택)",
   "tasks.ended": "종료됨",
+  "tasks.error_approve_failed": "승인 실패",
+  "tasks.error_reject_failed": "거절 실패",
   "tasks.error_cancel_failed": "취소 실패",
   "tasks.error_complete_failed": "완료 처리 실패",
   "tasks.error_network": "네트워크 오류",
