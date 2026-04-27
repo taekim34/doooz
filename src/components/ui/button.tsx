@@ -35,10 +35,38 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {}
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => (
-    <button ref={ref} className={cn(buttonVariants({ variant, size }), className)} {...props} />
-  ),
+  ({ className, variant, size, children, ...props }, ref) => {
+    const busy =
+      props["aria-busy"] === true || props["aria-busy"] === "true";
+    return (
+      <button
+        ref={ref}
+        className={cn(buttonVariants({ variant, size }), className)}
+        {...props}
+      >
+        {busy && <ButtonSpinner />}
+        {children}
+      </button>
+    );
+  },
 );
 Button.displayName = "Button";
+
+function ButtonSpinner() {
+  return (
+    <svg
+      className="animate-spin"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      aria-hidden
+    >
+      <path d="M21 12a9 9 0 1 1-6.22-8.56" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 export { buttonVariants };
