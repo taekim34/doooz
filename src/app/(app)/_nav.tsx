@@ -58,7 +58,19 @@ export function AppNav({
           <Image src="/logo.png" alt="DOOOZ" width={54} height={54} priority className="h-[27px] w-[27px]" />
           <span className="text-xs text-[color:var(--ink-subtle)]">{familyName}</span>
         </div>
-        <Link href={"/settings" as Route} className="flex h-8 w-8 items-center justify-center rounded-full text-[color:var(--ink-subtle)] transition-colors hover:bg-[color:var(--surface-sunken)] hover:text-[color:var(--ink-muted)]">
+        <Link
+          href={"/settings" as Route}
+          aria-current={isActive("/settings") ? "page" : undefined}
+          aria-disabled={isActive("/settings") || undefined}
+          tabIndex={isActive("/settings") ? -1 : undefined}
+          onClick={isActive("/settings") ? (e) => e.preventDefault() : undefined}
+          className={cn(
+            "flex h-8 w-8 items-center justify-center rounded-full transition-colors",
+            isActive("/settings")
+              ? "pointer-events-none cursor-default text-[color:var(--ink-muted)]"
+              : "text-[color:var(--ink-subtle)] hover:bg-[color:var(--surface-sunken)] hover:text-[color:var(--ink-muted)]",
+          )}
+        >
           <SettingsGearIcon />
         </Link>
       </header>
@@ -124,7 +136,16 @@ export function AppNav({
           <div className="flex items-center gap-2">
             <Link
               href={"/settings" as Route}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-[color:var(--ink-subtle)] transition-colors hover:bg-[color:var(--surface-sunken)] hover:text-[color:var(--ink-muted)]"
+              aria-current={isActive("/settings") ? "page" : undefined}
+              aria-disabled={isActive("/settings") || undefined}
+              tabIndex={isActive("/settings") ? -1 : undefined}
+              onClick={isActive("/settings") ? (e) => e.preventDefault() : undefined}
+              className={cn(
+                "flex h-8 w-8 items-center justify-center rounded-full transition-colors",
+                isActive("/settings")
+                  ? "pointer-events-none cursor-default text-[color:var(--ink-muted)]"
+                  : "text-[color:var(--ink-subtle)] hover:bg-[color:var(--surface-sunken)] hover:text-[color:var(--ink-muted)]",
+              )}
             >
               <SettingsGearIcon />
             </Link>
