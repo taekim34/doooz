@@ -20,6 +20,18 @@ const MAP: Record<string, [string, string, string, string, string]> = {
   unicorn: ["🦄", "🦄", "🦄", "🦄", "🦄"],
   tiger:   ["🐯", "🐯", "🐯", "🐯", "🐯"],
   hamster: ["🐹", "🐹", "🐹", "🐹", "🐹"],
+  // Cute monsters (unlock L8)
+  mono:    ["👾", "👾", "👾", "👾", "👾"],
+  jellu:   ["🪼", "🪼", "🪼", "🪼", "🪼"],
+  pinku:   ["💗", "💗", "💗", "💗", "💗"],
+  honey:   ["🍯", "🍯", "🍯", "🍯", "🍯"],
+  leaf:    ["🍃", "🍃", "🍃", "🍃", "🍃"],
+  frost:   ["❄️", "❄️", "❄️", "❄️", "❄️"],
+  // Mythical (unlock L16)
+  gumiho:  ["🦊", "🦊", "🦊", "🦊", "🦊"],
+  griffin: ["🦅", "🦅", "🦅", "🦅", "🦅"],
+  pegasus: ["🐴", "🐴", "🐴", "🐴", "🐴"],
+  phoenix: ["🔥", "🔥", "🔥", "🔥", "🔥"],
 };
 
 // Stage decorations appended by stage number so visual evolution is clear.
