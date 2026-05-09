@@ -177,18 +177,22 @@ export function TaskCheckbox({
   if (readOnly) {
     const chipVariant = isDone
       ? "success" as const
-      : isRejected
+      : isPenalty
         ? "danger" as const
-        : isOverdue
+        : isRejected
           ? "danger" as const
-          : isPardoned
-            ? "warning" as const
-            : isRequested
-              ? "pending" as const
-              : "neutral" as const;
-    const chipLabel = isBeg
-      ? (isDone ? `${t("tasks.beg_success")} +${points}` : isRejected ? t("tasks.beg_failed") : isRequested ? t("home.status_beg_pending") : t("home.status_pending"))
-      : (isDone ? t("home.status_done") : isOverdue ? t("home.status_overdue") : isPardoned ? t("home.status_pardoned") : t("home.status_pending"));
+          : isOverdue
+            ? "danger" as const
+            : isPardoned
+              ? "warning" as const
+              : isRequested
+                ? "pending" as const
+                : "neutral" as const;
+    const chipLabel = isPenalty
+      ? `${t("tasks.penalty_label")} ${points}`
+      : isBeg
+        ? (isDone ? `${t("tasks.beg_success")} +${points}` : isRejected ? t("tasks.beg_failed") : isRequested ? t("home.status_beg_pending") : t("home.status_pending"))
+        : (isDone ? t("home.status_done") : isOverdue ? t("home.status_overdue") : isPardoned ? t("home.status_pardoned") : t("home.status_pending"));
     return (
       <div className="flex items-center justify-between rounded-md border p-3">
         <span className={`truncate ${isDone ? "text-muted-foreground line-through" : ""}`}>{title}</span>
@@ -228,7 +232,7 @@ export function TaskCheckbox({
       </button>
       <div className="flex shrink-0 items-center gap-2">
         {statusBadge}
-        {canPardon && (isOverdue || (!isDone && !isPardoned)) && (
+        {canPardon && !isPenalty && (isOverdue || (!isDone && !isPardoned)) && (
           <button
             type="button"
             onClick={onPardon}

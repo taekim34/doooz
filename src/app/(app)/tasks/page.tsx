@@ -77,13 +77,15 @@ export default async function TasksPage() {
   if (user.role === "child") {
     const mine = all.filter((c) => c.assignee_id === user.id);
     // Today: pending + completed + pardoned all in one list (pending first, then done)
-    const todayAll = mine
-      .filter((c) => c.due_date === today && c.status !== "requested")
+    const todayTasks = mine
+      .filter((c) => c.due_date === today && !["requested", "penalty"].includes(c.status))
       .sort((a, b) => {
         const order: Record<string, number> = { pending: 0, overdue: 1, pardoned: 2, completed: 3, rejected: 4 };
         return (order[a.status] ?? 9) - (order[b.status] ?? 9);
       });
-    const todayDone = todayAll.filter((c) => c.status === "completed" || c.status === "pardoned").length;
+    const todayPenalties = mine.filter((c) => c.due_date === today && c.status === "penalty");
+    const todayAll = [...todayTasks, ...todayPenalties];
+    const todayDone = todayTasks.filter((c) => c.status === "completed" || c.status === "pardoned").length;
     const myRequested = mine.filter((c) => c.status === "requested");
     const upcoming = mine
       .filter((c) => c.due_date > today && c.status === "pending")
@@ -104,7 +106,7 @@ export default async function TasksPage() {
             <CardTitle>
               {t("tasks.today", locale)} · {today}{" "}
               <span className="text-sm font-normal text-muted-foreground">
-                {todayDone}/{todayAll.length} {t("tasks.completed", locale)}
+                {todayDone}/{todayTasks.length} {t("tasks.completed", locale)}
               </span>
             </CardTitle>
           </CardHeader>
@@ -119,7 +121,7 @@ export default async function TasksPage() {
                 title={c.title}
                 points={c.points}
                 status={c.status}
-                readOnly={c.status === "pardoned" || c.status === "rejected" || (c.template_id === null && c.status === "completed")}
+                readOnly={c.status === "pardoned" || c.status === "rejected" || c.status === "penalty" || (c.template_id === null && c.status === "completed")}
                 isBeg={c.template_id === null}
               />
             ))}
@@ -207,13 +209,13 @@ export default async function TasksPage() {
     const mine = all.filter((c) => c.assignee_id === m.id);
     return {
       member: m,
-      todayList: mine.filter((c) => c.due_date === today && !["completed", "requested", "rejected"].includes(c.status)),
+      todayList: mine.filter((c) => c.due_date === today && !["completed", "requested", "rejected", "penalty"].includes(c.status)),
       overdue: mine.filter((c) => c.status === "overdue"),
-      doneToday: mine.filter((c) => c.due_date === today && c.status === "completed"),
+      doneToday: mine.filter((c) => c.due_date === today && (c.status === "completed" || c.status === "penalty")),
     };
   });
 
-  const totalToday = all.filter((c) => c.due_date === today).length;
+  const totalToday = all.filter((c) => c.due_date === today && c.status !== "penalty").length;
   const doneCount = all.filter(
     (c) => c.due_date === today && c.status === "completed",
   ).length;
