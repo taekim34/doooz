@@ -150,7 +150,7 @@
   "tasks.once": "📌 One-time",
   "tasks.pardon": "Pardon",
   "tasks.penalty_cancel": "Cancel",
-  "tasks.penalty_cancelled": "Penalty cancelled",
+  "tasks.penalty_cancelled": "Cancelled",
   "tasks.penalty_label": "🚫 Penalty",
   "tasks.pardon_cancel": "Cancel",
   "tasks.pardon_success": "Pardoned",

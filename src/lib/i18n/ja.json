@@ -150,7 +150,7 @@
   "tasks.once": "📌 一回きり",
   "tasks.pardon": "おまけ",
   "tasks.penalty_cancel": "ペナルティ取消",
-  "tasks.penalty_cancelled": "ペナルティが取り消されました",
+  "tasks.penalty_cancelled": "取消済",
   "tasks.penalty_label": "🚫 ペナルティ",
   "tasks.pardon_cancel": "キャンセル",
   "tasks.pardon_success": "おまけしました",
