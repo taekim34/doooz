@@ -190,6 +190,7 @@
   "home.current_points": "Current Points",
   "home.invite_code": "Invite code",
   "home.missed_count": "Missed {count}",
+  "home.missed_yesterday_count": "Missed yesterday {count}",
   "home.no_badges": "No badges yet. Complete tasks to earn badges!",
   "home.no_children": "No children registered yet.",
   "home.no_tasks": "No tasks today.",

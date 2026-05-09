@@ -190,6 +190,7 @@
   "home.current_points": "現在のポイント",
   "home.invite_code": "招待コード",
   "home.missed_count": "やり残し {count}",
+  "home.missed_yesterday_count": "昨日のやり残し {count}",
   "home.no_badges": "まだバッジがありません。やることを完了するとバッジがもらえるよ！",
   "home.no_children": "まだ登録された子どもがいません。",
   "home.no_tasks": "今日のやることはありません。",

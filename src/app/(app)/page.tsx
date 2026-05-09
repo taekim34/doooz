@@ -2,7 +2,7 @@ import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
 import { characterEmoji } from "@/features/characters/emoji-map";
 import { getStage, progressToNextLevel } from "@/lib/level";
-import { familyToday } from "@/lib/datetime/family-tz";
+import { familyToday, familyYesterday } from "@/lib/datetime/family-tz";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { t, type Locale } from "@/lib/i18n";
@@ -33,11 +33,13 @@ export default async function HomePage() {
       .in("status", ["pending", "completed", "rejected", "pardoned", "requested"])
       .order("due_date");
 
+    const yesterday = familyYesterday(family.timezone);
     const { data: overdueTasks } = await supabase
       .from("task_instances")
       .select("id")
       .eq("assignee_id", user.id)
-      .eq("status", "overdue");
+      .eq("status", "overdue")
+      .eq("due_date", yesterday);
 
     const { data: earnedBadges } = await supabase
       .from("user_badges")
@@ -91,7 +93,7 @@ export default async function HomePage() {
               {t("home.today_tasks", locale)}
               {overdueCount > 0 && (
                 <StatusBadge variant="danger" className="ml-2 px-2 py-1 font-normal">
-                  {t("home.missed_count", locale).replace("{count}", String(overdueCount))}
+                  {t("home.missed_yesterday_count", locale).replace("{count}", String(overdueCount))}
                 </StatusBadge>
               )}
             </CardTitle>
