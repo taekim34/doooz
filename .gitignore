@@ -16,6 +16,11 @@ pnpm-debug.log*
 *.pem
 .vscode/*
 !.vscode/extensions.json
+.idea/
+.superpowers/
+.ww-w-ai/
+backups/
+images/
 
 coverage
 playwright-report

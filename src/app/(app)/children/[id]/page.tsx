@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { BackButton } from "@/components/ui/back-button";
 import { TaskCheckbox } from "../../tasks/_checkbox";
+import { PenaltyForm } from "./_penalty-form";
 import { t, type Locale } from "@/lib/i18n";
 
 interface ChildRow {
@@ -122,6 +123,10 @@ export default async function ChildDetailPage({
           </div>
         </CardContent>
       </Card>
+
+      <div className="flex justify-end">
+        <PenaltyForm childId={child.id} />
+      </div>
 
       <Card>
         <CardHeader>

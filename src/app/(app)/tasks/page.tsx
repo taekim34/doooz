@@ -1,6 +1,6 @@
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
-import { familyToday } from "@/lib/datetime/family-tz";
+import { familyToday, familyYesterday } from "@/lib/datetime/family-tz";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TaskCheckbox } from "./_checkbox";
 import { BegForm } from "./_beg-form";
@@ -43,14 +43,22 @@ export default async function TasksPage() {
     p_family_id: family.id,
   });
 
-  const [tasksRes, membersRes] = await Promise.all([
+  const yesterday = familyYesterday(family.timezone);
+
+  const [tasksRes, yesterdayOverdueRes, membersRes] = await Promise.all([
     supabase
       .from("task_instances")
       .select("id, title, points, status, due_date, assignee_id, template_id")
       .eq("family_id", family.id)
       .in("status", ["pending", "completed", "overdue", "pardoned", "requested", "rejected"])
-      .gte("due_date", today) // today + future
+      .gte("due_date", today)
       .order("due_date"),
+    supabase
+      .from("task_instances")
+      .select("id, title, points, status, due_date, assignee_id, template_id")
+      .eq("family_id", family.id)
+      .eq("status", "overdue")
+      .eq("due_date", yesterday),
     supabase
       .from("users")
       .select("id, display_name, role")
@@ -58,17 +66,10 @@ export default async function TasksPage() {
       .order("display_name"),
   ]);
 
-  // Also fetch overdue (past) + today's non-pending (completed/pardoned) for done section.
-  const { data: overdueOrPast } = await supabase
-    .from("task_instances")
-    .select("id, title, points, status, due_date, assignee_id")
-    .eq("family_id", family.id)
-    .in("status", ["overdue"])
-    .lt("due_date", today);
-
-  const upcomingAll = ((tasksRes.data ?? []) as Task[]);
-  const past = ((overdueOrPast ?? []) as Task[]);
-  const all: Task[] = [...upcomingAll, ...past];
+  const all: Task[] = [
+    ...((tasksRes.data ?? []) as Task[]),
+    ...((yesterdayOverdueRes.data ?? []) as Task[]),
+  ];
   const members = (membersRes.data ?? []) as Member[];
 
   // Child view
@@ -139,7 +140,6 @@ export default async function TasksPage() {
                     title={c.title}
                     points={c.points}
                     status={c.status}
-                    readOnly
                     trailing={d > 0 ? `D-${d}` : t("tasks.history_today", locale)}
                   />
                 );
@@ -151,7 +151,7 @@ export default async function TasksPage() {
         {overdue.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-red-700">{t("tasks.missed", locale)}</CardTitle>
+              <CardTitle className="text-red-700">{t("tasks.missed_yesterday", locale)}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {overdue.map((c) => (
@@ -265,7 +265,7 @@ export default async function TasksPage() {
               {member.display_name}{" "}
               <span className="text-xs font-normal text-muted-foreground">
                 · {t("tasks.history_today", locale)} {doneToday.length}/{todayList.length + doneToday.length}
-                {overdue.length > 0 ? ` · ${t("tasks.missed", locale)} ${overdue.length}` : ""}
+                {overdue.length > 0 ? ` · ${t("tasks.missed_yesterday", locale)} ${overdue.length}` : ""}
               </span>
             </CardTitle>
           </CardHeader>
