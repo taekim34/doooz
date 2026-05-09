@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { t, type Locale } from "@/lib/i18n";
 import { formatDateInFamilyTz } from "@/lib/datetime/family-tz";
+import { formatPointsReason } from "@/features/points/format-reason";
 import Link from "next/link";
 import type { Route } from "next";
 import { BackButton } from "@/components/ui/back-button";
@@ -114,7 +115,7 @@ export default async function PointsHistoryPage({
             const label =
               (isPenalty ? t("points.missed_task", locale) + " · " : "") +
               (isAdjustment ? t("points.adjustment", locale) + " · " : "") +
-              tx.reason;
+              formatPointsReason(tx.reason, locale);
             const amountClass = isPenalty
               ? "text-red-600 font-semibold"
               : tx.amount >= 0

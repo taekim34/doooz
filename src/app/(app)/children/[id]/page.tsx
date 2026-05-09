@@ -11,6 +11,7 @@ import Link from "next/link";
 import { BackButton } from "@/components/ui/back-button";
 import { TaskCheckbox } from "../../tasks/_checkbox";
 import { PenaltyForm } from "./_penalty-form";
+import { formatPointsReason } from "@/features/points/format-reason";
 import { t, type Locale } from "@/lib/i18n";
 
 interface ChildRow {
@@ -164,7 +165,7 @@ export default async function ChildDetailPage({
                 <span className="text-muted-foreground">{tx.task_instances?.due_date ?? formatDateInFamilyTz(tx.created_at, family.timezone, "yyyy-MM-dd")}</span>{" "}
                 {tx.kind === "penalty" && "😢 "}
                 {tx.kind === "adjustment" && `${t("children.adjustment", locale)} · `}
-                {tx.reason}
+                {formatPointsReason(tx.reason, locale)}
               </span>
               <span
                 className={

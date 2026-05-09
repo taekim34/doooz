@@ -242,6 +242,31 @@ export function TaskCheckbox({
             {t("tasks.pardon")}
           </button>
         )}
+        {canPardon && isPenalty && (
+          <button
+            type="button"
+            onClick={() => {
+              startTransition(async () => {
+                try {
+                  const res = await fetch(`/api/points/penalty/${id}/cancel`, { method: "POST" });
+                  if (!res.ok) {
+                    const j = await res.json().catch(() => ({}));
+                    toast.error(j.error || t("common.failed"));
+                    return;
+                  }
+                  toast.success(t("tasks.penalty_cancelled"));
+                  router.refresh();
+                } catch (e) {
+                  toast.error((e as Error).message || t("tasks.error_network"));
+                }
+              });
+            }}
+            disabled={pending}
+            className="rounded-md border border-red-300 bg-white px-2 py-1 text-xs text-red-700 hover:bg-red-50 disabled:opacity-60"
+          >
+            {t("tasks.penalty_cancel")}
+          </button>
+        )}
         {canPardon && isPardoned && (
           <button
             type="button"
