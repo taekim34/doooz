@@ -42,7 +42,7 @@ export function TaskCheckbox({
   const isRejected = localStatus === "rejected";
   const isRequested = localStatus === "requested";
   const isPenalty = localStatus === "penalty";
-  const isInteractive = !readOnly && !isPardoned && !(isOverdue && !canPardon) && !isRejected && !isBeg && !isRequested && !isPenalty;
+  const isInteractive = !readOnly && !isPardoned && !isOverdue && !isRejected && !isBeg && !isRequested && !isPenalty;
 
   async function onToggle() {
     if (pending || !isInteractive) return;
@@ -145,7 +145,7 @@ export function TaskCheckbox({
     if (isRejected) {
       return (
         <StatusBadge variant="danger" className="px-2 py-1 font-normal">
-          {t("tasks.beg_failed")}
+          {points < 0 ? t("tasks.penalty_cancelled") : t("tasks.beg_failed")}
         </StatusBadge>
       );
     }
@@ -190,9 +190,11 @@ export function TaskCheckbox({
                 : "neutral" as const;
     const chipLabel = isPenalty
       ? `${t("tasks.penalty_label")} ${points}`
-      : isBeg
-        ? (isDone ? `${t("tasks.beg_success")} +${points}` : isRejected ? t("tasks.beg_failed") : isRequested ? t("home.status_beg_pending") : t("home.status_pending"))
-        : (isDone ? t("home.status_done") : isOverdue ? t("home.status_overdue") : isPardoned ? t("home.status_pardoned") : t("home.status_pending"));
+      : (isRejected && points < 0)
+        ? t("tasks.penalty_cancelled")
+        : isBeg
+          ? (isDone ? `${t("tasks.beg_success")} +${points}` : isRejected ? t("tasks.beg_failed") : isRequested ? t("home.status_beg_pending") : t("home.status_pending"))
+          : (isDone ? t("home.status_done") : isOverdue ? t("home.status_overdue") : isPardoned ? t("home.status_pardoned") : t("home.status_pending"));
     return (
       <div className="flex items-center justify-between rounded-md border p-3">
         <span className={`truncate ${isDone ? "text-muted-foreground line-through" : ""}`}>{title}</span>

@@ -84,9 +84,6 @@ export default async function TaskHistoryPage({ searchParams }: Props) {
     return toFamilyDate(d, family.timezone);
   })();
   const canGoNext = selectedDate < today;
-  const isPastDate = selectedDate < today;
-  // Parents can modify any date (including today) for corrections.
-  // Children: today uses /tasks page, history is read-only.
   const readOnly = !isParent;
 
   return (
@@ -134,18 +131,21 @@ export default async function TaskHistoryPage({ searchParams }: Props) {
             </CardHeader>
           )}
           <CardContent className="space-y-2 pt-4">
-            {items.map((r) => (
-              <TaskCheckbox
-                key={r.id}
-                id={r.id}
-                title={r.title}
-                points={r.points}
-                status={r.status}
-                canPardon={isParent && !readOnly && r.template_id !== null}
-                readOnly={readOnly || r.template_id === null}
-                isBeg={r.template_id === null}
-              />
-            ))}
+            {items.map((r) => {
+              const canComplete = isParent && r.status === "overdue" && r.template_id !== null;
+              return (
+                <TaskCheckbox
+                  key={r.id}
+                  id={r.id}
+                  title={r.title}
+                  points={r.points}
+                  status={canComplete ? "pending" : r.status}
+                  canPardon={isParent && !readOnly && r.template_id !== null}
+                  readOnly={readOnly || r.template_id === null}
+                  isBeg={r.template_id === null}
+                />
+              );
+            })}
           </CardContent>
         </Card>
       ))}
