@@ -6,6 +6,7 @@ import { TaskCheckbox } from "./_checkbox";
 import { BegForm } from "./_beg-form";
 import { BegActions } from "./_beg-actions";
 import { BegCancelButton } from "./_beg-cancel";
+import { PenaltyForm } from "../children/[id]/_penalty-form";
 import Link from "next/link";
 import { t, type Locale } from "@/lib/i18n";
 
@@ -303,6 +304,9 @@ export default async function TasksPage() {
                 isBeg={c.template_id === null}
               />
             ))}
+            <div className="pt-2 border-t">
+              <PenaltyForm childId={member.id} />
+            </div>
           </CardContent>
         </Card>
       ))}
