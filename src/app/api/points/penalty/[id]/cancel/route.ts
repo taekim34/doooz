@@ -4,7 +4,7 @@ import { apiError } from "@/lib/api-error";
 
 /**
  * POST /api/points/penalty/[id]/cancel
- * Parent cancels a penalty — deletes the task_instance and inserts
+ * Parent cancels a penalty — marks task_instance as 'rejected' and inserts
  * a compensating adjustment to reverse the deduction.
  */
 export async function POST(
@@ -45,7 +45,10 @@ export async function POST(
   });
   if (ptErr) return apiError(500, "operation failed");
 
-  await supabase.from("task_instances").delete().eq("id", id);
+  await supabase
+    .from("task_instances")
+    .update({ status: "rejected" })
+    .eq("id", id);
 
   return NextResponse.json({ ok: true });
 }
