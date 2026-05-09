@@ -468,7 +468,7 @@
   "tasks.pardon_cancel": "Undo Pardon",
   "tasks.pardon_label": "🫶 Pardoned",
   "tasks.penalty_cancel": "Cancel",
-  "tasks.penalty_cancelled": "Penalty cancelled",
+  "tasks.penalty_cancelled": "Cancelled",
   "tasks.penalty_label": "🚫 Penalty",
   "tasks.pardon_success": "Pardoned",
   "tasks.permanent_delete": "Permanently Delete",

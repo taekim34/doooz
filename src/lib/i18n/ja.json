@@ -468,7 +468,7 @@
   "tasks.pardon_cancel": "おまけ取消",
   "tasks.pardon_label": "🫶 おまけ済",
   "tasks.penalty_cancel": "ペナルティ取消",
-  "tasks.penalty_cancelled": "ペナルティが取り消されました",
+  "tasks.penalty_cancelled": "取消済",
   "tasks.penalty_label": "🚫 ペナルティ",
   "tasks.pardon_success": "おまけしました",
   "tasks.permanent_delete": "完全削除",

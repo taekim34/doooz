@@ -468,7 +468,7 @@
   "tasks.pardon_cancel": "봐주기 취소",
   "tasks.pardon_label": "🫶 봐주기",
   "tasks.penalty_cancel": "벌점 취소",
-  "tasks.penalty_cancelled": "벌점이 취소되었습니다",
+  "tasks.penalty_cancelled": "벌점 취소",
   "tasks.penalty_label": "🚫 벌점",
   "tasks.pardon_success": "봐줬어요",
   "tasks.permanent_delete": "완전 삭제",
