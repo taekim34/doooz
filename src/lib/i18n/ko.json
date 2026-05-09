@@ -149,6 +149,7 @@
   "tasks.none": "등록된 할일이 없어요.",
   "tasks.once": "📌 1회성 할일",
   "tasks.pardon": "봐주기",
+  "tasks.penalty_label": "🚫 벌점",
   "tasks.pardon_cancel": "취소",
   "tasks.pardon_success": "봐줬어요",
   "tasks.points_label": "포인트",

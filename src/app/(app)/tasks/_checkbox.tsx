@@ -41,7 +41,8 @@ export function TaskCheckbox({
   const isOverdue = localStatus === "overdue";
   const isRejected = localStatus === "rejected";
   const isRequested = localStatus === "requested";
-  const isInteractive = !readOnly && !isPardoned && !isOverdue && !isRejected && !isBeg && !isRequested;
+  const isPenalty = localStatus === "penalty";
+  const isInteractive = !readOnly && !isPardoned && !isOverdue && !isRejected && !isBeg && !isRequested && !isPenalty;
 
   async function onToggle() {
     if (pending || !isInteractive) return;
@@ -162,6 +163,13 @@ export function TaskCheckbox({
         </StatusBadge>
       );
     }
+    if (isPenalty) {
+      return (
+        <StatusBadge variant="danger" className="px-2 py-1 font-normal">
+          {t("tasks.penalty_label")} {points}
+        </StatusBadge>
+      );
+    }
     return <span className="text-sm font-semibold">+{points}</span>;
   })();
 
@@ -195,7 +203,7 @@ export function TaskCheckbox({
     <div
       className={`flex w-full items-center justify-between gap-2 rounded-md border p-3 text-left ${
         isDone ? (isBeg ? "bg-green-50 border-green-200" : "bg-muted text-muted-foreground") : ""
-      } ${isOverdue ? "border-red-200 bg-red-50" : ""} ${
+      } ${isOverdue || isPenalty ? "border-red-200 bg-red-50" : ""} ${
         isPardoned ? "bg-yellow-50" : ""
       } ${isRejected ? "bg-red-50 border-red-200 text-muted-foreground" : ""}`}
     >
@@ -209,7 +217,7 @@ export function TaskCheckbox({
         }`}
       >
         <span>
-          {isDone ? (isBeg ? "🎉" : "✅") : isRejected ? "❌" : isPardoned ? "🫶" : isRequested ? "⏳" : isOverdue ? "⚠️" : "⬜"}
+          {isPenalty ? "🚫" : isDone ? (isBeg ? "🎉" : "✅") : isRejected ? "❌" : isPardoned ? "🫶" : isRequested ? "⏳" : isOverdue ? "⚠️" : "⬜"}
         </span>
         <span className={`truncate ${isDone ? "line-through" : ""}`}>{title}</span>
         {trailing && (

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { apiError } from "@/lib/api-error";
+import { familyToday } from "@/lib/datetime/family-tz";
 import { pushToChild } from "@/lib/push/send";
 import { t, type Locale } from "@/lib/i18n";
 
@@ -47,10 +48,26 @@ export async function POST(req: Request) {
 
   const { data: famRow } = await supabase
     .from("families")
-    .select("locale")
+    .select("locale, timezone")
     .eq("id", me.family_id)
     .single();
   const locale = (famRow?.locale || "ko") as Locale;
+  const today = familyToday(famRow?.timezone ?? "Asia/Seoul");
+
+  const { data: instance, error: instErr } = await supabase
+    .from("task_instances")
+    .insert({
+      family_id: me.family_id,
+      assignee_id: childId,
+      title: reason,
+      points: -amount,
+      due_date: today,
+      status: "penalty",
+      template_id: null,
+    })
+    .select("id")
+    .single();
+  if (instErr) return apiError(500, "operation failed");
 
   const { error: ptErr } = await supabase.from("point_transactions").insert({
     family_id: me.family_id,
@@ -58,7 +75,7 @@ export async function POST(req: Request) {
     amount: -amount,
     kind: "penalty",
     reason,
-    related_task_id: null,
+    related_task_id: instance!.id,
     actor_id: me.id,
   });
   if (ptErr) return apiError(500, "operation failed");

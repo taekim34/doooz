@@ -149,6 +149,7 @@
   "tasks.none": "登録されたやることはありません。",
   "tasks.once": "📌 一回きり",
   "tasks.pardon": "おまけ",
+  "tasks.penalty_label": "🚫 ペナルティ",
   "tasks.pardon_cancel": "キャンセル",
   "tasks.pardon_success": "おまけしました",
   "tasks.points_label": "ポイント",

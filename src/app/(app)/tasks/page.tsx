@@ -51,7 +51,7 @@ export default async function TasksPage() {
       .from("task_instances")
       .select("id, title, points, status, due_date, assignee_id, template_id")
       .eq("family_id", family.id)
-      .in("status", ["pending", "completed", "overdue", "pardoned", "requested", "rejected"])
+      .in("status", ["pending", "completed", "overdue", "pardoned", "requested", "rejected", "penalty"])
       .gte("due_date", today)
       .order("due_date"),
     supabase

@@ -149,6 +149,7 @@
   "tasks.none": "No tasks registered.",
   "tasks.once": "📌 One-time",
   "tasks.pardon": "Pardon",
+  "tasks.penalty_label": "🚫 Penalty",
   "tasks.pardon_cancel": "Cancel",
   "tasks.pardon_success": "Pardoned",
   "tasks.points_label": "Points",
