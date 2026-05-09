@@ -304,6 +304,7 @@ export default async function TasksPage() {
                 points={c.points}
                 status={c.status}
                 isBeg={c.template_id === null}
+                canPardon={c.status === "penalty"}
               />
             ))}
             <div className="pt-2 border-t">
