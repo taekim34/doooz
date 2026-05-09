@@ -45,7 +45,7 @@ export function TaskCheckbox({
   const isRejected = localStatus === "rejected";
   const isRequested = localStatus === "requested";
   const isPenalty = localStatus === "penalty";
-  const isInteractive = !readOnly && !isPardoned && !isOverdue && !isRejected && !isBeg && !isRequested && !isPenalty;
+  const isInteractive = !readOnly && !isPardoned && !(isOverdue && !canPardon) && !isRejected && !isBeg && !isRequested && !isPenalty;
 
   async function onToggle() {
     if (pending || !isInteractive) return;
