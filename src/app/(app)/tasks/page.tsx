@@ -73,13 +73,15 @@ export default async function TasksPage() {
   // ═══════════════════════════════════════════════
   if (user.role === "child") {
     const mine = all.filter((c) => c.assignee_id === user.id);
-    const todayAll = mine
-      .filter((c) => c.due_date === today && c.status !== "requested" && c.status !== "rejected")
+    const todayTasks = mine
+      .filter((c) => c.due_date === today && !["requested", "rejected", "penalty"].includes(c.status))
       .sort((a, b) => {
         const order: Record<string, number> = { pending: 0, pardoned: 1, completed: 2 };
         return (order[a.status] ?? 9) - (order[b.status] ?? 9);
       });
-    const todayDone = todayAll.filter((c) => c.status === "completed" || c.status === "pardoned").length;
+    const todayPenalties = mine.filter((c) => c.due_date === today && c.status === "penalty");
+    const todayAll = [...todayTasks, ...todayPenalties];
+    const todayDone = todayTasks.filter((c) => c.status === "completed" || c.status === "pardoned").length;
     const myPending = mine.filter((c) => c.status === "requested");
     const myRejected = mine.filter((c) => c.status === "rejected");
     const myApproved = mine.filter((c) => c.due_date === today && c.status === "completed" && c.template_id === null);
@@ -116,7 +118,7 @@ export default async function TasksPage() {
       <KidTasks
         allTaskItems={allTaskItems}
         todayDone={todayDone}
-        todayTotal={todayAll.length}
+        todayTotal={todayTasks.length}
         upcoming={upcoming}
         yesterdayOverdue={yesterdayOverdue}
         myPending={myPending.map((c) => ({ id: c.id, title: c.title }))}
@@ -138,13 +140,13 @@ export default async function TasksPage() {
     const mine = all.filter((c) => c.assignee_id === m.id);
     return {
       member: m,
-      todayList: mine.filter((c) => c.due_date === today && !["completed", "requested", "rejected"].includes(c.status)),
+      todayList: mine.filter((c) => c.due_date === today && !["completed", "requested", "rejected", "penalty"].includes(c.status)),
       overdue: mine.filter((c) => c.status === "overdue" && c.due_date === yesterday),
-      doneToday: mine.filter((c) => c.due_date === today && c.status === "completed"),
+      doneToday: mine.filter((c) => c.due_date === today && (c.status === "completed" || c.status === "penalty")),
     };
   });
 
-  const totalToday = all.filter((c) => c.due_date === today).length;
+  const totalToday = all.filter((c) => c.due_date === today && c.status !== "penalty").length;
   const doneCount = all.filter((c) => c.due_date === today && c.status === "completed").length;
 
   const todayDateObj = new Date(`${today}T00:00:00`);

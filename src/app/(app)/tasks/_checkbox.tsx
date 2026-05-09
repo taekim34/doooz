@@ -291,7 +291,7 @@ export function TaskCheckbox({
           )
         )}
         {/* Pending pardon action for non-overdue non-done (extra) */}
-        {canPardon && !isOverdue && !isDone && !isPardoned && (
+        {canPardon && !isOverdue && !isDone && !isPardoned && !isPenalty && (
           <button
             type="button"
             onClick={onPardon}
@@ -528,6 +528,15 @@ function KidCardVariant({
           style={{ background: "linear-gradient(135deg,#F3F4F6,#E5E7EB)", boxShadow: "none" }}
         >
           🙏
+        </span>
+      );
+    }
+    if (isPenalty) {
+      return (
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xl"
+          style={{ background: "var(--gradient-error)", boxShadow: "none" }}
+        >
+          🚫
         </span>
       );
     }

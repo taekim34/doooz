@@ -94,14 +94,17 @@ export default async function ChildDetailPage({
     badges: { name: string; icon: string | null } | null;
   }>;
 
-  const doneCount = taskList.filter((t) => t.status === "completed").length;
+  const nonPenaltyTasks = taskList.filter((t) => t.status !== "penalty");
+  const doneCount = nonPenaltyTasks.filter((t) => t.status === "completed").length;
 
   function statusMeta(status: string) {
     if (status === "completed")
-      return { dot: "var(--success)", text: "var(--ink)", strike: true, label: "+" };
+      return { dot: "var(--success)", text: "var(--ink)", strike: true };
+    if (status === "penalty")
+      return { dot: "var(--error)", text: "var(--error)", strike: false };
     if (status === "overdue" || status === "pardoned")
-      return { dot: "var(--error)", text: "var(--ink-subtle)", strike: false, label: "+" };
-    return { dot: "#C7C7CC", text: "var(--ink)", strike: false, label: "+" };
+      return { dot: "var(--error)", text: "var(--ink-subtle)", strike: false };
+    return { dot: "#C7C7CC", text: "var(--ink)", strike: false };
   }
 
   return (
@@ -144,7 +147,7 @@ export default async function ChildDetailPage({
             label={t("children.current_points", locale)}
           />
           <StatCard
-            value={`${doneCount}/${taskList.length}`}
+            value={`${doneCount}/${nonPenaltyTasks.length}`}
             label={t("children.today_complete", locale)}
           />
           <StatCard
@@ -161,7 +164,7 @@ export default async function ChildDetailPage({
         {/* Today's tasks */}
         <Section
           title={t("children.today_tasks", locale)}
-          hint={`${doneCount}/${taskList.length}`}
+          hint={`${doneCount}/${nonPenaltyTasks.length}`}
         >
           {taskList.length === 0 ? (
             <p className="m-0 py-2.5 text-[13px] text-[color:var(--ink-subtle)]">
@@ -201,11 +204,11 @@ export default async function ChildDetailPage({
                       className="shrink-0 whitespace-nowrap text-sm font-bold tracking-[-0.01em]"
                       style={{
                         color:
-                          task.status === "completed" ? "var(--success)" : "var(--ink)",
+                          task.status === "penalty" ? "var(--error)" : task.status === "completed" ? "var(--success)" : "var(--ink)",
                         fontFeatureSettings: '"tnum" 1',
                       }}
                     >
-                      +{task.points} pt
+                      {task.points < 0 ? task.points : `+${task.points}`} pt
                     </span>
                   </div>
                 );
