@@ -466,6 +466,7 @@
   "tasks.pardon": "🫶 봐주기",
   "tasks.pardon_cancel": "봐주기 취소",
   "tasks.pardon_label": "🫶 봐주기",
+  "tasks.penalty_label": "🚫 벌점",
   "tasks.pardon_success": "봐줬어요",
   "tasks.permanent_delete": "완전 삭제",
   "tasks.permanent_delete_confirm": "정말 완전히 삭제할까요? 되돌릴 수 없습니다.",

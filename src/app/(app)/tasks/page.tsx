@@ -46,7 +46,7 @@ export default async function TasksPage() {
       .from("task_instances")
       .select("id, title, points, status, due_date, assignee_id, template_id")
       .eq("family_id", family.id)
-      .in("status", ["pending", "completed", "pardoned", "requested", "rejected"])
+      .in("status", ["pending", "completed", "pardoned", "requested", "rejected", "penalty"])
       .gte("due_date", today)
       .order("due_date"),
     supabase
@@ -89,7 +89,7 @@ export default async function TasksPage() {
       title: c.title,
       points: c.points,
       status: c.status,
-      readOnly: c.status === "pardoned" || (c.template_id === null && c.status === "completed"),
+      readOnly: c.status === "pardoned" || c.status === "penalty" || (c.template_id === null && c.status === "completed"),
       isBeg: c.template_id === null,
     }));
 

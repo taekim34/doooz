@@ -44,7 +44,8 @@ export function TaskCheckbox({
   const isOverdue = localStatus === "overdue";
   const isRejected = localStatus === "rejected";
   const isRequested = localStatus === "requested";
-  const isInteractive = !readOnly && !isPardoned && !isOverdue && !isRejected && !isBeg && !isRequested;
+  const isPenalty = localStatus === "penalty";
+  const isInteractive = !readOnly && !isPardoned && !isOverdue && !isRejected && !isBeg && !isRequested && !isPenalty;
 
   async function onToggle() {
     if (pending || !isInteractive) return;
@@ -159,15 +160,18 @@ export function TaskCheckbox({
   // ─── Parent Row variant ───
   if (variant === "parent-row") {
     const dotColor = isDone ? "var(--success-strong)"
+      : isPenalty ? "var(--error)"
       : isOverdue ? "var(--error)"
       : isPardoned ? "var(--warning)"
       : isRequested ? "#F97316"
       : "var(--ink-disabled)";
     const statusText = isDone ? t("tasks.completed")
+      : isPenalty ? t("tasks.penalty_label")
       : isOverdue ? t("tasks.missed")
       : isPardoned ? t("tasks.pardon_label")
       : t("home.status_pending");
     const statusColor = isDone ? "var(--success-strong)"
+      : isPenalty ? "var(--error)"
       : isOverdue ? "var(--error)"
       : isPardoned ? "var(--warning)"
       : "var(--ink-subtle)";
@@ -205,11 +209,11 @@ export function TaskCheckbox({
         <span
           className="shrink-0 whitespace-nowrap text-[13px] font-bold"
           style={{
-            color: isPardoned ? "var(--ink-subtle)" : "var(--ink)",
+            color: isPenalty ? "var(--error)" : isPardoned ? "var(--ink-subtle)" : "var(--ink)",
             fontFeatureSettings: '"tnum" 1',
           }}
         >
-          +{points}
+          {points < 0 ? points : `+${points}`}
         </span>
         {/* Pardon action on overdue rows (parent only) */}
         {canPardon && isOverdue && (
@@ -344,6 +348,13 @@ export function TaskCheckbox({
         </StatusBadge>
       );
     }
+    if (isPenalty) {
+      return (
+        <StatusBadge variant="danger" className="px-2 py-1 font-normal">
+          {t("tasks.penalty_label")} {points}
+        </StatusBadge>
+      );
+    }
     return <span className="text-sm font-semibold">+{points}</span>;
   })();
 
@@ -391,7 +402,7 @@ export function TaskCheckbox({
         }`}
       >
         <span>
-          {isDone ? (isBeg ? "🎉" : "✅") : isRejected ? "❌" : isPardoned ? "🫶" : isRequested ? "⏳" : isOverdue ? (<span className="inline-block h-3 w-3 rounded-full bg-red-500" />) : "⬜"}
+          {isPenalty ? "🚫" : isDone ? (isBeg ? "🎉" : "✅") : isRejected ? "❌" : isPardoned ? "🫶" : isRequested ? "⏳" : isOverdue ? (<span className="inline-block h-3 w-3 rounded-full bg-red-500" />) : "⬜"}
         </span>
         <span className={`truncate ${isDone ? "line-through" : ""}`}>{title}</span>
         {trailing && (
@@ -431,6 +442,7 @@ export function TaskCheckbox({
 function KidCardVariant({
   title,
   points,
+  localStatus,
   isDone,
   isPardoned,
   isOverdue,
@@ -467,10 +479,12 @@ function KidCardVariant({
   t: (key: string, vars?: Record<string, string>) => string;
 }) {
   const beg = isRequested || (isBeg && !isDone);
+  const isPenalty = localStatus === "penalty";
 
   // Shadow logic from mockup
   let ring = "0 0 0 1.5px rgba(255,107,157,0.35)";
   if (isDone) ring = "none";
+  if (isPenalty) ring = "0 0 0 1.5px rgba(239,68,68,0.5)";
   if (isOverdue) ring = "0 0 0 1.5px rgba(239,68,68,0.35)";
   if (beg) ring = "0 0 0 1.5px rgba(156,163,175,0.35)";
   if (isPardoned) ring = "0 0 0 1.5px rgba(245,158,11,0.35)";
@@ -552,6 +566,7 @@ function KidCardVariant({
 
   // Points / status text
   const pointsText = (() => {
+    if (isPenalty) return `${points} pt`;
     if (isDone) return `+${points} pt`;
     if (beg) return t("tasks.beg_waiting");
     if (isPardoned) return t("tasks.pardon_label");
@@ -559,7 +574,9 @@ function KidCardVariant({
     return `+${points} pt`;
   })();
 
-  const pointsColor = (isDone || (!beg && !isPardoned && !isRejected))
+  const pointsColor = isPenalty
+    ? "var(--error)"
+    : (isDone || (!beg && !isPardoned && !isRejected))
     ? "#FF6B9D"
     : beg ? "rgba(45,27,61,0.5)"
     : isPardoned ? "var(--warning)"

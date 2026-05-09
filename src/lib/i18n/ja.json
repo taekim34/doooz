@@ -466,6 +466,7 @@
   "tasks.pardon": "🫶 おまけ",
   "tasks.pardon_cancel": "おまけ取消",
   "tasks.pardon_label": "🫶 おまけ済",
+  "tasks.penalty_label": "🚫 ペナルティ",
   "tasks.pardon_success": "おまけしました",
   "tasks.permanent_delete": "完全削除",
   "tasks.permanent_delete_confirm": "完全に削除しますか？元に戻せません。",
