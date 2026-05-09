@@ -23,13 +23,16 @@ export function PenaltyForm({ childId }: { childId: string }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ child_id: childId, reason: reason.trim(), amount: pts }),
     });
-    setLoading(false);
-    if (res.ok) {
-      setReason("");
-      setAmount("");
-      setOpen(false);
-      router.refresh();
+    if (!res.ok) {
+      setLoading(false);
+      alert(t("common.failed"));
+      return;
     }
+    setLoading(false);
+    setReason("");
+    setAmount("");
+    setOpen(false);
+    router.refresh();
   }
 
   if (!open) {

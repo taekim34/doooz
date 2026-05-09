@@ -7,3 +7,9 @@ ALTER TABLE public.task_instances
       'overdue'::text, 'requested'::text, 'rejected'::text,
       'penalty'::text
     ]));
+
+-- Allow negative points for penalty tasks
+ALTER TABLE public.task_instances
+  DROP CONSTRAINT task_instances_points_check,
+  ADD CONSTRAINT task_instances_points_check
+    CHECK (points >= 0 OR status = 'penalty');
