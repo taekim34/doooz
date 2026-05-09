@@ -187,6 +187,7 @@
   "home.no_tasks_title": "아직 오늘의 임무가 없어요",
   "home.no_tasks_desc": "부모님이 곧 임무를 만들어줄 거예요!",
   "home.overdue_badge": "지연 {count}개",
+  "home.overdue_yesterday_badge": "어제 놓침 {count}개",
   "home.overdue_label": "놓침",
   "home.no_tasks_kid": "오늘 과제가 없어요",
   "home.upcoming_title": "미리 하기",

@@ -153,7 +153,7 @@ export function KidHome({
   const doneCount = todayTasks.filter((tk) => getStatus(tk) === "completed").length;
   const isEmpty = todayTasks.length === 0 && overdueCount === 0 && upcomingTasks.length === 0;
   const streakLabel = t("home.streak_days", { days: String(streakDays) });
-  const overdueLabel = t("home.overdue_badge", { count: String(overdueCount) });
+  const overdueLabel = t("home.overdue_yesterday_badge", { count: String(overdueCount) });
 
   // Populate the global mobile floating-header slots (rendered by layout).
   useFloatingHeader({

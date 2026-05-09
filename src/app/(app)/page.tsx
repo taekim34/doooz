@@ -1,6 +1,6 @@
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
-import { familyToday } from "@/lib/datetime/family-tz";
+import { familyToday, familyYesterday } from "@/lib/datetime/family-tz";
 import { getStage, progressToNextLevel } from "@/lib/level";
 import { computeStreak } from "@/lib/streak";
 import { KidHome } from "./_kid-home";
@@ -37,7 +37,8 @@ export default async function HomePage() {
     // already been applied by the cron, so they should not clutter today's
     // view. Future-due tasks ride along in `tasks` and are split into a
     // separate "미리하기" section in KidHome (not counted in today's totals).
-    const [{ data: tasks }, { data: earnedBadges }, { data: completions }] =
+    const yesterday = familyYesterday(family.timezone);
+    const [{ data: tasks }, { data: yesterdayOverdue }, { data: earnedBadges }, { data: completions }] =
       await Promise.all([
         supabase
           .from("task_instances")
@@ -46,6 +47,12 @@ export default async function HomePage() {
           .gte("due_date", today)
           .in("status", ["pending", "completed", "rejected", "pardoned", "requested"])
           .order("due_date"),
+        supabase
+          .from("task_instances")
+          .select("id")
+          .eq("assignee_id", user.id)
+          .eq("status", "overdue")
+          .eq("due_date", yesterday),
         supabase
           .from("user_badges")
           .select("badge_id, earned_at, badges(name, icon)")
@@ -94,7 +101,7 @@ export default async function HomePage() {
         nextThreshold={progress.nextThreshold}
         todayTasks={todayOnly}
         upcomingTasks={upcoming}
-        overdueCount={0}
+        overdueCount={(yesterdayOverdue ?? []).length}
         earnedBadges={(earnedBadges ?? []) as Array<{ badge_id: string; badges: { name: string; icon: string } | null }>}
         streakDays={streakDays}
       />

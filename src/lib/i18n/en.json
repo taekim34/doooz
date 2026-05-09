@@ -187,6 +187,7 @@
   "home.no_tasks_title": "No missions for today yet",
   "home.no_tasks_desc": "Your parents will create missions soon!",
   "home.overdue_badge": "Overdue {count}",
+  "home.overdue_yesterday_badge": "Missed yesterday {count}",
   "home.overdue_label": "Missed",
   "home.upcoming_title": "Get a head start",
   "home.upcoming_hint": "Not counted toward today",

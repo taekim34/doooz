@@ -187,6 +187,7 @@
   "home.no_tasks_title": "今日のミッションはまだありません",
   "home.no_tasks_desc": "お父さんお母さんがすぐミッションを作ってくれるよ！",
   "home.overdue_badge": "遅延 {count}個",
+  "home.overdue_yesterday_badge": "昨日のやり残し {count}個",
   "home.overdue_label": "やり残し",
   "home.no_tasks_kid": "今日のやることはありません",
   "home.upcoming_title": "先取りタスク",
