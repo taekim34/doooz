@@ -32,6 +32,15 @@ export function familyToday(timezone: string): string {
 }
 
 /**
+ * Yesterday's family-local date as YYYY-MM-DD.
+ */
+export function familyYesterday(timezone: string): string {
+  const zoned = toZonedTime(new Date(clockNow()), timezone);
+  zoned.setDate(zoned.getDate() - 1);
+  return formatInTimeZone(zoned, timezone, "yyyy-MM-dd");
+}
+
+/**
  * Start-of-day Date in the family's timezone (zoned Date at 00:00 local).
  */
 export function startOfFamilyDay(instant: Date | number, timezone: string): Date {

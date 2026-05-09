@@ -11,6 +11,7 @@ import { t, type Locale } from "@/lib/i18n";
 import { formatPointsReason } from "@/features/points/format-reason";
 import { tileGrad } from "@/lib/tile-grad";
 import { Section } from "@/components/organisms";
+import { PenaltyForm } from "./_penalty-form";
 
 interface ChildRow {
   id: string;
@@ -150,6 +151,11 @@ export default async function ChildDetailPage({
             value={`#${rank.rank}`}
             label={t("children.ranking", locale)}
           />
+        </div>
+
+        {/* Penalty */}
+        <div className="flex justify-end">
+          <PenaltyForm childId={child.id} />
         </div>
 
         {/* Today's tasks */}

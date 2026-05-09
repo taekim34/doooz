@@ -31,11 +31,19 @@ type RequestTask = {
   title: string;
 };
 
+type OverdueTask = {
+  id: string;
+  title: string;
+  points: number;
+  status: string;
+};
+
 type Props = {
   allTaskItems: TaskItem[];
   todayDone: number;
   todayTotal: number;
   upcoming: UpcomingTask[];
+  yesterdayOverdue: OverdueTask[];
   myPending: RequestTask[];
   myRejected: RequestTask[];
   myApproved: RequestTask[];
@@ -47,6 +55,7 @@ export function KidTasks({
   todayDone,
   todayTotal,
   upcoming,
+  yesterdayOverdue,
   myPending,
   myRejected,
   myApproved,
@@ -73,6 +82,28 @@ export function KidTasks({
         todayTotal={todayTotal}
       />
 
+      {/* Yesterday overdue section */}
+      {yesterdayOverdue.length > 0 && (
+        <div className="px-5 pb-4">
+          <h3 className="mb-3 text-[15px] font-bold text-red-600">
+            {t("tasks.missed_yesterday", locale)}
+          </h3>
+          <div className="flex flex-col gap-3">
+            {yesterdayOverdue.map((c) => (
+              <TaskCheckbox
+                key={c.id}
+                id={c.id}
+                title={c.title}
+                points={c.points}
+                status={c.status}
+                readOnly
+                variant="kid-card"
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Upcoming section */}
       {upcoming.length > 0 && (
         <div className="px-5 pb-4">
@@ -87,7 +118,6 @@ export function KidTasks({
                 title={c.title}
                 points={c.points}
                 status={c.status}
-                readOnly
                 trailing={c.trailing}
                 variant="kid-card"
               />

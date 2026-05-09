@@ -142,7 +142,7 @@ export function ParentTasks({
                   }}
                 >
                   {childDone}/{childTotal}
-                  {overdue.length > 0 ? ` · ${t("tasks.missed", locale)} ${overdue.length}` : ""}
+                  {overdue.length > 0 ? ` · ${t("tasks.missed_yesterday", locale)} ${overdue.length}` : ""}
                 </span>
               </div>
 
