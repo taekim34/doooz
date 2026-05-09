@@ -290,6 +290,32 @@ export function TaskCheckbox({
             </span>
           )
         )}
+        {/* Cancel penalty (parent only) */}
+        {canPardon && isPenalty && (
+          <button
+            type="button"
+            onClick={() => {
+              startTransition(async () => {
+                try {
+                  const res = await fetch(`/api/points/penalty/${id}/cancel`, { method: "POST" });
+                  if (!res.ok) {
+                    const j = await res.json().catch(() => ({}));
+                    toast.error(j.error || t("common.failed"));
+                    return;
+                  }
+                  toast.success(t("tasks.penalty_cancelled"));
+                  router.refresh();
+                } catch (e) {
+                  toast.error((e as Error).message || t("tasks.error_network"));
+                }
+              });
+            }}
+            disabled={pending}
+            className="shrink-0 rounded-full border border-red-300 bg-white px-2.5 py-1 text-[11px] text-red-700 hover:bg-red-50 disabled:opacity-60"
+          >
+            {t("tasks.penalty_cancel")}
+          </button>
+        )}
         {/* Pending pardon action for non-overdue non-done (extra) */}
         {canPardon && !isOverdue && !isDone && !isPardoned && !isPenalty && (
           <button

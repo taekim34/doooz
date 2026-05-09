@@ -28,6 +28,7 @@ const PREFIX_KEYS: Array<{ match: RegExp; key: string }> = [
   // Korean RPC prefixes (translated on the fly for en/ja viewers)
   { match: /^할일 완료:\s*/, key: "points.reason_task_complete" },
   { match: /^보상 교환:\s*/, key: "points.reason_reward_redeemed" },
+  { match: /^벌점 취소:\s*/, key: "points.reason_penalty_cancelled" },
   { match: /^취소:\s*/, key: "points.reason_cancelled" },
   { match: /^재체크:\s*/, key: "points.reason_recheck" },
 ];
