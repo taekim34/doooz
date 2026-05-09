@@ -5,6 +5,9 @@ import { PushSubscriber } from "./_push-subscriber";
 import { ForegroundRefresh } from "./_foreground-refresh";
 import { NavigationLoading } from "./_navigation-loading";
 import { LocaleProvider } from "@/lib/i18n/context";
+import { MobileNavProvider } from "./_mobile-nav-context";
+import { MobileDrawer } from "./_mobile-drawer";
+import { MobileFloatingHeader } from "./_mobile-floating-header";
 import type { Locale } from "@/lib/i18n";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -15,36 +18,33 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <LocaleProvider locale={locale}>
       <Suspense>
         <NavigationLoading>
-          <div
-            data-role={user.role === "child" ? "kid" : "parent"}
-            data-theme={user.tone}
-            data-mode={user.color_mode}
-            className="flex min-h-screen flex-col bg-[var(--surface-raised)]"
-          >
-            <AppNav role={user.role} userName={user.display_name} familyName={family.name} locale={locale} />
+          <MobileNavProvider>
+            <div
+              data-role={user.role === "child" ? "kid" : "parent"}
+              data-theme={user.tone}
+              data-mode={user.color_mode}
+              className="app-shell flex min-h-screen flex-col"
+            >
+              <AppNav role={user.role} familyName={family.name} locale={locale} />
 
-            <main className="flex-1 overflow-x-hidden">
-              {/* Mobile: direct content with bottom-tab padding */}
-              <div className="p-4 pb-24 md:hidden">{children}</div>
-
-              {/* Desktop: PhoneCanvas card wrapper */}
-              <div
-                className="mx-auto hidden max-w-[960px] p-[clamp(16px,2.5vw,32px)] px-[clamp(12px,3vw,24px)] pb-14 md:block"
-              >
-                <div
-                  className="overflow-hidden rounded-3xl border border-[color:var(--border-subtle)] bg-[color:var(--surface)]"
-                  style={{
-                    boxShadow: "0 24px 48px -20px rgba(45,27,61,0.18), 0 2px 4px rgba(10,10,10,0.04)",
-                  }}
-                >
-                  <div className="p-6 lg:p-8">{children}</div>
+              <main className="flex-1 overflow-x-hidden">
+                {/* Mobile: floating header (per-page slots) + edge-to-edge content */}
+                <div className="md:hidden">
+                  <MobileFloatingHeader />
+                  <div className="px-4 pb-10">{children}</div>
                 </div>
-              </div>
-            </main>
 
-            <PushSubscriber />
-            <ForegroundRefresh />
-          </div>
+                {/* Desktop: max-width content; gradient (kid) or surface (parent) bleeds through */}
+                <div className="mx-auto hidden max-w-[960px] px-[clamp(16px,3vw,32px)] py-[clamp(16px,2.5vw,32px)] pb-14 md:block">
+                  {children}
+                </div>
+              </main>
+
+              <MobileDrawer role={user.role === "child" ? "child" : "parent"} familyName={family.name} locale={locale} />
+              <PushSubscriber />
+              <ForegroundRefresh />
+            </div>
+          </MobileNavProvider>
         </NavigationLoading>
       </Suspense>
     </LocaleProvider>

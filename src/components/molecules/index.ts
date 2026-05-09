@@ -1,4 +1,5 @@
 export { TaskCard, type TaskCardProps } from "./task-card";
+export { ListCard, ListRow } from "./list-card";
 export { ApprovalRow, type ApprovalRowProps } from "./approval-row";
 export { InviteCodeCard, type InviteCodeCardProps } from "./invite-code-card";
 export { FadeUp, type FadeUpProps } from "./fade-up";

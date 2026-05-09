@@ -1,19 +1,13 @@
 "use client";
 import { useState } from "react";
-import {
-  TITLE_THRESHOLDS,
-  TITLE_COUNT,
-  calculateLevel,
-  getLevelTitle,
-  getTitleTier,
-} from "@/lib/level";
+import { STAGE_INFO, calculateLevel, getStage, getStageTitle } from "@/lib/level";
 import { useT } from "@/lib/i18n/useT";
 
 export function LevelTable({ currentLifetime }: { currentLifetime: number }) {
   const [open, setOpen] = useState(false);
   const t = useT();
-
-  const currentTier = getTitleTier(currentLifetime);
+  const currentLevel = calculateLevel(currentLifetime);
+  const currentStage = getStage(currentLevel);
 
   return (
     <div>
@@ -47,42 +41,40 @@ export function LevelTable({ currentLifetime }: { currentLifetime: number }) {
 
       {open && (
         <div
-          className="mt-0 max-h-[360px] overflow-hidden overflow-y-auto rounded-[14px] border border-[rgba(255,255,255,0.8)] px-1 pt-1.5 pb-1"
+          className="mt-0 overflow-hidden rounded-[14px] border border-[rgba(255,255,255,0.8)] px-1 pt-1.5 pb-1"
           style={{ background: "rgba(255,255,255,0.7)" }}
         >
-          {TITLE_THRESHOLDS.map((threshold, i) => {
-            const tier = i + 1;
-            const tierLevel = calculateLevel(threshold);
-            const isCurrent = tier === currentTier;
+          {STAGE_INFO.map((s, i) => {
+            const isCurrent = s.stage === currentStage;
+            const range = s.maxLevel === null
+              ? `Lv.${s.minLevel}+`
+              : `Lv.${s.minLevel}–${s.maxLevel}`;
             return (
               <div
-                key={tier}
+                key={s.stage}
                 className="grid items-center gap-2"
                 style={{
-                  gridTemplateColumns: "60px 1fr auto",
-                  padding: "10px 12px",
+                  gridTemplateColumns: "32px 1fr auto",
+                  padding: "12px 14px",
                   borderBottom:
-                    i === TITLE_COUNT - 1
+                    i === STAGE_INFO.length - 1
                       ? "none"
                       : "1px solid rgba(10,10,10,0.04)",
                   background: isCurrent ? "rgba(255,107,157,0.08)" : "transparent",
                   borderRadius: isCurrent ? 8 : 0,
                 }}
               >
-                <span
-                  className="text-xs font-extrabold tracking-[-0.01em] text-[color:var(--ink)]"
-                  style={{ fontFeatureSettings: '"tnum" 1' }}
-                >
-                  Lv.{tierLevel}
+                <span aria-hidden className="text-[20px] leading-none">
+                  {s.icon}
                 </span>
-                <span className="text-[13px] font-semibold tracking-[-0.01em] text-[color:var(--ink)]">
-                  {getLevelTitle(tier, t)}
+                <span className="text-[14px] font-bold tracking-[-0.01em] text-[color:var(--ink)]">
+                  {getStageTitle(s.stage, t)}
                 </span>
                 <span
                   className="whitespace-nowrap text-xs font-bold tracking-[-0.01em] text-[#FF6B9D]"
                   style={{ fontFeatureSettings: '"tnum" 1' }}
                 >
-                  {threshold.toLocaleString()} pt
+                  {range}
                 </span>
               </div>
             );

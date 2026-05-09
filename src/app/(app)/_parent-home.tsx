@@ -1,3 +1,4 @@
+"use client";
 import { FadeUp } from "@/components/molecules";
 import { EyebrowLabel, SectionLabel, StatCard } from "@/components/atoms";
 import { KidRow } from "@/components/molecules/kid-row";
@@ -6,6 +7,7 @@ import { nowDate } from "@/lib/datetime/clock";
 import { t, type Locale } from "@/lib/i18n";
 import Link from "next/link";
 import type { Route } from "next";
+import { useFloatingHeader } from "./_mobile-nav-context";
 
 type Kid = {
   id: string;
@@ -66,6 +68,15 @@ export function ParentHome({
 }) {
   const totalTasks = tasks.length;
   const totalDone = tasks.filter((c) => c.status === "completed").length;
+
+  // Mobile floating header — center: family name; right: empty for now.
+  useFloatingHeader({
+    center: (
+      <div className="rounded-full bg-indigo-100 px-3 py-1.5 text-[12px] font-bold text-indigo-600">
+        {familyName}
+      </div>
+    ),
+  });
 
   // Empty state — no kids yet.
   if (kids.length === 0) {
@@ -132,7 +143,7 @@ export function ParentHome({
 
   return (
     <div
-      className="mx-auto max-w-lg pb-8 lg:max-w-5xl"
+      className="mx-auto max-w-lg pb-8 lg:max-w-[880px]"
       style={{ fontFeatureSettings: '"tnum" 1' }}
     >
       {/* Header — spans full width on lg */}

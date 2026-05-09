@@ -11,6 +11,12 @@ export type TaskCardProps = {
   /** Small label rendered under the title (e.g. "D-3" / "내일" for upcoming tasks). */
   trailing?: string;
   className?: string;
+  /**
+   * Read-only mode — replaces the toggle button with a non-interactive status
+   * dot, removes hover affordance. Use for status views (e.g. home dashboard)
+   * where editing happens elsewhere.
+   */
+  readOnly?: boolean;
 };
 
 export function TaskCard({
@@ -21,6 +27,7 @@ export function TaskCard({
   assigneeName,
   trailing,
   className,
+  readOnly = false,
 }: TaskCardProps) {
   const isCompleted = status === "completed";
   const isOverdue = status === "overdue";
@@ -43,40 +50,42 @@ export function TaskCard({
         opacity: isPardoned ? 0.7 : 1,
       }}
     >
-      {/* Check circle */}
-      <button
-        type="button"
-        onClick={onToggle}
-        disabled={!onToggle || isPardoned}
-        aria-label={isCompleted ? "Mark incomplete" : "Mark complete"}
-        className="flex h-[24px] w-[24px] shrink-0 items-center justify-center rounded-full transition-all disabled:cursor-not-allowed"
-        style={
-          isCompleted
-            ? {
-                background: "var(--accent-gradient, var(--accent))",
-                boxShadow:
-                  "0 4px 8px -2px color-mix(in srgb, var(--accent) 40%, transparent)",
-              }
-            : {
-                border:
-                  "1.5px solid color-mix(in srgb, var(--accent) 55%, transparent)",
-                background:
-                  "color-mix(in srgb, var(--accent) 5%, transparent)",
-              }
-        }
-      >
-        {isCompleted && (
-          <svg width="12" height="12" viewBox="0 0 18 18" fill="none">
-            <path
-              d="M4 9.5L7.5 13l7-8"
-              stroke="#fff"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        )}
-      </button>
+      {/* Interactive toggle button — hidden entirely in readOnly mode */}
+      {readOnly ? null : (
+        <button
+          type="button"
+          onClick={onToggle}
+          disabled={!onToggle || isPardoned}
+          aria-label={isCompleted ? "Mark incomplete" : "Mark complete"}
+          className="flex h-[24px] w-[24px] shrink-0 items-center justify-center rounded-full transition-all disabled:cursor-not-allowed"
+          style={
+            isCompleted
+              ? {
+                  background: "var(--accent-gradient, var(--accent))",
+                  boxShadow:
+                    "0 4px 8px -2px color-mix(in srgb, var(--accent) 40%, transparent)",
+                }
+              : {
+                  border:
+                    "1.5px solid color-mix(in srgb, var(--accent) 55%, transparent)",
+                  background:
+                    "color-mix(in srgb, var(--accent) 5%, transparent)",
+                }
+          }
+        >
+          {isCompleted && (
+            <svg width="12" height="12" viewBox="0 0 18 18" fill="none">
+              <path
+                d="M4 9.5L7.5 13l7-8"
+                stroke="#fff"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          )}
+        </button>
+      )}
 
       {/* Content */}
       <div className="min-w-0 flex-1">

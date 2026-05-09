@@ -27,11 +27,17 @@ export function ForegroundRefresh() {
     setTimeout(hide, 800);
   }, [router, show, hide]);
 
-  // Foreground restore
+  // Foreground restore — mobile background→foreground only.
+  // Desktop tab/window focus is intentionally ignored to avoid noisy refreshes;
+  // `pageshow` (bfcache) still triggers on both platforms.
   useEffect(() => {
+    const isTouchDevice =
+      typeof window !== "undefined" &&
+      window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+
     function refresh() {
       const elapsed = now() - lastActive.current;
-      if (elapsed > 3000) doRefresh();
+      if (elapsed > 30_000) doRefresh();
       lastActive.current = now();
     }
 
@@ -41,17 +47,16 @@ export function ForegroundRefresh() {
     function onPageShow(e: PageTransitionEvent) {
       if (e.persisted) refresh();
     }
-    function onFocus() {
-      refresh();
-    }
 
-    document.addEventListener("visibilitychange", onVisible);
+    if (isTouchDevice) {
+      document.addEventListener("visibilitychange", onVisible);
+    }
     window.addEventListener("pageshow", onPageShow);
-    window.addEventListener("focus", onFocus);
     return () => {
-      document.removeEventListener("visibilitychange", onVisible);
+      if (isTouchDevice) {
+        document.removeEventListener("visibilitychange", onVisible);
+      }
       window.removeEventListener("pageshow", onPageShow);
-      window.removeEventListener("focus", onFocus);
     };
   }, [doRefresh]);
 

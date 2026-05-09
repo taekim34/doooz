@@ -1,12 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
-  TITLE_COUNT,
-  TITLE_THRESHOLDS,
   calculateLevel,
-  getLevelTitle,
   getStage,
-  getTitleByLifetime,
-  getTitleTier,
+  getStageTitle,
   levelThreshold,
   nextLevelAt,
   progressToNextLevel,
@@ -63,50 +59,37 @@ describe("levelThreshold + nextLevelAt", () => {
   });
 });
 
-describe("title tier (decoupled from level)", () => {
-  it("TITLE_THRESHOLDS has 30 entries", () => {
-    expect(TITLE_COUNT).toBe(30);
-    expect(TITLE_THRESHOLDS.length).toBe(30);
-  });
-  it("title_1 at 0", () => {
-    expect(getTitleTier(0)).toBe(1);
-    expect(getTitleTier(149)).toBe(1);
-  });
-  it("title_9 at 10000", () => {
-    expect(getTitleTier(10_000)).toBe(9);
-  });
-  it("title_30 at 1_000_000 and beyond", () => {
-    expect(getTitleTier(1_000_000)).toBe(30);
-    expect(getTitleTier(99_999_999)).toBe(30);
-  });
-  it("getTitleByLifetime returns Lx fallback without tFn", () => {
-    expect(getTitleByLifetime(0)).toBe("L1");
-    expect(getTitleByLifetime(1_000_000)).toBe("L30");
-  });
-});
-
-describe("getStage", () => {
+describe("getStage — new boundaries (1:1-6, 2:7-12, 3:13-24, 4:25-49, 5:50+)", () => {
   it("stage 1 for L1-L6", () => {
     expect(getStage(1)).toBe(1);
     expect(getStage(6)).toBe(1);
   });
-  it("stage 2 at L7-L12", () => {
+  it("stage 2 for L7-L12", () => {
     expect(getStage(7)).toBe(2);
     expect(getStage(12)).toBe(2);
   });
-  it("stage 5 caps at infinity", () => {
-    expect(getStage(25)).toBe(5);
+  it("stage 3 for L13-L24", () => {
+    expect(getStage(13)).toBe(3);
+    expect(getStage(24)).toBe(3);
+  });
+  it("stage 4 for L25-L49", () => {
+    expect(getStage(25)).toBe(4);
+    expect(getStage(49)).toBe(4);
+  });
+  it("stage 5 from L50 onwards (unbounded)", () => {
+    expect(getStage(50)).toBe(5);
     expect(getStage(1000)).toBe(5);
   });
 });
 
-describe("getLevelTitle", () => {
+describe("getStageTitle", () => {
   it("returns fallback without tFn", () => {
-    expect(getLevelTitle(1)).toBe("L1");
-    expect(getLevelTitle(30)).toBe("L30");
+    expect(getStageTitle(1)).toBe("Stage 1");
+    expect(getStageTitle(5)).toBe("Stage 5");
   });
-  it("clamps past 30", () => {
-    expect(getLevelTitle(207)).toBe("L30");
+  it("uses tFn when supplied", () => {
+    const t = (k: string) => `T(${k})`;
+    expect(getStageTitle(2, t)).toBe("T(characters.stage_rookie)");
   });
 });
 

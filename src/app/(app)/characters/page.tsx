@@ -1,7 +1,7 @@
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
 import { CharacterIcon } from "@/components/molecules/character-icon";
-import { getStage, progressToNextLevel, getLevelTitle } from "@/lib/level";
+import { getStage, progressToNextLevel } from "@/lib/level";
 import Link from "next/link";
 import { BackButton, SectionLabel } from "@/components/atoms";
 import { LevelTable } from "./_level-table";

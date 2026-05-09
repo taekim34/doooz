@@ -54,16 +54,15 @@ const ITEMS: ReadonlyArray<NavItem> = [
   { href: "/rewards/requests" as Route, labelKey: "nav.requests", emoji: "\u2705", roles: ["parent"] },
   { href: "/characters" as Route, labelKey: "nav.characters", emoji: "\u{1F98A}", roles: ["child"] },
   { href: "/family" as Route, labelKey: "nav.family", emoji: "\u{1F468}\u200D\u{1F469}\u200D\u{1F467}" },
+  { href: "/settings" as Route, labelKey: "nav.settings", emoji: "\u2699\uFE0F" },
 ];
 
 export function AppNav({
   role,
-  userName,
   familyName,
   locale,
 }: {
   role: "parent" | "child";
-  userName: string;
   familyName: string;
   locale: Locale;
 }) {
@@ -77,45 +76,21 @@ export function AppNav({
 
   return (
     <>
-      {/* ── Mobile top header (<md) ── */}
-      <header
-        className="sticky top-0 z-40 flex items-center justify-between border-b border-[rgba(10,10,10,0.06)] px-4 py-2 md:hidden"
-        style={{
-          background: "color-mix(in srgb, var(--surface) 92%, transparent)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-        }}
-      >
-        <div className="flex items-center gap-2">
-          <Image src="/logo.png" alt="Doooz" width={54} height={54} priority className="h-[27px] w-[27px]" />
-          <span className="text-xs text-[color:var(--ink-subtle)]">{familyName}</span>
-        </div>
-        <NavLink
-          href={"/settings" as Route}
-          active={isActive("/settings")}
-          className={cn(
-            "flex h-8 w-8 items-center justify-center rounded-full transition-colors",
-            isActive("/settings")
-              ? "text-[color:var(--ink-muted)]"
-              : "text-[color:var(--ink-subtle)] hover:bg-[color:var(--surface-sunken)] hover:text-[color:var(--ink-muted)]",
-          )}
-        >
-          <SettingsGearIcon />
-        </NavLink>
-      </header>
+      {/* Mobile uses MobileFloatingHeader + MobileDrawer (mounted in layout). */}
 
       {/* ── Desktop top nav (md+) ── */}
       <nav
-        className="sticky top-0 z-40 hidden border-b border-[rgba(10,10,10,0.06)] md:block"
+        className="sticky top-0 z-40 hidden border-b border-[rgba(45,27,61,0.12)] md:block"
         style={{
-          background: "color-mix(in srgb, var(--surface) 85%, transparent)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
+          background: "color-mix(in srgb, var(--surface) 75%, transparent)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          boxShadow: "0 4px 14px -10px rgba(45,27,61,0.18)",
         }}
       >
         <div
-          className="mx-auto flex max-w-[1280px] items-center justify-between"
-          style={{ padding: "12px clamp(16px, 4vw, 32px)" }}
+          className="mx-auto flex max-w-[960px] items-center justify-between"
+          style={{ padding: "12px clamp(16px, 3vw, 32px)" }}
         >
           {/* Left: logo + name + role badge */}
           <div className="flex items-center gap-3">
@@ -125,18 +100,18 @@ export function AppNav({
             </div>
             <span
               className={cn(
-                "rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide",
+                "rounded-full px-2 py-0.5 text-[11px] font-semibold tracking-wide",
                 isKid
                   ? "bg-pink-100 text-pink-600"
                   : "bg-indigo-100 text-indigo-600",
               )}
             >
-              {isKid ? t("nav.child") : t("nav.parent")}
+              {familyName}
             </span>
           </div>
 
-          {/* Center: nav pills */}
-          <div className="flex items-center gap-1">
+          {/* Right-aligned nav pills (incl. 설정) */}
+          <div className="ml-auto flex items-center gap-1">
             {items.map((it) => {
               const active = isActive(it.href);
               return (
@@ -151,93 +126,15 @@ export function AppNav({
                       : "text-[color:var(--ink-muted)] hover:bg-[color:var(--surface-sunken)] hover:text-[color:var(--ink)]",
                   )}
                 >
-                  <span className="mr-1.5">{it.emoji}</span>
                   {t(it.labelKey)}
                 </NavLink>
               );
             })}
           </div>
-
-          {/* Right: settings gear + avatar */}
-          <div className="flex items-center gap-2">
-            <NavLink
-              href={"/settings" as Route}
-              active={isActive("/settings")}
-              className={cn(
-                "flex h-8 w-8 items-center justify-center rounded-full transition-colors",
-                isActive("/settings")
-                  ? "text-[color:var(--ink-muted)]"
-                  : "text-[color:var(--ink-subtle)] hover:bg-[color:var(--surface-sunken)] hover:text-[color:var(--ink-muted)]",
-              )}
-            >
-              <SettingsGearIcon />
-            </NavLink>
-            <div
-              className={cn(
-                "flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-white",
-                isKid
-                  ? "bg-gradient-to-br from-pink-400 to-rose-500"
-                  : "bg-gradient-to-br from-indigo-400 to-violet-500",
-              )}
-              title={userName}
-            >
-              {userName.charAt(0).toUpperCase()}
-            </div>
-          </div>
         </div>
       </nav>
 
-      {/* ── Mobile bottom tabs (<md) ── */}
-      <nav
-        className="fixed bottom-0 left-0 right-0 z-40 grid grid-cols-6 border-t border-[rgba(10,10,10,0.06)] pb-[env(safe-area-inset-bottom)] md:hidden"
-        style={{
-          background: "color-mix(in srgb, var(--surface) 92%, transparent)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-        }}
-      >
-        {items.map((it) => {
-          const active = isActive(it.href);
-          return (
-            <NavLink
-              key={it.href}
-              href={it.href}
-              active={active}
-              className="flex flex-col items-center gap-0.5 py-2 transition-colors"
-              style={{
-                color: active
-                  ? isKid ? "var(--accent-kid)" : "var(--accent-parent)"
-                  : "var(--ink-subtle)",
-              }}
-            >
-              <span className="text-[18px] leading-none">{it.emoji}</span>
-              <span className={cn("text-[10px]", active && "font-semibold")}>
-                {t(it.labelKey)}
-              </span>
-            </NavLink>
-          );
-        })}
-      </nav>
     </>
   );
 }
 
-/** Inline SVG gear icon to avoid lucide-react dependency */
-function SettingsGearIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
-  );
-}

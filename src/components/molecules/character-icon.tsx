@@ -1,8 +1,87 @@
+"use client";
 import * as React from "react";
 import Image from "next/image";
 import { characterEmoji } from "@/features/characters/emoji-map";
 import { characterImageSrc } from "@/features/characters/image-map";
 import type { CharacterStage } from "@/lib/level";
+
+// Idle animation pool — each entry is a CSS class + duration in ms.
+// Picked randomly with random pause between bursts so multiple characters
+// on the same screen feel autonomous, not synchronized.
+const IDLE_BURSTS: ReadonlyArray<{ klass: string; ms: number }> = [
+  { klass: "ch-jump",       ms: 700 },
+  { klass: "ch-sway",       ms: 1200 },
+  { klass: "ch-shake",      ms: 600 },
+  { klass: "ch-pulse",      ms: 900 },
+  { klass: "ch-spin",       ms: 900 },
+  { klass: "ch-trot-left",  ms: 1200 },
+  { klass: "ch-trot-right", ms: 1200 },
+];
+
+function pickBurst() {
+  return IDLE_BURSTS[Math.floor(Math.random() * IDLE_BURSTS.length)]!;
+}
+
+/**
+ * Random idle bursts + pointer-driven on-demand burst.
+ *
+ * - Idle loop: every 4–10s pick a random burst.
+ * - Hover (mouse) / touchdown — immediately play a one-shot burst and freeze
+ *   the idle loop until pointerleave / click / touchup.
+ */
+function useIdleAnimation(enabled: boolean) {
+  const [burst, setBurst] = React.useState<string>("");
+  const interactingRef = React.useRef(false);
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  const clearTimer = () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = undefined;
+  };
+
+  const loop = React.useCallback(() => {
+    if (!enabled || interactingRef.current) return;
+    const pause = 4000 + Math.random() * 6000;
+    timerRef.current = setTimeout(() => {
+      if (!enabled || interactingRef.current) return;
+      const pick = pickBurst();
+      setBurst(pick.klass);
+      timerRef.current = setTimeout(() => {
+        if (interactingRef.current) return;
+        setBurst("");
+        loop();
+      }, pick.ms);
+    }, pause);
+  }, [enabled]);
+
+  React.useEffect(() => {
+    if (!enabled) return;
+    timerRef.current = setTimeout(loop, Math.random() * 2500);
+    return () => {
+      clearTimer();
+    };
+  }, [enabled, loop]);
+
+  const onEnter = React.useCallback(() => {
+    if (!enabled) return;
+    interactingRef.current = true;
+    clearTimer();
+    // Force-restart by clearing then setting next tick (so a repeated hover
+    // on the same burst class still re-triggers the animation).
+    setBurst("");
+    timerRef.current = setTimeout(() => setBurst(pickBurst().klass), 0);
+  }, [enabled]);
+
+  const onLeave = React.useCallback(() => {
+    if (!enabled) return;
+    interactingRef.current = false;
+    clearTimer();
+    setBurst("");
+    loop();
+  }, [enabled, loop]);
+
+  return { burst, onEnter, onLeave };
+}
 
 /**
  * Stage badges overlaid on the base PNG to convey evolution at a glance:
@@ -32,11 +111,12 @@ const STAGE_BADGE: Record<CharacterStage, string> = {
  * Unknown character IDs fall back to the legacy emoji string from emoji-map,
  * which already concatenates the stage suffix — so behaviour stays consistent.
  *
- * Animation props:
- *   tappable — adds spring-back squish on :active. Default false (set true
- *              for clickable characters; non-interactive avatars stay still).
- *   idle="breathe" — slow pulsing scale. Use sparingly; one or two on screen
- *              feels alive, dozens feels chaotic.
+ * Animation props (both default ON — opt out with explicit `false`/`undefined`):
+ *   tappable=true   — spring-back squish on :active.
+ *   idle="breathe"  — random idle bursts (jump/sway/shake/pulse/spin) every
+ *                     few seconds. Pure CSS animation classes are toggled by
+ *                     a per-instance JS timer so multiple characters feel
+ *                     independent.
  */
 export interface CharacterIconProps {
   id: string | null | undefined;
@@ -61,22 +141,31 @@ export function CharacterIcon({
   className,
   ariaLabel,
   hideBadge,
-  tappable,
-  idle,
+  tappable = true,
+  idle = "breathe",
 }: CharacterIconProps) {
   const src = characterImageSrc(id);
+  const { burst, onEnter, onLeave } = useIdleAnimation(idle === "breathe");
   const animClass = [
     tappable ? "ch-tap" : "",
-    idle === "breathe" ? "ch-breathe" : "",
+    burst,
   ]
     .filter(Boolean)
     .join(" ");
+  const interactionHandlers = idle === "breathe"
+    ? {
+        onPointerEnter: onEnter,
+        onPointerLeave: onLeave,
+        onClick: onLeave,
+      }
+    : {};
 
   if (!src) {
     return (
       <span
         aria-label={ariaLabel ?? id ?? undefined}
         className={[className, animClass].filter(Boolean).join(" ")}
+        {...interactionHandlers}
         style={{
           display: "inline-flex",
           alignItems: "center",
@@ -98,6 +187,7 @@ export function CharacterIcon({
     <span
       aria-label={ariaLabel ?? id ?? "character"}
       className={[className, animClass].filter(Boolean).join(" ")}
+      {...interactionHandlers}
       style={{
         position: "relative",
         display: "inline-block",

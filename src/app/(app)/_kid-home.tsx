@@ -1,17 +1,17 @@
 "use client";
-import { FadeUp, TaskCard } from "@/components/molecules";
+import { FadeUp, ListCard, ListRow } from "@/components/molecules";
 import { CharacterAvatar } from "@/components/molecules/character-avatar";
-import { LevelPill, EyebrowLabel } from "@/components/atoms";
+import { EyebrowLabel } from "@/components/atoms";
+import { getStageTitle } from "@/lib/level";
 import { ProgressTrack } from "@/components/atoms/progress-track";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CelebrationOverlay } from "@/components/organisms";
-import Link from "next/link";
-import type { Route } from "next";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n/useT";
 import type { CharacterStage } from "@/lib/level";
+import { useFloatingHeader } from "./_mobile-nav-context";
 
 type Task = {
   id: string;
@@ -48,113 +48,39 @@ type KidHomeProps = {
 };
 
 
-const KID_BG_GRADIENT =
-  "linear-gradient(135deg, #FFF5EC 0%, #FFE4E9 40%, #E5EFFF 100%)";
 
-
-function MenuIcon() {
+function StreakPill({ label }: { label: string }) {
   return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <path
-        d="M3 5h12M3 9h12M3 13h8"
-        stroke="var(--ink)"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
+    <div
+      className="flex items-center gap-1.5 rounded-full px-3.5 py-2"
+      style={{
+        background: "linear-gradient(90deg,#FFF3E0,#FFE4E9)",
+        boxShadow:
+          "0 8px 20px -10px rgba(255,107,157,0.35), inset 0 1px 0 rgba(255,255,255,0.8)",
+      }}
+    >
+      <span className="text-[15px] leading-none">🔥</span>
+      <span className="text-sm font-bold tracking-[-0.2px] text-[color:var(--ink)]">
+        {label}
+      </span>
+    </div>
   );
 }
 
-function BellIcon() {
+function OverduePill({ label }: { label: string }) {
   return (
-    <svg width="18" height="20" viewBox="0 0 18 20" fill="none">
-      <path
-        d="M9 2.5a5 5 0 00-5 5v3l-1.5 3h13L14 10.5v-3a5 5 0 00-5-5zM7 17a2 2 0 004 0"
-        stroke="var(--ink)"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-type TopBarProps = {
-  streakDays: number;
-  overdueCount: number;
-  streakLabel: string;
-  overdueLabel: string;
-};
-
-function KidTopBar({
-  streakDays,
-  overdueCount,
-  streakLabel,
-  overdueLabel,
-}: TopBarProps) {
-  const showOverdue = overdueCount > 0;
-  const showStreak = !showOverdue && streakDays > 0;
-  return (
-    <div className="relative flex items-center justify-between px-5 pt-4 pb-2">
-      <Link
-        href={"/settings" as Route}
-        aria-label="menu"
-        className="flex h-11 w-11 items-center justify-center rounded-full"
-        style={{
-          background: "rgba(255,255,255,0.7)",
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
-          boxShadow: "var(--shadow-md)",
-        }}
-      >
-        <MenuIcon />
-      </Link>
-
-      {showOverdue ? (
-        <div
-          className="flex items-center gap-1.5 rounded-full px-3.5 py-2"
-          style={{
-            background: "linear-gradient(90deg, #FEE2E2, #FECACA)",
-            boxShadow:
-              "0 8px 20px -10px rgba(239,68,68,0.35), inset 0 1px 0 rgba(255,255,255,0.8)",
-          }}
-        >
-          <span className="text-sm leading-none">⚠️</span>
-          <span className="text-sm font-bold tracking-[-0.2px] text-[#B91C1C]">
-            {overdueLabel}
-          </span>
-        </div>
-      ) : showStreak ? (
-        <div
-          className="flex items-center gap-1.5 rounded-full px-3.5 py-2"
-          style={{
-            background: "linear-gradient(90deg,#FFF3E0,#FFE4E9)",
-            boxShadow:
-              "0 8px 20px -10px rgba(255,107,157,0.35), inset 0 1px 0 rgba(255,255,255,0.8)",
-          }}
-        >
-          <span className="text-[15px] leading-none">🔥</span>
-          <span className="text-sm font-bold tracking-[-0.2px] text-[color:var(--ink)]">
-            {streakLabel}
-          </span>
-        </div>
-      ) : (
-        <span aria-hidden className="w-px" />
-      )}
-
-      <Link
-        href={"/points" as Route}
-        aria-label="notifications"
-        className="flex h-11 w-11 items-center justify-center rounded-full"
-        style={{
-          background: "rgba(255,255,255,0.7)",
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
-          boxShadow: "var(--shadow-md)",
-        }}
-      >
-        <BellIcon />
-      </Link>
+    <div
+      className="flex items-center gap-1.5 rounded-full px-3.5 py-2"
+      style={{
+        background: "linear-gradient(90deg, #FEE2E2, #FECACA)",
+        boxShadow:
+          "0 8px 20px -10px rgba(239,68,68,0.35), inset 0 1px 0 rgba(255,255,255,0.8)",
+      }}
+    >
+      <span className="text-sm leading-none">⚠️</span>
+      <span className="text-sm font-bold tracking-[-0.2px] text-[#B91C1C]">
+        {label}
+      </span>
     </div>
   );
 }
@@ -229,20 +155,22 @@ export function KidHome({
   const streakLabel = t("home.streak_days", { days: String(streakDays) });
   const overdueLabel = t("home.overdue_badge", { count: String(overdueCount) });
 
+  // Populate the global mobile floating-header slots (rendered by layout).
+  useFloatingHeader({
+    center:
+      overdueCount > 0
+        ? <OverduePill label={overdueLabel} />
+        : streakDays > 0
+          ? <StreakPill label={streakLabel} />
+          : undefined,
+  });
+
   // Empty state — mockup: simpler hero + centered empty message, no FAB/badges.
   if (isEmpty) {
     return (
       <div
-        className="relative -mx-4 -mt-4 md:-mx-8 md:-mt-8 flex min-h-[calc(100vh-4rem)] flex-col pb-8 text-[color:var(--ink)] md:min-h-screen"
-        style={{ background: KID_BG_GRADIENT }}
+        className="relative flex min-h-[calc(100vh-4rem)] flex-col pb-8 text-[color:var(--ink)] md:min-h-screen"
       >
-        <KidTopBar
-          streakDays={streakDays}
-          overdueCount={0}
-          streakLabel={streakLabel}
-          overdueLabel={overdueLabel}
-        />
-
         {/* Simple character hero */}
         <div
           className="mx-4 mt-2.5 rounded-[22px] text-center"
@@ -299,11 +227,8 @@ export function KidHome({
 
   return (
     <div
-      className="relative -mx-4 -mt-4 pb-8 text-[color:var(--ink)] md:-mx-8 md:-mt-8"
-      style={{
-        minHeight: "calc(100vh - 4rem)",
-        background: KID_BG_GRADIENT,
-      }}
+      className="relative pb-8 text-[color:var(--ink)]"
+      style={{ minHeight: "calc(100vh - 4rem)" }}
     >
       {/* Ambient glow blobs */}
       <div
@@ -323,15 +248,7 @@ export function KidHome({
         }}
       />
 
-      <div className="relative mx-auto max-w-lg pb-8">
-        {/* Top bar */}
-        <KidTopBar
-          streakDays={streakDays}
-          overdueCount={overdueCount}
-          streakLabel={streakLabel}
-          overdueLabel={overdueLabel}
-        />
-
+      <div className="relative mx-auto max-w-lg pb-8 lg:max-w-[880px]">
         {/* Hero card */}
         <FadeUp delay={80}>
           <div className="px-5 pt-4">
@@ -359,20 +276,25 @@ export function KidHome({
                     size="xl"
                     level={user.level}
                   />
-                  <div className="absolute -bottom-1.5 -right-2">
-                    <LevelPill level={user.level} />
-                  </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <EyebrowLabel>{t("home.role_adventurer")}</EyebrowLabel>
+                  <span className="text-[12px] font-bold tracking-[0.04em] leading-none text-[color:var(--ink-subtle)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
+                    Lv.{user.level} {getStageTitle(stage, t)}
+                  </span>
                   <div className="mt-1 text-[28px] font-bold leading-tight tracking-[-0.3px] text-[color:var(--ink)]">
                     {user.display_name}
                   </div>
-                  <div className="mt-0.5 text-[13px] font-medium text-[rgba(45,27,61,0.55)]">
+                  <div className="mt-1.5 flex items-baseline gap-1">
+                    <span className="text-[28px] font-extrabold leading-none tracking-[-0.02em] text-[color:var(--accent)]" style={{ fontFeatureSettings: '"tnum" 1' }}>
+                      {user.current_balance.toLocaleString()}
+                    </span>
+                    <span className="text-[14px] font-semibold text-[color:var(--accent)]">pt</span>
+                  </div>
+                  <div className="mt-1 text-[12px] font-medium text-[rgba(45,27,61,0.55)]">
                     {nextThreshold ? (
                       <>
                         {t("home.next_level_prefix")}{" "}
-                        <span className="font-bold text-[color:var(--accent)]">
+                        <span className="font-bold text-[color:var(--ink)]">
                           {(nextThreshold - user.lifetime_earned).toLocaleString()}pt
                         </span>
                       </>
@@ -420,31 +342,47 @@ export function KidHome({
                 </span>
               </div>
             </div>
-            <div className="space-y-3">
-              {todayTasks.length === 0 && (
-                <div className="flex flex-col items-center py-10">
-                  <span className="text-[48px] leading-none">😴</span>
-                  <p className="mt-4 text-center text-[16px] font-semibold text-[color:var(--ink)]">
-                    {t("home.no_tasks_title")}
-                  </p>
-                  <p className="mt-1 text-center text-[14px] font-normal text-[color:var(--ink-subtle)]">
-                    {t("home.no_tasks_desc")}
-                  </p>
-                </div>
-              )}
-              {todayTasks.map((task) => {
-                const status = getStatus(task);
-                return (
-                  <TaskCard
-                    key={task.id}
-                    title={task.title}
-                    points={task.points}
-                    status={status === "completed" ? "completed" : status === "pardoned" ? "pardoned" : "pending"}
-                    onToggle={pending || status === "pardoned" ? undefined : () => onToggle(task)}
-                  />
-                );
-              })}
-            </div>
+            {todayTasks.length === 0 ? (
+              <div className="flex flex-col items-center py-10">
+                <span className="text-[48px] leading-none">😴</span>
+                <p className="mt-4 text-center text-[16px] font-semibold text-[color:var(--ink)]">
+                  {t("home.no_tasks_title")}
+                </p>
+                <p className="mt-1 text-center text-[14px] font-normal text-[color:var(--ink-subtle)]">
+                  {t("home.no_tasks_desc")}
+                </p>
+              </div>
+            ) : (
+              <ListCard>
+                {todayTasks.map((task, i) => {
+                  const status = getStatus(task);
+                  const isCompleted = status === "completed";
+                  const isPardoned = status === "pardoned";
+                  return (
+                    <ListRow
+                      key={task.id}
+                      last={i === todayTasks.length - 1}
+                      muted={isCompleted || isPardoned}
+                      strikethrough={isCompleted}
+                      title={task.title}
+                      trailing={
+                        <span
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 700,
+                            color: "var(--accent)",
+                            fontFeatureSettings: '"tnum" 1',
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {isCompleted ? `+${task.points}` : `${task.points} pt`}
+                        </span>
+                      }
+                    />
+                  );
+                })}
+              </ListCard>
+            )}
           </div>
         </FadeUp>
 
@@ -461,21 +399,36 @@ export function KidHome({
                   {t("home.upcoming_hint")}
                 </span>
               </div>
-              <div className="space-y-3">
-                {upcomingTasks.map((task) => {
+              <ListCard>
+                {upcomingTasks.map((task, i) => {
                   const status = getStatus(task);
+                  const isCompleted = status === "completed";
                   return (
-                    <TaskCard
+                    <ListRow
                       key={task.id}
+                      last={i === upcomingTasks.length - 1}
+                      muted={isCompleted}
+                      strikethrough={isCompleted}
                       title={task.title}
-                      points={task.points}
-                      status={status === "completed" ? "completed" : "pending"}
-                      onToggle={pending ? undefined : () => onToggle(task)}
-                      trailing={task.trailing}
+                      subtitle={task.trailing}
+                      trailing={
+                        <span
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 700,
+                            color: "var(--accent)",
+                            fontFeatureSettings: '"tnum" 1',
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {isCompleted ? `+${task.points}` : `${task.points} pt`}
+                        </span>
+                      }
                     />
                   );
                 })}
-              </div>
+              </ListCard>
+
             </div>
           </FadeUp>
         )}
@@ -483,7 +436,7 @@ export function KidHome({
         {/* Badges */}
         <FadeUp delay={240}>
           <div className="px-5 pt-6">
-            <Card>
+            <Card className="rounded-[22px]">
               <CardHeader>
                 <CardTitle className="text-base">{t("home.badges")}</CardTitle>
               </CardHeader>

@@ -491,6 +491,20 @@
 }
 
 /* =========================
+   App shell — Option B (Ambient Gradient)
+   Kid: warm pink/peach wash. Parent: clean light surface.
+   Cards/nav float over this with translucent surfaces.
+   ========================= */
+.app-shell {
+  background: var(--surface-raised);
+}
+[data-role="kid"] .app-shell,
+.app-shell[data-role="kid"] {
+  background: linear-gradient(135deg, #FFF5EC 0%, #FFE4E9 40%, #E5EFFF 100%);
+  background-attachment: fixed;
+}
+
+/* =========================
    Auth page entrance animation
    ========================= */
 @keyframes dzRise {
@@ -508,10 +522,51 @@
    Character animations
    ========================= */
 
-/* Idle breathing — slow, opt-in via .ch-breathe */
-@keyframes chBreathe {
+/* Idle burst keyframes — picked at random by CharacterIcon's JS timer.
+   Each burst plays once then yields back to a static rest pose. */
+@keyframes chJump {
+  0%, 100% { transform: translateY(0)    scale(1); }
+  30%      { transform: translateY(-14px) scale(1.05, 0.95); }
+  55%      { transform: translateY(0)    scale(0.92, 1.08); }
+  75%      { transform: translateY(-4px) scale(1.02, 0.98); }
+}
+@keyframes chSway {
+  0%, 100% { transform: rotate(0deg); }
+  20%      { transform: rotate(-8deg); }
+  50%      { transform: rotate(8deg); }
+  80%      { transform: rotate(-4deg); }
+}
+@keyframes chShake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  15%      { transform: translateX(-4px) rotate(-3deg); }
+  30%      { transform: translateX(4px)  rotate(3deg); }
+  45%      { transform: translateX(-3px) rotate(-2deg); }
+  60%      { transform: translateX(3px)  rotate(2deg); }
+  75%      { transform: translateX(-2px) rotate(-1deg); }
+  90%      { transform: translateX(2px)  rotate(1deg); }
+}
+@keyframes chPulse {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.04); }
+  40%      { transform: scale(1.18); }
+  70%      { transform: scale(0.96); }
+}
+@keyframes chSpin {
+  0%   { transform: rotate(0deg)   scale(1); }
+  50%  { transform: rotate(180deg) scale(1.05); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+/* Trot: dashes off to one side, vanishes, reappears from the opposite side. */
+@keyframes chTrotLeft {
+  0%   { transform: translateX(0)     scale(1);    opacity: 1; }
+  35%  { transform: translateX(-160%) scale(0.85); opacity: 0; }
+  36%  { transform: translateX(160%)  scale(0.85); opacity: 0; }
+  100% { transform: translateX(0)     scale(1);    opacity: 1; }
+}
+@keyframes chTrotRight {
+  0%   { transform: translateX(0)     scale(1);    opacity: 1; }
+  35%  { transform: translateX(160%)  scale(0.85); opacity: 0; }
+  36%  { transform: translateX(-160%) scale(0.85); opacity: 0; }
+  100% { transform: translateX(0)     scale(1);    opacity: 1; }
 }
 
 /* Tap squish — applied via :active state on .ch-tap */
@@ -533,10 +588,13 @@
   }
 }
 
-.ch-breathe {
-  animation: chBreathe 3.6s ease-in-out infinite;
-  will-change: transform;
-}
+.ch-jump       { animation: chJump  700ms cubic-bezier(0.34, 1.56, 0.64, 1) both; transform-origin: 50% 100%; }
+.ch-sway       { animation: chSway  1200ms ease-in-out both; transform-origin: 50% 90%; }
+.ch-shake      { animation: chShake 600ms ease-in-out both; }
+.ch-pulse      { animation: chPulse 900ms ease-in-out both; }
+.ch-spin       { animation: chSpin  900ms ease-in-out both; }
+.ch-trot-left  { animation: chTrotLeft  1200ms ease-in-out both; }
+.ch-trot-right { animation: chTrotRight 1200ms ease-in-out both; }
 
 .ch-tap {
   transition: transform 160ms var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
