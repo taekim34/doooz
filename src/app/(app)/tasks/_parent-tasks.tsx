@@ -1,5 +1,6 @@
 import { TaskCheckbox } from "./_checkbox";
 import { BegActions } from "./_beg-actions";
+import { PenaltyForm } from "../children/[id]/_penalty-form";
 import Link from "next/link";
 import { t, type Locale } from "@/lib/i18n";
 
@@ -172,6 +173,10 @@ export function ParentTasks({
                   </li>
                 ))}
               </ul>
+
+              <div className="mt-2">
+                <PenaltyForm childId={member.id} />
+              </div>
             </div>
           );
         })}
