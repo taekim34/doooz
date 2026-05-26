@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
-import { characterEmoji } from "@/features/characters/emoji-map";
+import { CharacterIcon } from "@/components/molecules/character-icon";
 import { getStage, progressToNextLevel, getLevelTitle } from "@/lib/level";
 import { familyToday, formatDateInFamilyTz } from "@/lib/datetime/family-tz";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -108,7 +108,7 @@ export default async function MemberDetailPage({
       <Card>
         <CardContent className="p-6 space-y-4">
           <div className="flex items-center gap-6">
-            <div className="text-7xl">{characterEmoji(member.character_id, stage)}</div>
+            <CharacterIcon id={member.character_id} stage={stage} pixelSize={72} />
             <div className="flex-1">
               <div className="text-xl font-bold">{member.display_name}</div>
               <div className="text-sm text-muted-foreground">

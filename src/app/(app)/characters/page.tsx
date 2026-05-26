@@ -1,6 +1,6 @@
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
-import { characterEmoji } from "@/features/characters/emoji-map";
+import { CharacterIcon } from "@/components/molecules/character-icon";
 import { getStage, progressToNextLevel, getLevelTitle, LEVEL_THRESHOLDS } from "@/lib/level";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
@@ -36,14 +36,16 @@ export default async function CharactersPage() {
       <BackButton fallback="/" />
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{t("characters.my_character", locale)}</h1>
-        <Link href="/characters/gallery" className="text-sm text-primary underline">
-          {t("characters.change", locale)}
-        </Link>
+        {user.role === "child" && (
+          <Link href="/characters/gallery" className="text-sm text-primary underline">
+            {t("characters.change", locale)}
+          </Link>
+        )}
       </div>
       <Card>
         <CardContent className="p-6 space-y-4">
           <div className="flex items-center gap-6">
-            <div className="text-7xl">{characterEmoji(user.character_id, stage)}</div>
+            <CharacterIcon id={user.character_id} stage={stage} pixelSize={72} />
             <div className="flex-1">
               <div className="text-lg font-semibold">{t("settings.character_label", locale)} Lv. {user.level} · {getLevelTitle(user.level, (k) => t(k, locale))}</div>
               <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">

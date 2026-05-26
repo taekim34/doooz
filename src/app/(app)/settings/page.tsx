@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
-import { characterEmoji } from "@/features/characters/emoji-map";
+import { CharacterIcon } from "@/components/molecules/character-icon";
 import { getStage } from "@/lib/level";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -146,10 +146,12 @@ export default async function SettingsPage({
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-between">
-            <span className="text-2xl">{characterEmoji(user.character_id, getStage(user.level))}</span>
-            <Link href={"/characters/gallery" as never} className="text-sm text-primary underline">
-              {t("settings.change_link", locale)}
-            </Link>
+            <CharacterIcon id={user.character_id} stage={getStage(user.level)} pixelSize={28} />
+            {user.role === "child" && (
+              <Link href={"/characters/gallery" as never} className="text-sm text-primary underline">
+                {t("settings.change_link", locale)}
+              </Link>
+            )}
           </div>
         </CardContent>
       </Card>

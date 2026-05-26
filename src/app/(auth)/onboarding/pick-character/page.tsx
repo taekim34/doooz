@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { characterEmoji } from "@/features/characters/emoji-map";
+import { CharacterIcon } from "@/components/molecules/character-icon";
 import { t } from "@/lib/i18n";
 import { getAuthLocale } from "@/lib/i18n/auth-locale";
 
@@ -45,7 +45,7 @@ export default async function PickCharacterPage() {
                 disabled={locked}
                 className="flex w-full flex-col items-center rounded-lg border bg-background p-4 text-sm shadow-sm transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
               >
-                <span className="text-4xl">{characterEmoji(c.id, 1)}</span>
+                <CharacterIcon id={c.id} stage={2} pixelSize={56} hideBadge />
                 <span className="mt-2">{c.name}</span>
                 {locked && <span className="text-xs text-muted-foreground">Lv.{c.unlock_level} {t("auth.unlock", locale)}</span>}
               </button>

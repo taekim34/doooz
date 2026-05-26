@@ -1,46 +1,37 @@
 /**
- * Level calculator
- * Thresholds from spec v2 §1 #2 (x5 inflation, 30 levels).
- * Keep in sync with any SQL `calculate_level` if present.
+ * Level calculator — the level curve is defined in ONE place: the constants
+ * below. L1-L9 use a fixed anchor table; from L10 the curve is linear
+ * (+5,000 per level). These mirror the DB `calculate_level()` function, which
+ * is the authoritative store for `users.level`. This module only derives
+ * display values (progress bar, level table) from the same formula, so code
+ * and DB cannot drift. `LEVEL_THRESHOLDS` is generated, never hand-typed.
+ * Keep ANCHOR_THRESHOLDS / LINEAR_DELTA in sync with the SQL function.
  */
 
-export const LEVEL_THRESHOLDS: readonly number[] = [
-  0,         // L1
-  150,       // L2
-  400,       // L3
-  800,       // L4
-  1_500,     // L5
-  2_500,     // L6
-  4_500,     // L7
-  7_000,     // L8
-  10_000,    // L9
-  15_000,    // L10
-  22_000,    // L11
-  32_000,    // L12
-  45_000,    // L13
-  60_000,    // L14
-  80_000,    // L15
-  100_000,   // L16
-  130_000,   // L17
-  160_000,   // L18
-  190_000,   // L19
-  220_000,   // L20
-  280_000,   // L21
-  340_000,   // L22
-  400_000,   // L23
-  470_000,   // L24
-  540_000,   // L25
-  620_000,   // L26
-  700_000,   // L27
-  800_000,   // L28
-  900_000,   // L29
-  1_000_000, // L30
+const ANCHOR_THRESHOLDS: readonly number[] = [
+  0, 150, 400, 800, 1_500, 2_500, 4_500, 7_000, 10_000, // L1..L9
 ] as const;
+const ANCHOR_LEVEL = ANCHOR_THRESHOLDS.length; // 9
+const ANCHOR_LIFETIME = ANCHOR_THRESHOLDS[ANCHOR_LEVEL - 1] as number; // 10_000
+const LINEAR_DELTA = 5_000;
+
+/** Display cap for the level table; the DB curve itself is unbounded. */
+export const MAX_LEVEL = 30;
+
+/** Lifetime required to reach a level (1-indexed). The single source of the curve. */
+export function thresholdForLevel(level: number): number {
+  if (level <= ANCHOR_LEVEL) return ANCHOR_THRESHOLDS[level - 1] as number;
+  return ANCHOR_LIFETIME + (level - ANCHOR_LEVEL) * LINEAR_DELTA;
+}
+
+/** Derived from thresholdForLevel — never hand-maintained. */
+export const LEVEL_THRESHOLDS: readonly number[] = Array.from(
+  { length: MAX_LEVEL },
+  (_, i) => thresholdForLevel(i + 1),
+);
 
 /** @deprecated Use getLevelTitle(level, locale) with i18n keys instead */
 export const LEVEL_TITLES: readonly string[] = [] as const;
-
-export const MAX_LEVEL = LEVEL_THRESHOLDS.length;
 
 export function calculateLevel(lifetime: number): number {
   if (!Number.isFinite(lifetime) || lifetime < 0) return 1;

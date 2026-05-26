@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
-import { characterEmoji } from "@/features/characters/emoji-map";
+import { CharacterIcon } from "@/components/molecules/character-icon";
 import { BackButton } from "@/components/ui/back-button";
 import { t, type Locale } from "@/lib/i18n";
 
@@ -79,7 +79,7 @@ export default async function GalleryPage() {
                       : "cursor-pointer hover:border-primary hover:bg-muted"
                 } disabled:pointer-events-none`}
               >
-                <span className="text-4xl">{characterEmoji(c.id, 1)}</span>
+                <CharacterIcon id={c.id} stage={2} pixelSize={56} hideBadge />
                 <span className="mt-1">{c.name}</span>
                 {locked && (
                   <span className="text-xs text-muted-foreground">Lv.{c.unlock_level} {t("characters.unlock_level", locale)}</span>

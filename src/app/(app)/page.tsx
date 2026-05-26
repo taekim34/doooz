@@ -1,6 +1,6 @@
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
-import { characterEmoji } from "@/features/characters/emoji-map";
+import { CharacterIcon } from "@/components/molecules/character-icon";
 import { getStage, progressToNextLevel } from "@/lib/level";
 import { familyToday, familyYesterday } from "@/lib/datetime/family-tz";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -65,7 +65,7 @@ export default async function HomePage() {
 
         <Card>
           <CardContent className="flex items-center gap-6 p-6">
-            <div className="text-6xl">{characterEmoji(user.character_id, stage)}</div>
+            <CharacterIcon id={user.character_id} stage={stage} pixelSize={60} />
             <div className="flex-1">
               <div className="text-sm text-muted-foreground">{user.display_name}</div>
               <div className="text-xl font-bold">Lv. {user.level}</div>
@@ -199,9 +199,7 @@ export default async function HomePage() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <Link href={`/children/${k.id}` as Route} className="flex items-center gap-3 hover:opacity-80">
-                  <span className="text-3xl">
-                    {characterEmoji(k.character_id, getStage(k.level))}
-                  </span>
+                  <CharacterIcon id={k.character_id} stage={getStage(k.level)} pixelSize={32} />
                   <div>
                     <CardTitle className="text-base">{k.display_name}</CardTitle>
                     <div className="text-xs text-muted-foreground">

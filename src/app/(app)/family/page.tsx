@@ -1,7 +1,7 @@
 import { requireUser } from "@/features/auth/current-user";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
-import { characterEmoji } from "@/features/characters/emoji-map";
+import { CharacterIcon } from "@/components/molecules/character-icon";
 import { getStage } from "@/lib/level";
 import Link from "next/link";
 import { t, type Locale } from "@/lib/i18n";
@@ -38,7 +38,7 @@ export default async function FamilyPage() {
           <Link key={m.id} href={`/family/member/${m.id}` as never}>
             <Card className="transition hover:border-primary">
               <CardContent className="flex items-center gap-4 p-4">
-                <span className="text-4xl">{characterEmoji(m.character_id, getStage(m.level))}</span>
+                <CharacterIcon id={m.character_id} stage={getStage(m.level)} pixelSize={40} />
                 <div className="flex-1">
                   <div className="font-semibold">{m.display_name}</div>
                   <div className="text-xs text-muted-foreground">

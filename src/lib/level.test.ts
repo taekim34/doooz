@@ -38,6 +38,15 @@ describe("calculateLevel (30 levels)", () => {
     expect(calculateLevel(10_000_000)).toBe(30);
   });
 
+  // From L10 the curve is linear (+5,000/level), matching DB calculate_level().
+  it("L10+ matches the DB linear formula", () => {
+    const dbLevel = (lifetime: number) =>
+      lifetime >= 10_000 ? 9 + Math.floor((lifetime - 10_000) / 5_000) : null;
+    for (const lifetime of [10_000, 20_250, 30_000, 31_395, 34_415, 100_000]) {
+      expect(calculateLevel(lifetime)).toBe(dbLevel(lifetime));
+    }
+  });
+
   it("MAX_LEVEL matches thresholds length", () => {
     expect(MAX_LEVEL).toBe(30);
     expect(LEVEL_THRESHOLDS.length).toBe(30);
