@@ -60,6 +60,10 @@ export async function sendPushToUsers(
               keys: { p256dh: sub.keys_p256dh, auth: sub.keys_auth },
             },
             JSON.stringify(payload),
+            // urgency:"high" wakes locked/idle devices immediately (FCM/APNs batch
+            // "normal" pushes to save battery -> the real-time delay, worst for beg
+            // pushes to idle parent phones). TTL 1 day so a late beg doesn't pop stale.
+            { urgency: "high", TTL: 86400 },
           );
           return result;
         } catch (err: unknown) {
