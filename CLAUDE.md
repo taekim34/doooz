@@ -2,6 +2,21 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## STOP — READ BEFORE ANY DB MIGRATION OR `supabase db push`
+
+**PROD DATABASE IS AHEAD OF `main`. NEVER trust local schema as the source of truth for prod.**
+
+`dev` (and `feat/*`) branch migrations have been `db push`ed to PROD **before merging to main**, so `main`'s `supabase/migrations/` is BEHIND prod. A fresh local `supabase db reset` produces a schema that DIFFERS from prod (e.g. prod `users` has `tone`/`color_mode` columns that main's migrations don't create). **`dev` is NOT QA'd and will not merge for a while → emergency patches keep landing on `main` directly. This drift WILL bite every time unless you check.**
+
+Before writing or pushing ANY migration:
+1. **`supabase migration list --linked`** (DB password via `tene` → `SUPABASE_DB_PASSWORD=$DOOOZ_DB_PASS`). If ANY migration is **remote-only** (on prod, not in main) → **STOP**. Prod is ahead. Do NOT push until reconciled.
+2. **Verify against the REAL prod schema, not local.** `supabase db dump --linked` (schema) → grep the actual columns/policies/grants of every table you touch. Local `db reset` only reflects main's files.
+3. **Write migrations defensively** so they are valid on BOTH stale-main and prod (e.g. `grant`/`alter` only columns confirmed to exist via an `information_schema` existence check). Do not assume local columns == prod columns.
+4. **Backup first:** `supabase db dump --linked` (schema) + `--data-only` (data) into `backups/`. Raw `pg_dump` needs PG17 (`brew install postgresql@17`; server is PG17, pooler host in `supabase/.temp/pooler-url`). **`auth` schema is NOT restorable from any self-made dump (platform-managed); this project is Supabase Free = no PITR. Keep migrations to the `public` schema only.**
+5. **Two mandatory reviews (every migration):** (a) **data loss** — classify every statement, grep for `drop table/column, truncate, delete, alter column type`, prove rowcount/value unchanged before/after on populated data; (b) **over-restriction** — for any privilege/policy narrowing, map EVERY legit write path (app user-client + RPCs) and confirm none is blocked; confirm sensitive-column writers are `SECURITY DEFINER` (run as owner, unaffected). See `~/.claude/rules/migration-safety-review.md`.
+
+**Why this matters:** RLS is row-level, not column-level. A 2026-06 security migration almost shipped a `users` column-grant whitelist that omitted prod-only columns (`tone`/`color_mode`) — would have broken theme edits once `dev` merges — caught ONLY by diffing the prod dump. Authored-against-local == landmine.
+
 ## Commands
 
 ```bash
