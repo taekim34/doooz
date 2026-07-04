@@ -1,0 +1,20 @@
+{
+  "name": "@dooooz/shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./schemas/*": "./src/schemas/*.ts",
+    "./level": "./src/level.ts",
+    "./datetime/*": "./src/datetime/*.ts",
+    "./streak": "./src/streak.ts",
+    "./invariants": "./src/invariants.ts",
+    "./i18n": "./src/i18n/index.ts",
+    "./characters/emoji-map": "./src/characters/emoji-map.ts"
+  },
+  "dependencies": {
+    "zod": "^3.23.8",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0"
+  }
+}

@@ -50,6 +50,7 @@ Next.js 15 App Router + React 19 + TS 5 + Supabase (Postgres/Auth/RLS) + Tailwin
 - `lib/datetime/` — Family TZ via `date-fns-tz`, `clock.ts` for testable time
 - `components/ui/` — Shared primitives
 - `(app)/_*.tsx` — Non-routable layout components
+- `packages/shared/` — `@dooooz/shared`: framework-agnostic logic shared with the mobile app (schemas, level, datetime, streak, invariants, i18n, emoji-map). Web `src/lib/*` and `src/schemas/*` paths are re-export shims into this package. New code (esp. mobile) imports `@dooooz/shared/<module>` directly.
 
 ### Conventions
 
